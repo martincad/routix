@@ -2,7 +2,6 @@
 
 #include "../../include/system.h"
 #include "../../include/stdio.h"
-#include <stdarg.h>
 
 #define VIDEO	0xb8000
 
@@ -136,85 +135,4 @@ unsigned char *gotoxy ( int fila, int columna)
 
 
 
-void kprintf ( char *string, ...)
-{
-
- char *p=string;
- char *d;
- char nibble[8];
- char car;
-
- unsigned int i,flag;
-	
- va_list argumentos;
-
- va_start(argumentos, string );
-
- for ( p=string; *p ; p++ ) {
-  if ( *p != '%' ) {
-   putchar(*p);
-   continue;
-  }
-  
-  switch (*++p) {
-
-   case 'c':
-	     car=va_arg(argumentos, int);     
-	     putchar( (char) car);
-	     break;
-
-   case 'x':
-	     i = va_arg(argumentos, unsigned int );
-	     printn(i,16);
-	     break;
-
-
-   case 'd':
-	     i = va_arg(argumentos, unsigned int);
-	     printn(i,10);
-	     break;
-
-   case 'o':
-	     i = va_arg(argumentos, unsigned int);
-	     printn(i,8);
-	     break; 
-
-   case 's':
-	     d = va_arg(argumentos, char *);
-	     puts(d);
-	     break;
-	     
-	     
-
-   default:
-	     putchar(*p);
-	     break;
-
-  }
-	
- }
-  
- va_end(argumentos);
-}
-
-
-
-void printn( unsigned int num, int base)
-{
- unsigned int div;
- if ( (div=num/base) ) printn(div,base);
- putchar( getascii_video(num%base) );
-}
-
-
-
-
-
-char getascii_video ( char c )
-{
- char valor = '0' + c;
-
- if ( valor > '9' ) valor += 7;
- return valor;
-}
 

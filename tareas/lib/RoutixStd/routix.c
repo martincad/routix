@@ -225,7 +225,12 @@ void printf ( char *string, ...)
 
    case 'd':
 	     i = va_arg(argumentos, unsigned int);
-	     printn_(i,10);
+		 if (i> (0xffffffff/2)) {
+		 	putchar('-');
+			printn_(~i+1,10);
+			break;
+		 }
+		 printn_(i,10);
 	     break;
 
    case 'o':

@@ -10,10 +10,11 @@ _scr_lock           0x10              obj/console.a
 _buffer             0x200             obj/fat12.o
 _dev_fat            0x20              obj/fat12.o
 _buff_teclado       0x20              obj/console.a
+_zombie_header      0x10              obj/syscalls.a
 __fin               0x10              obj/mm.a
 _exit_addr          0x10              obj/bootstrap.a
 _fat_header         0x10              obj/fat12.o
-_variables          0x120             obj/syscalls.a
+_variables          0xf0              obj/syscalls.a
 _caps_lock          0x10              obj/console.a
 _memoria            0x10              obj/mm.a
 __sp                0x10              obj/mm.a
@@ -26,7 +27,7 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0xc0000000     0x8f60
+.text           0xc0000000     0x9220
  obj/boot.o(.text)
  .text          0xc0000000       0x10 obj/boot.o
                 0xc0000000                _start
@@ -142,139 +143,141 @@ Linker script and memory map
                 0xc00032fe                _spin_lock
                 0xc00032c3                _atomic_sub
  obj/*.a(.text)
- .text          0xc0003380      0x3d0 obj/bootstrap.a
+ .text          0xc0003380      0x3f0 obj/bootstrap.a
                 0xc0003380                _init
                 0xc0003575                _kmain
- .text          0xc0003750     0x13e0 obj/mm.a
-                0xc000382e                _morecore
-                0xc000387b                _free
-                0xc00044bd                _convertir_direccion
-                0xc0003950                _init_MM_base
-                0xc0003eb7                _make_int_gate
-                0xc000469e                _kmapmem
-                0xc0004255                _inicializacion_kmalloc
-                0xc0004abb                _make_pdt
-                0xc0004af7                _copy_page
-                0xc0004490                _get_page_index
-                0xc0004007                _kfree_page
-                0xc0003e50                _make_descriptor
-                0xc00040c6                _get_free_page
-                0xc0004955                _kunmapmem
-                0xc0004382                _kmem_free
-                0xc000451b                _make_pde
-                0xc0003f12                _make_trap_gate
-                0xc0003f6d                _make_task_gate
-                0xc0003d95                _init_all_memory
-                0xc0004546                _make_pte
-                0xc0003fa5                _clear_busy_bit
-                0xc0003750                _malloc
-                0xc0003d3a                _contar_memoria
-                0xc0004397                _umalloc_page
-                0xc0004147                _print_free_pages
-                0xc000443e                _ufree_page
-                0xc0003cf8                _init_MM
-                0xc0003fc4                _lidt
-                0xc000406a                _kmalloc_page
-                0xc0003fd0                _kmalloc_page_start
-                0xc0003fb9                _lgdt
- .text          0xc0004b30     0x2020 obj/syscalls.a
-                0xc0004d7d                _sys_free_page
-                0xc0005c0c                _sys_get_ppid
-                0xc0006832                _sys_getvar
-                0xc00061d0                _sys_print
-                0xc0005bf9                _sys_get_pid
-                0xc000627e                _sys_clrscr
-                0xc0004c25                _sys_mem
-                0xc000692d                _setvar
-                0xc0006ae6                _find_empty_var
-                0xc0005c5b                _sys_exit
-                0xc0006409                _sys_proc_dump
-                0xc00067d0                _init_var
-                0xc0006a49                _getvar
-                0xc0005b5f                _sys_perror
-                0xc0006a8a                _find_var
-                0xc0004c14                _sys_timer
-                0xc0005232                _sys_exec
-                0xc0004bf2                _sys_process
-                0xc0006190                _rematar_task
-                0xc0004d95                _sys_free_mem
-                0xc00062c4                _sys_usleep
-                0xc0006241                _sys_gets
-                0xc0004c03                _sys_console
-                0xc0004dc5                _sys_void
-                0xc0004c8a                _sys_malloc_page
-                0xc0004e14                _sys_fork
-                0xc0006290                _sys_sleep
-                0xc0004c36                _sys_misc
-                0xc0004b5a                _sys_no_existe
-                0xc00065d8                _sys_proc_dump_v
-                0xc0004bb0                _intSysCall
-                0xc0005f5b                _sys_show
-                0xc0005b8e                _sys_renice
-                0xc00060ad                _sys_wait
-                0xc0006805                _sys_setvar
- .text          0xc0006b50      0x5a0 obj/console.a
-                0xc0006c8d                __getascii
-                0xc0006e80                _putchar
-                0xc0006f78                _puts
-                0xc0006dd1                _gets
-                0xc0006d86                _getchar
-                0xc0006b50                _Teclado
-                0xc0006cb2                _getascii
-                0xc0006be4                _leer_buff_teclado
-                0xc0007022                _scroll_up
-                0xc0006fb0                _nextpos
-                0xc000709c                _gotoxy
-                0xc0006fdc                _clrscr
- .text          0xc00070f0      0x720 obj/sched.a
-                0xc0007640                _entrada_de_inicio
-                0xc00070f0                _inicializarTss
-                0xc00072a9                _inc_tareas_activas
-                0xc00074aa                _insertar_tarea
-                0xc0007301                _despertar_task
-                0xc00076e5                _start_scheduler
-                0xc0007292                _get_new_pid
-                0xc00077b6                _scheduler
-                0xc0007779                _tarea_init
-                0xc0007610                _switch_to_kernel_mode
-                0xc0007554                _tomar_nombre_tarea
-                0xc0007183                _inicializar_task
-                0xc000751a                _encontrar_proceso_por_pid
-                0xc0007340                _init_new_task
-                0xc0007675                _intProximaTarea
-                0xc00072b4                _dormir_task
-                0xc00075b8                _remover_task
- .text          0xc0007810       0x90 obj/signals.a
-                0xc000782a                _sys_kill
- .text          0xc00078a0      0x680 obj/taskdeb.a
-                0xc0007e5b                _ps
-                0xc0007afc                _dump_tm
-                0xc0007c25                _local
-                0xc0007b90                _bisiestos
-                0xc00078f7                _time_debug
-                0xc0007d56                _task_debug
- .text          0xc0007f20     0x1040 obj/floppy.a
-                0xc0008716                _leer_escribir
-                0xc00081f9                _recalibrate
-                0xc0008bfa                _dump_status_register
-                0xc000861a                _init_floppy_DMA
-                0xc0008f2d                _Floppy
-                0xc00088bc                _dump_states
-                0xc000841b                _read_sector
-                0xc00080ab                _init_floppy
-                0xc00085c1                _block
-                0xc0008014                _floppy_get_result
-                0xc0008353                _seek
-                0xc00082aa                _read_sector_id
-                0xc0007f53                _motor_off
-                0xc0007f20                _motor_on
-                0xc00085a2                _read_msr
-                0xc0007f7b                _set_dor
-                0xc0007fa4                _floppy_sendbyte
-                0xc000882f                _leer_sec
-                0x00008f60                __code_size = SIZEOF (.text)
+ .text          0xc0003770     0x13e0 obj/mm.a
+                0xc000384e                _morecore
+                0xc000389b                _free
+                0xc00044dd                _convertir_direccion
+                0xc0003970                _init_MM_base
+                0xc0003ed7                _make_int_gate
+                0xc00046be                _kmapmem
+                0xc0004275                _inicializacion_kmalloc
+                0xc0004adb                _make_pdt
+                0xc0004b17                _copy_page
+                0xc00044b0                _get_page_index
+                0xc0004027                _kfree_page
+                0xc0003e70                _make_descriptor
+                0xc00040e6                _get_free_page
+                0xc0004975                _kunmapmem
+                0xc00043a2                _kmem_free
+                0xc000453b                _make_pde
+                0xc0003f32                _make_trap_gate
+                0xc0003f8d                _make_task_gate
+                0xc0003db5                _init_all_memory
+                0xc0004566                _make_pte
+                0xc0003fc5                _clear_busy_bit
+                0xc0003770                _malloc
+                0xc0003d5a                _contar_memoria
+                0xc00043b7                _umalloc_page
+                0xc0004167                _print_free_pages
+                0xc000445e                _ufree_page
+                0xc0003d18                _init_MM
+                0xc0003fe4                _lidt
+                0xc000408a                _kmalloc_page
+                0xc0003ff0                _kmalloc_page_start
+                0xc0003fd9                _lgdt
+ .text          0xc0004b50     0x22a0 obj/syscalls.a
+                0xc0004d9d                _sys_free_page
+                0xc0005c13                _sys_get_ppid
+                0xc0006ad2                _sys_getvar
+                0xc0006470                _sys_print
+                0xc0005c00                _sys_get_pid
+                0xc000651e                _sys_clrscr
+                0xc0004c45                _sys_mem
+                0xc0006bcd                _setvar
+                0xc0006d86                _find_empty_var
+                0xc0005c29                _sys_exit
+                0xc00066a9                _sys_proc_dump
+                0xc0006a70                _init_var
+                0xc0006ce9                _getvar
+                0xc0005b66                _sys_perror
+                0xc0006d2a                _find_var
+                0xc0004c34                _sys_timer
+                0xc0005252                _sys_exec
+                0xc0004c12                _sys_process
+                0xc00061b8                _rematar_task
+                0xc0004db5                _sys_free_mem
+                0xc0006564                _sys_usleep
+                0xc00064e1                _sys_gets
+                0xc0005f39                _sys_exit_notify
+                0xc0004c23                _sys_console
+                0xc0004de5                _sys_void
+                0xc0004caa                _sys_malloc_page
+                0xc0004e34                _sys_fork
+                0xc0006530                _sys_sleep
+                0xc0004c56                _sys_misc
+                0xc0004b7a                _sys_no_existe
+                0xc0006878                _sys_proc_dump_v
+                0xc0005d16                _sys_exit_mm
+                0xc0004bd0                _intSysCall
+                0xc0006333                _sys_show
+                0xc0005b95                _sys_renice
+                0xc0006051                _sys_wait
+                0xc0006aa5                _sys_setvar
+ .text          0xc0006df0      0x5a0 obj/console.a
+                0xc0006f2d                __getascii
+                0xc0007120                _putchar
+                0xc0007218                _puts
+                0xc0007071                _gets
+                0xc0007026                _getchar
+                0xc0006df0                _Teclado
+                0xc0006f52                _getascii
+                0xc0006e84                _leer_buff_teclado
+                0xc00072c2                _scroll_up
+                0xc0007250                _nextpos
+                0xc000733c                _gotoxy
+                0xc000727c                _clrscr
+ .text          0xc0007390      0x720 obj/sched.a
+                0xc00078e0                _entrada_de_inicio
+                0xc0007390                _inicializarTss
+                0xc0007549                _inc_tareas_activas
+                0xc000774a                _insertar_tarea
+                0xc00075a1                _despertar_task
+                0xc0007985                _start_scheduler
+                0xc0007532                _get_new_pid
+                0xc0007a56                _scheduler
+                0xc0007a19                _tarea_init
+                0xc00078b0                _switch_to_kernel_mode
+                0xc00077f4                _tomar_nombre_tarea
+                0xc0007423                _inicializar_task
+                0xc00077ba                _encontrar_proceso_por_pid
+                0xc00075e0                _init_new_task
+                0xc0007915                _intProximaTarea
+                0xc0007554                _dormir_task
+                0xc0007858                _remover_task
+ .text          0xc0007ab0       0x90 obj/signals.a
+                0xc0007aca                _sys_kill
+ .text          0xc0007b40      0x680 obj/taskdeb.a
+                0xc00080fb                _ps
+                0xc0007d9c                _dump_tm
+                0xc0007ec5                _local
+                0xc0007e30                _bisiestos
+                0xc0007b97                _time_debug
+                0xc0007ff6                _task_debug
+ .text          0xc00081c0     0x1060 obj/floppy.a
+                0xc00089d6                _leer_escribir
+                0xc00084a3                _recalibrate
+                0xc0008eba                _dump_status_register
+                0xc00088c4                _init_floppy_DMA
+                0xc00091ed                _Floppy
+                0xc0008b83                _dump_states
+                0xc00086c5                _read_sector
+                0xc000834e                _init_floppy
+                0xc000886b                _block
+                0xc00082b3                _floppy_get_result
+                0xc00085fd                _seek
+                0xc0008554                _read_sector_id
+                0xc00081f3                _motor_off
+                0xc00081c0                _motor_on
+                0xc000884c                _read_msr
+                0xc000821b                _set_dor
+                0xc0008243                _floppy_sendbyte
+                0xc0008af6                _leer_sec
+                0x00009220                __code_size = SIZEOF (.text)
 
-.data           0xc8000000     0x20d0 load address 0xc0008f60
+.data           0xc8000000     0x20d0 load address 0xc0009220
  obj/*(.data)
  .data          0xc8000000       0x30 obj/mm.a
                 0xc8000010                _KERNEL_PDT
@@ -284,6 +287,7 @@ Linker script and memory map
                 0xc8000170                _syscall_timer
                 0xc80000f0                _syscall_process
                 0xc80000b0                _syscall_mem
+                0xc8000118                _zombie_queue_len
                 0xc80001b0                _syscall_misc
                 0xc8000070                _syscall_group_max
                 0xc8000130                _syscall_console
@@ -333,7 +337,7 @@ Linker script and memory map
                 0xc80020c0                _kernel_lock
                 0x000020d0                __data_size = SIZEOF (.data)
 
-.bss            0xc80020d0      0x510
+.bss            0xc80020d0      0x4f0
  obj/*(.bss)
  .bss           0xc80020d0       0x10 obj/mm.a
  .bss           0xc80020e0       0x40 obj/floppy.a
@@ -347,24 +351,25 @@ Linker script and memory map
                 0xc8002170                __fin
                 0xc8002180                _memoria
                 0xc8002190                __sp
- COMMON         0xc80021a0      0x120 obj/syscalls.a
+ COMMON         0xc80021a0      0x100 obj/syscalls.a
                                   0x0 (size before relaxing)
-                0xc80021a0                _variables
- COMMON         0xc80022c0       0x80 obj/console.a
+                0xc80021a0                _zombie_header
+                0xc80021b0                _variables
+ COMMON         0xc80022a0       0x80 obj/console.a
                                   0x0 (size before relaxing)
-                0xc80022c0                _num_lock
-                0xc80022d0                _buff_consola
-                0xc8002300                _scr_lock
-                0xc8002310                _buff_teclado
-                0xc8002330                _caps_lock
- COMMON         0xc8002340       0x70 obj/sched.a
+                0xc80022a0                _num_lock
+                0xc80022b0                _buff_consola
+                0xc80022e0                _scr_lock
+                0xc80022f0                _buff_teclado
+                0xc8002310                _caps_lock
+ COMMON         0xc8002320       0x70 obj/sched.a
                                   0x0 (size before relaxing)
-                0xc8002340                _tss
- COMMON         0xc80023b0      0x230 obj/fat12.o
+                0xc8002320                _tss
+ COMMON         0xc8002390      0x230 obj/fat12.o
                                   0x0 (size before relaxing)
-                0xc80023b0                _buffer
-                0xc80025b0                _dev_fat
-                0xc80025d0                _fat_header
+                0xc8002390                _buffer
+                0xc8002590                _dev_fat
+                0xc80025b0                _fat_header
 LOAD obj/boot.o
 LOAD obj/bootstrap.a
 LOAD obj/mm.a
@@ -391,29 +396,29 @@ LOAD obj/event.o
 LOAD obj/atomic.o
 OUTPUT(kernel.bin binary)
 
-.comment        0xc80025e0      0x2bc
- .comment       0xc80025e0       0x28 obj/bootstrap.a
- .comment       0xc8002608       0x64 obj/mm.a
- .comment       0xc800266c       0x78 obj/syscalls.a
- .comment       0xc80026e4       0x28 obj/console.a
- .comment       0xc800270c       0x28 obj/sched.a
- .comment       0xc8002734       0x14 obj/signals.a
- .comment       0xc8002748       0x14 obj/int.o
- .comment       0xc800275c       0x14 obj/io.o
- .comment       0xc8002770       0x28 obj/taskdeb.a
- .comment       0xc8002798       0x14 obj/string.o
- .comment       0xc80027ac       0x14 obj/pic.o
- .comment       0xc80027c0       0x14 obj/floppy.a
- .comment       0xc80027d4       0x14 obj/file.o
- .comment       0xc80027e8       0x14 obj/libk.o
- .comment       0xc80027fc       0x14 obj/stdlib.o
- .comment       0xc8002810       0x14 obj/fat12.o
- .comment       0xc8002824       0x14 obj/time.o
- .comment       0xc8002838       0x14 obj/8254.o
- .comment       0xc800284c       0x14 obj/timer.o
- .comment       0xc8002860       0x14 obj/error.o
- .comment       0xc8002874       0x14 obj/event.o
- .comment       0xc8002888       0x14 obj/atomic.o
+.comment        0xc80025c0      0x2bc
+ .comment       0xc80025c0       0x28 obj/bootstrap.a
+ .comment       0xc80025e8       0x64 obj/mm.a
+ .comment       0xc800264c       0x78 obj/syscalls.a
+ .comment       0xc80026c4       0x28 obj/console.a
+ .comment       0xc80026ec       0x28 obj/sched.a
+ .comment       0xc8002714       0x14 obj/signals.a
+ .comment       0xc8002728       0x14 obj/int.o
+ .comment       0xc800273c       0x14 obj/io.o
+ .comment       0xc8002750       0x28 obj/taskdeb.a
+ .comment       0xc8002778       0x14 obj/string.o
+ .comment       0xc800278c       0x14 obj/pic.o
+ .comment       0xc80027a0       0x14 obj/floppy.a
+ .comment       0xc80027b4       0x14 obj/file.o
+ .comment       0xc80027c8       0x14 obj/libk.o
+ .comment       0xc80027dc       0x14 obj/stdlib.o
+ .comment       0xc80027f0       0x14 obj/fat12.o
+ .comment       0xc8002804       0x14 obj/time.o
+ .comment       0xc8002818       0x14 obj/8254.o
+ .comment       0xc800282c       0x14 obj/timer.o
+ .comment       0xc8002840       0x14 obj/error.o
+ .comment       0xc8002854       0x14 obj/event.o
+ .comment       0xc8002868       0x14 obj/atomic.o
 
 Cross Reference Table
 
@@ -675,6 +680,7 @@ _kmapmem                                          obj/mm.a
 _kmem_free                                        obj/mm.a
                                                   obj/syscalls.a
 _kpanic                                           obj/error.o
+                                                  obj/syscalls.a
 _kprintf                                          obj/libk.o
                                                   obj/error.o
                                                   obj/8254.o
@@ -821,6 +827,8 @@ _sys_clrscr                                       obj/syscalls.a
 _sys_console                                      obj/syscalls.a
 _sys_exec                                         obj/syscalls.a
 _sys_exit                                         obj/syscalls.a
+_sys_exit_mm                                      obj/syscalls.a
+_sys_exit_notify                                  obj/syscalls.a
 _sys_fork                                         obj/syscalls.a
 _sys_free_mem                                     obj/syscalls.a
 _sys_free_page                                    obj/syscalls.a
@@ -877,3 +885,6 @@ _ufree_page                                       obj/mm.a
 _umalloc_page                                     obj/mm.a
                                                   obj/syscalls.a
 _variables                                        obj/syscalls.a
+_zombie_header                                    obj/syscalls.a
+                                                  obj/bootstrap.a
+_zombie_queue_len                                 obj/syscalls.a

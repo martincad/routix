@@ -113,6 +113,12 @@ void kmain (void)
 
 	// Inicializar variables USER-KERNEL (moemntaneas) definidas en sysmisc.c
 	init_var();
+
+	// Inicializar lista de procesos zombies
+	extern struct zombie_queue zombie_header;
+	zombie_header.next = NULL;
+	zombie_header.ppid = 0;
+	zombie_header.task_struct = NULL;
 	
 	entrada_de_inicio();
 

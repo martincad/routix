@@ -115,7 +115,6 @@ typedef struct task_struct_t
     word cuenta;
     dword tiempo_cpu;
     struct file *open_files [MAX_FILES_POR_TAREA];  //definido en file.h
-//  void *paginas[MAX_PAGINAS_POR_TAREA];
     word num_code, num_data, num_stack;	    //Cantidad de paginas de Codigo, Datos y stack
     int err_no;
     signal_struct_t senales;
@@ -125,7 +124,7 @@ typedef struct task_struct_t
     pid_t ppid;
     int retorno;
     int wait_child;
-    pid_t last_child_died;
+	int last_child_died;
 } task_struct_t ;
 
 enum estado { TASK_RUNNING, TASK_STOPPED, TASK_INTERRUMPIBLE, TASK_ININTERRUMPIBLE, TASK_ZOMBIE, TASK_CLEAN };
@@ -177,4 +176,12 @@ int remover_task (task_struct_t *tarea);
 // EL pedido de la pagina, y la asignacion del código de EXIT está realizado en Kmain.c
 #define EXIT_TASK	(TASK_TEXT - PAGINA_SIZE)
 
+// Estructura utilizada para almacenar una cola de procesos zombies (Siempre hay un primer nodo)
+struct zombie_queue
+{
+	pid_t ppid;						// padre del proceso zombiee
+	task_struct_t *task_struct;		// task struct del proceso
+	struct zombie_queue *next;		// :-)
+	
+};
 

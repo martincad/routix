@@ -23,7 +23,7 @@ console.a: $(OBJECTS)
 	$(LD)  $(LFLAGS) $(OBJECTS) -o $(OBJDIR)/console.a > console.map
 
 
-teclado.o: teclado.c $(INCDIR)/system.h $(INCDIR)/event.h
+teclado.o: teclado.c $(INCDIR)/system.h $(INCDIR)/teclado.h $(INCDIR)/event.h
 	$(CC) $(CFLAGS) teclado.c -o teclado.o
 
 video.o: video.c $(INCDIR)/system.h $(INCDIR)/stdio.h

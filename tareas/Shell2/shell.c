@@ -31,17 +31,14 @@ void main(void)
 	else if ( ! strcmp(msg, "exec") ) {
 	    printf("Ingrese nombre de tarea:");
 	    gets(msg1);
-		pid = fork();
-		if (pid==0) {		//Shell HIJO
+//		pid = fork();
+//		if (pid==0) {		//Shell HIJO
 		    if (exec(msg1)==-1)
 				perror("No pudo ejecutarse");
-			//printf("Shell hijo pid: %d\tAntes de wait", get_pid());
-			//wait(&j);	//El shell hijo recoge la condicion de salida del programa a ejecutar
-			//printf("Shell hijo pid: %d\tDespues de wait", get_pid());
-			exit(-1);
-		}
-		else if (pid==-1)
-			perror("fork");
+//			exit(-1);
+//		}
+//		else if (pid==-1)
+//			perror("fork");
 //		wait(&j);		//El shell padre recoge la condicion de salida del shell hijo
 	}
 	else if ( ! strcmp(msg, "echo") ) {
@@ -94,7 +91,7 @@ void main(void)
 		show(2);
 	}
 
-	else if (! strcmp(msg, "show 3")) {
+	else if (! strcmp(msg, "show zombies")) {
 		show(3);
 	}
 

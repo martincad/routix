@@ -39,6 +39,7 @@ kmapmem                                           sys_proc.o
                                                   sys_mem.o
 kmem_free                                         sys_proc.o
                                                   sys_mem.o
+kpanic                                            sys_proc.o
 kprintf                                           sys_misc.o
                                                   sys_time.o
                                                   sys_proc.o
@@ -68,6 +69,8 @@ sys_console                                       syscalla.o
                                                   syscalls.o
 sys_exec                                          sys_proc.o
 sys_exit                                          sys_proc.o
+sys_exit_mm                                       sys_proc.o
+sys_exit_notify                                   sys_proc.o
 sys_fork                                          sys_proc.o
 sys_free_mem                                      sys_mem.o
 sys_free_page                                     sys_mem.o
@@ -119,4 +122,5 @@ ufree_page                                        sys_proc.o
 umalloc_page                                      sys_proc.o
                                                   sys_mem.o
 variables                                         sys_misc.o
-                                                  sys_proc.o
+zombie_header                                     sys_proc.o
+zombie_queue_len                                  sys_proc.o

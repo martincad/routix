@@ -51,9 +51,9 @@ unsigned int getascii (unsigned char code);
 unsigned int keymap_std[] = 
 {
     0, 0, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 225, 39, '\b',
-    0, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 129, '+', '\n',
-    CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 148, 132, '^', SHIFT, '#',
-    'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', SHIFT,
+    0, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '´', '+', '\n',
+    CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 148, '{', '}', SHIFT, '}',
+    'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-', SHIFT,
     '*', ALT, ' ', CAPS_LOCK, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, NUM_LOCK, SCR_LOCK, HOME, CURSOR_UP, PAGE_UP, '-',
     CURSOR_LEFT, 0, CURSOR_RIGHT, '+', END, CURSOR_DOWN, PAGE_DOWN, INSERT, DELETE, ENTER, 0, '<', F11, F12
 };
@@ -62,9 +62,9 @@ unsigned int keymap_std[] =
 unsigned int keymap_std_shift[] = 
 {
    0, 0, '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', 225, 39, '\b',
-   0, 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 129, '+', '\n',
-   CTRL, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 148, 132, '^', SHIFT, '#',
-   'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', SHIFT,
+   0, 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '¨', '*', '\n',
+   CTRL, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 148, '[', '^', SHIFT, ']',
+   'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', ':', '_', SHIFT,
    '*', ALT, ' ', CAPS_LOCK, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, NUM_LOCK, SCR_LOCK, HOME, CURSOR_UP, PAGE_UP, '-',
    CURSOR_LEFT, 0, CURSOR_RIGHT, '+', END, CURSOR_DOWN, PAGE_DOWN, INSERT, DELETE, ENTER, 0, '<', F11, F12
 };

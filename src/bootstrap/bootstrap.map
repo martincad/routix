@@ -27,3 +27,4 @@ mascarasPics                                      kmain.o
 memoria                                           kmain.o
 puts                                              kmain.o
 start_scheduler                                   kmain.o
+zombie_header                                     kmain.o

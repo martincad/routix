@@ -403,16 +403,12 @@ int sys_exec (char *nombre)
     // Despertamos la nueva tarea, recordemos que init_new_task crea las tareas en estado TASK_STOPPED
     despertar_task( new_task );
 
-	//Nuevo exec
-//	if (getvar("newexec")==1 && strcmp(actual->descripcion,"shell.bin")) {
-//	if (getvar("newexec")==1) 
-//		sys_exit(0);
-
+/*	TEMP Fuera de Servicio momentaneamente (como los subtes de Ibarra)
 	//Si el proceso que ejecuta el exec no es el init, debe morir, muejeje
 	if (actual->pid!=1) {
 		sys_exit(0);
 	}
-	
+*/	
     return OK;
 }
 
@@ -450,63 +446,171 @@ inline pid_t sys_get_ppid (void)
     return actual->ppid;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+//	Llamada al sistema Exit y funciones relacionadas
+//
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Primer nodo de la lista de procesos zombies
+struct zombie_queue zombie_header;
+
+
+// Cantidad de procesos en estado Zombie
+int zombie_queue_len = 0;
+
+// Funciones relacionadas con la llamada "exit"
+int sys_exit_mm(void);
+int sys_exit_notify(void);
+
 void sys_exit (int valor)
 {
+	cli();
 	dormir_task(actual);
 	actual->estado = TASK_ZOMBIE;
-		
+	actual->retorno = valor;	
+	
+	sys_exit_mm();
+	sys_exit_notify();
+
+	sti();
+	_reschedule();
+}
+
+//! Liberar todos los recursos relacionados con la memoria
+int sys_exit_mm(void)
+{
 	struct user_page *aux, *tmp;
 
-	cli();
-	
+	// Liberar las paginas de código
 	for (aux=tmp=actual->mcode ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
+		// Desmapear la direccion fisica de la logica
 		kunmapmem(aux->vdir, actual->cr3_backup);
+		// Si Esta habilitada la variable de entorno "__exit", imprimir info
+		if (getvar("__exit")==1)
+			kprintf("Liberando Codigo dir: 0x%x\tvdir: 0x%x\n", aux->dir,aux->vdir);
 		ufree_page(aux);
-		if (getvar("exitdebug")==1)
-			kprintf("Libero Codigo\n");
 	}
+	// Liberar de esta tarea las paginas de datos
 	for (aux=tmp=actual->mdata ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
 		kunmapmem(aux->vdir, actual->cr3_backup);
+		if (getvar("__exit")==1)
+			kprintf("Liberando Datos dir: 0x%x\tvdir: 0x%x\n", aux->dir,aux->vdir);
 		ufree_page(aux);
-		if (getvar("exitdebug")==1)
-			kprintf("Libero Datos\n");
 	}
+	// Liberar de esta tarea las paginas de codig
 	for (aux=tmp=actual->mstack ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
 		kunmapmem(aux->vdir, actual->cr3_backup);
+		if (getvar("__exit")==1)
+			kprintf("Liberando Stack dir: 0x%x\tvdir: 0x%x\n", aux->dir,aux->vdir);
 		ufree_page(aux);
-		if (getvar("exitdebug")==1)
-			kprintf("Libero UserStack\n");
 	}
+
 	// Desmapear del directorio la pagina usada para los wrappers (de exit por ej)
-	
 	kunmapmem (TASK_TEXT - PAGINA_SIZE, actual->cr3_backup);
 
 	// Antes de liberar a este muñequin, debo liberar a las tablas de pagina
 	kfree_page (actual->cr3_backup);
-//	kfree_page (actual);
-
-// Verificar si el padre esta esperando por la terminación del hijo
-	task_struct_t *padre;
-	
-	// Si no existe el padre, INIT deberá hacerse cargo del proceso huerfano
-    if ( (padre = encontrar_proceso_por_pid(actual->ppid))!=NULL ) {
-		// El padre está en un wait esperando por el hijo ?
-		if (padre->estado == TASK_INTERRUMPIBLE && padre->wait_child) {
-			padre->retorno = valor;		//Pasarle el valor de salida del hijo
-			padre->last_child_died = actual->pid;
-			despertar_task (padre);
-			actual->estado = TASK_CLEAN;
-		}
-
-	}
-
-	sti();
-	_reschedule();
-
+	return 0;
 }
+
+//! Notify se encarga de:   1. Si tiene hijos, avisarle al init para que se haga cargo.
+//							2. Si su padre esta en un wait, darle la condición de salida y terminar.
+
+int sys_exit_notify (void)
+{
+	struct zombie_queue *aux = &zombie_header;
+	
+	// Voy hacia el ultimo nodo de la lista
+	for (aux=&zombie_header ; aux->next!=NULL ; aux=aux->next);		
+	aux->next = (struct zombie_queue *) malloc (sizeof(struct zombie_queue));
+	if (aux->next==NULL)
+		kpanic("EXIT NOTIFY: no hay memoria para crear un nodo en la lista zombie_queue\n");
+	aux = aux->next;
+
+	aux->ppid = actual->ppid;
+	aux->task_struct = actual;
+	aux->next = NULL;
+	
+	zombie_queue_len++;
+	
+	return 0;
+}
+
+
+
+
+pid_t sys_wait (int *status)
+{
+    status = convertir_direccion( status , actual->cr3_backup);
+	actual->wait_child = 1;
+	if (getvar("__wait")==1)
+		kprintf("SYS_WAIT: Llamada al sistema Wait... status: %d\n", *status);
+
+	struct zombie_queue *aux, *tmp;
+
+	int zombie_find = 0;
+	
+	while (zombie_find==0) {
+		for (aux=&zombie_header ; aux->next!=NULL ; aux=aux->next) {
+				if ( aux->next->ppid == actual->pid)	{			// Encontre un hijo "zombie"
+					zombie_find=1;
+					break;
+				}
+		}
+		if (getvar("__wait")==1)
+			kprintf("No encontre hijo zombie\n");
+		_reschedule();	// espero un rato
+	}
+	
+	if (getvar("__wait")==1) 
+		kprintf("Mi hijo zombie es: %d\n", tmp->task_struct->pid);
+
+	// Remover al zombie de la lista
+	tmp = aux->next;
+	pid_t child_pid = tmp->task_struct->pid;
+
+	// Valor de retorno del hijo
+	*status = tmp->task_struct->retorno;
+	remover_task (tmp->task_struct);
+
+	// Quitar al nodo de la lista
+	aux->next = aux->next->next;
+	free (tmp);
+	zombie_queue_len--;
+	
+	
+
+	
+	return child_pid;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*! Elimina una tarea de la lista de scheduler y libera el task struct (se supone que ya ha sido recogida su condicion
+ * 	de salida) */
+inline int rematar_task (task_struct_t *tarea)
+{
+	if (remover_task (tarea)!=NULL) {		//Si se pudo quitar la tarea de la lista
+		free (tarea);						//liberar el task_struct
+		return 0;
+	}
+	return -1;
+}
+
 
 //Cantidad de veces que la función malloc llamo a morecore solicitandole una página
 extern word morecores;
@@ -527,48 +631,16 @@ void sys_show (int valor)
 			kprintf("\nSizeof floppy_cache: %d\n", sizeof(struct floppy_cache));
 			kprintf("Sectores cacheados: %d\tPaginas usadas: %d\n", i, sizeof(struct floppy_cache) * i / 4096 + 1);
 			break;
+		case 3:
+			kprintf ("Cantidad de procesos zombies: %d\n", zombie_queue_len);
+			struct zombie_queue *tmp;
+			for (tmp=zombie_header.next ; tmp ; tmp=tmp->next) {
+				kprintf("Proceso Zombie PID: %d\tNombre: %s\n", tmp->task_struct->pid,tmp->task_struct->descripcion);
+			}
+			break;
 		default:
 			break;
 	}
 			
-}
-
-struct {
-	char nombre[15];
-	int	 valor;
-} variables[15];
-
-pid_t sys_wait (int *status)
-{
-    status = convertir_direccion( status , actual->cr3_backup);
-	actual->wait_child = 1;
-	kprintf("Llamada al sistema Wait... status: %d\n", *status);
-	dormir_task(actual);
-	_reschedule();
-	actual->wait_child = 0;
-	*status = actual->retorno;
-
-	// Elimiar al hijo de la lista de tareas
-	
-	task_struct_t *hijo = encontrar_proceso_por_pid(actual->last_child_died);
-	if (hijo==NULL) {
-		if (getvar("waitdebug")==1)
-			kprintf("SYS_WAIT: se intenta remover a un hijo que no esta enlistado");
-	}
-	else rematar_task(hijo);
-	
-
-	return actual->last_child_died;
-}
-
-/*! Elimina una tarea de la lista de scheduler y libera el task struct (se supone que ya ha sido recogida su condicion
- * 	de salida) */
-inline int rematar_task (task_struct_t *tarea)
-{
-	if (remover_task (tarea)!=NULL) {		//Si se pudo quitar la tarea de la lista
-		free (tarea);						//liberar el task_struct
-		return 0;
-	}
-	return -1;
 }
 

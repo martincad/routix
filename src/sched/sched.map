@@ -27,6 +27,7 @@ kprintf                                           sched.o
 leer_buff_teclado                                 sched.o
 make_pdt                                          task.o
 perror                                            sched.o
+remover_task                                      task.o
 scheduler                                         sched.o
                                                   taska.o
 start_scheduler                                   sched.o

@@ -25,6 +25,7 @@ exit_addr                                         sys_proc.o
 find_empty_var                                    sys_misc.o
 find_var                                          sys_misc.o
 free                                              sys_time.o
+                                                  sys_proc.o
 gets                                              sys_con.o
 getvar                                            sys_misc.o
                                                   sys_proc.o
@@ -53,6 +54,8 @@ open                                              sys_proc.o
 perror                                            sys_proc.o
 putchar                                           sys_con.o
 read                                              sys_proc.o
+rematar_task                                      sys_proc.o
+remover_task                                      sys_proc.o
 remover_timer                                     sys_time.o
 setvar                                            sys_misc.o
 spin_lock                                         sys_con.o

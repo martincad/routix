@@ -297,3 +297,15 @@ void tomar_nombre_tarea (const char *viejo, char *nuevo)
     nuevo = str_to_lower (nuevo);
 }	
 
+int remover_task (task_struct_t *tarea)
+{
+	task_struct_t *aux;
+
+	for ( aux = tareas_inicio ; aux!=NULL ; aux=aux->proxima) {
+		if (aux->proxima == tarea)	{	//La encontre
+			aux->proxima = tarea->proxima;
+			return 0;
+		}
+	}
+	return -1;
+}

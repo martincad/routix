@@ -1,0 +1,32 @@
+ reality% num my_trap.c
+   1  #include <signal.h>
+   2  char cmd[100];
+   3  
+   4  main(int argc, char *argv[])
+   5  {
+   6     void sighandler();
+   7     int i, offset = 0;
+   8  
+   9     signal(SIGQUIT, sighandler);
+  10     for (i = 1; i < argc; i++) {
+  11         strcpy(cmd + offset, argv[i]);
+  12         offset += strlen(argv[i]);
+  13         cmd[offset++] = ' ';
+  14     }
+  15     cmd[offset] = '\0';
+  16     pause();
+  17  }
+  18  
+  19  void sighandler()
+  20  {
+  21    system(cmd);
+  22  }
+
+  reality% my_trap head -4 my_trap.c
+  ^\#include <signal.h>
+  char cmd[100];
+
+  main(int argc, char *argv[])
+
+  reality% my_trap /bin/echo this is "a try"
+  ^\this is a try

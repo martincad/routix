@@ -22,6 +22,7 @@
 //Nuevas
 
 extern task_struct_t *actual;
+inline int rematar_task (task_struct_t *);
 
 
 
@@ -550,5 +551,27 @@ pid_t sys_wait (int *status)
 	actual->wait_child = 0;
 	*status = actual->retorno;
 
+	// Elimiar al hijo de la lista de tareas
+	
+	task_struct_t *hijo = encontrar_proceso_por_pid(actual->last_child_died);
+	if (hijo==NULL) {
+		if (getvar("waitdebug")==1)
+			kprintf("SYS_WAIT: se intenta remover a un hijo que no esta enlistado");
+	}
+	else rematar_task;
+	
+
 	return actual->last_child_died;
 }
+
+/*! Elimina una tarea de la lista de scheduler y libera el task struct (se supone que ya ha sido recogida su condicion
+ * 	de salida) */
+inline int rematar_task (task_struct_t *tarea)
+{
+	if (remover_task (tarea)!=NULL) {		//Si se pudo quitar la tarea de la lista
+		free (tarea);						//liberar el task_struct
+		return 0;
+	}
+	return -1;
+}
+

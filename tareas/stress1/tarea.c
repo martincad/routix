@@ -12,13 +12,35 @@ void main(void)
 
 	for (j=1 ; j<=1000 ; j++) {
 	
-		for( i=0 ; i<0x8fffff ; i++);
-		if (exec("stack.bin")==-1) {
-			perror("exec");
-			exit (0);
-		}
-			
-		printf("\nStress info: se ha logrado ejecutar %d procesos\n", j);
+		if (fork()==0) {
+			if (exec("rotor1.bin")==-1)
+				perror("exec");
+			exit (-1);
+		}	
+		for( i=0 ; i<0x4fffff ; i++);
+
+		if (fork()==0) {
+			if (exec("rotor2.bin")==-1) 
+				perror("exec");
+			exit (-1);
+		}	
+		for( i=0 ; i<0x4fffff ; i++);
+
+		if (fork()==0) {
+			if (exec("rotor3.bin")==-1) 
+				perror("exec");
+			exit (-1);
+		}	
+		for( i=0 ; i<0x4fffff ; i++);
+
+		if (fork()==0) {
+			if (exec("rotor4.bin")==-1) 
+				perror("exec");
+			exit (-1);
+		}	
+		for( i=0 ; i<0x4fffff ; i++);
+		
+		printf("\nStress info: se ha logrado ejecutar %d procesos\n", j*4);
 	}
     
     while(1);

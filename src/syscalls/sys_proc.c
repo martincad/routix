@@ -507,18 +507,16 @@ int sys_exit_mm(void)
 			kprintf("Liberando Stack dir: 0x%x\tvdir: 0x%x\n", aux->dir,aux->vdir);
 		ufree_page(aux);
 	}
-
 	// Desmapear del directorio la pagina usada para los wrappers (de exit por ej)
 	kunmapmem (TASK_TEXT - PAGINA_SIZE, actual->cr3_backup);
 
-	// Antes de liberar a este muñequin, debo liberar a las tablas de pagina
+	// Libero el directorio de páginas utilizado por la tarea
 	kfree_page (actual->cr3_backup);
 	return 0;
 }
 
 //! Notify se encarga de:   1. Si tiene hijos, avisarle al init para que se haga cargo.
 //							2. Si su padre esta en un wait, darle la condición de salida y terminar.
-
 int sys_exit_notify (void)
 {
 	struct zombie_queue *aux = &zombie_header;
@@ -544,46 +542,48 @@ int sys_exit_notify (void)
 
 pid_t sys_wait (int *status)
 {
+	_cli();
     status = convertir_direccion( status , actual->cr3_backup);
-	actual->wait_child = 1;
-	if (getvar("__wait")==1)
-		kprintf("SYS_WAIT: Llamada al sistema Wait... status: %d\n", *status);
 
 	struct zombie_queue *aux, *tmp;
 
-	int zombie_find = 0;
+	int zombie_found = 0;
 	
-	while (zombie_find==0) {
+	while (1) {
 		for (aux=&zombie_header ; aux->next!=NULL ; aux=aux->next) {
-				if ( aux->next->ppid == actual->pid)	{			// Encontre un hijo "zombie"
-					zombie_find=1;
-					break;
-				}
+			if ( aux->next->ppid == actual->pid)	{			// Encontre un hijo "zombie"
+				zombie_found = 1;
+				break;
+			}
 		}
+		if (zombie_found==1)
+			break;
 		if (getvar("__wait")==1)
-			kprintf("No encontre hijo zombie\n");
+			kprintf("SYS_WAIT: Mi PID es: %d\tNo encontre hijo zombie\n", actual->pid);
+		_sti();
 		_reschedule();	// espero un rato
+		_cli();
 	}
 	
-	if (getvar("__wait")==1) 
-		kprintf("Mi hijo zombie es: %d\n", tmp->task_struct->pid);
+//	if (getvar("__wait")==1) 
+//		kprintf("Mi hijo zombie es: %d\n", tmp->task_struct->pid);
 
-	// Remover al zombie de la lista
+	// Mientras que aux queda apuntando al nodo anterior, tmp lo hace al nodo en cuestión
 	tmp = aux->next;
 	pid_t child_pid = tmp->task_struct->pid;
 
 	// Valor de retorno del hijo
 	*status = tmp->task_struct->retorno;
 	remover_task (tmp->task_struct);
-
+	
 	// Quitar al nodo de la lista
-	aux->next = aux->next->next;
+	aux->next = tmp->next;
+	// Liberar el task struct utilizado
+	kfree_page ((addr_t)(tmp->task_struct));
 	free (tmp);
 	zombie_queue_len--;
 	
-	
-
-	
+	_sti();
 	return child_pid;
 }
 

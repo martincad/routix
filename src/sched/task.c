@@ -220,9 +220,6 @@ task_struct_t *init_new_task(word cs, word ds, dword eip, dword esp, dword eflag
     for (j=0 ; j<MAX_FILES_POR_TAREA; j++)
 	nueva->open_files[j] = NULL;
 
- //Flag indica si esta esperando la terminación del hijo	
- nueva->wait_child = 0;
- 
  // Insertamos la tarea en la lista
  if ( ! insertar_tarea(nueva) ) {
  
@@ -300,6 +297,8 @@ void tomar_nombre_tarea (const char *viejo, char *nuevo)
     nuevo = str_to_lower (nuevo);
 }	
 
+/*! Saca a un proceso de la lista de procesos del scheduler
+ */ 
 int remover_task (task_struct_t *tarea)
 {
 	task_struct_t *aux;

@@ -2,20 +2,26 @@
 #include "stdarg.h"
 #include "../include/routix.h"
 
-char i[1000];
+char msg[40];
+
 void main(void) 
 {
-    char *p;
-    int pid;
-    p = (char *) malloc(100);
-    strcpy(p, "Hola soy el ");
-    pid=fork();
-    if (pid==0)
-	strcat(p, "HIJO !!!\n");
-    else strcat(p, "PADRE !!!\n");
+	int i=0;
+	int j=1;
 
-    //Imprimir tanto en PADRE como en HIJO el string apuntado por p
-    printf("%s", p);    
+	for (j=1 ; j<10 ; j++) {
+	
+		for( i=0 ; i<0xfffff ; i++);
+		exec("rotor1.bin");
+		for( i=0 ; i<0xfffff ; i++);
+		exec("rotor2.bin");
+		for( i=0 ; i<0xfffff ; i++);
+		exec("rotor3.bin");
+		for( i=0 ; i<0xfffff ; i++);
+		exec("rotor4.bin");
+
+		printf("\nStress info: se han logrado ejecutar %d procesos\n", 4 * j);
+	}
     
     while(1);
 }

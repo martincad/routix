@@ -16,8 +16,8 @@ LIBDIR = ../lib
 
 OBJECTS = tarea.o $(LIBDIR)/routstd.a
 
-tarea.bin: $(OBJECTS)
-	$(LD) $(LFLAGS) $(OBJECTS) -o tarea.bin  > tarea.map
+stress1.bin: $(OBJECTS)
+	$(LD) $(LFLAGS) $(OBJECTS) -o stress1.bin  > tarea.map
 
 tarea.o: tarea.c
 	$(CC) $(CFLAGS) tarea.c -o tarea.o

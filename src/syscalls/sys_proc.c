@@ -299,8 +299,6 @@ int sys_exec (char *nombre)
     char nuevo_nombre[13];
     tomar_nombre_tarea(nombre,nuevo_nombre);
 
-if (getvar("mmdebug")==1)
-kprintf("1 ");
     // init_new_task devuelve la tarea creada como TASK_STOPPED, la mantendremos así hasta el final    
     new_task = init_new_task(DESC_CODE_USUARIO, DESC_DATA_USUARIO, TASK_TEXT, TASK_STACK + 4096 - 4, 0x202,\
 		    nuevo_nombre, 10);
@@ -308,22 +306,16 @@ kprintf("1 ");
     if (!new_task) {	    //liberar
 		return -1;
     }
-if (getvar("mmdebug")==1)
-kprintf("2 ");
 
     new_task->mstack = umalloc_page (PAGINA_STACK, TASK_STACK);
     if (!new_task->mstack)  //liberar
 		return -1;
-if (getvar("mmdebug")==1)
-kprintf("3 ");
 
     if( kmapmem( new_task->mstack->dir , TASK_STACK, new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
 		kprintf("TEMP 1:new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
         kprintf("Kmapmem TASK_STACK error\n");
         return -1;
     }
-if (getvar("mmdebug")==1)
-kprintf("4 ");
 
 	// Direccion fisica de la ubicacion de wrappers para tareas 	
 	extern addr_t *exit_addr;
@@ -332,8 +324,6 @@ kprintf("4 ");
         kprintf("Kmapmem EXIT_TASK error\n");
         return -1;
     }
-if (getvar("mmdebug")==1)
-kprintf("5 ");
 
 	// Poner al fondo del stack la direccion de comienzo del codigo del wrapper exit
 	unsigned long *qwe = (unsigned long *) (new_task->mstack->dir + 4096 - 4);
@@ -457,21 +447,30 @@ void sys_exit (int valor)
 	
 	for (aux=tmp=actual->mcode ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
+		kunmapmem(aux->vdir, actual->cr3_backup);
 		ufree_page(aux);
-//		kprintf("TEMP: Libero Codigo\n");
+		if (getvar("exitdebug")==1)
+			kprintf("Libero Codigo\n");
 	}
 	for (aux=tmp=actual->mdata ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
+		kunmapmem(aux->vdir, actual->cr3_backup);
 		ufree_page(aux);
-//		kprintf("TEMP: Libero Datos\n");
+		if (getvar("exitdebug")==1)
+			kprintf("Libero Datos\n");
 	}
 	for (aux=tmp=actual->mstack ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
+		kunmapmem(aux->vdir, actual->cr3_backup);
 		ufree_page(aux);
-//		kprintf("TEMP: Libero UserStack\n");
+		if (getvar("exitdebug")==1)
+			kprintf("Libero UserStack\n");
 	}
+	// Desmapear del directorio la pagina usada para los wrappers (de exit por ej)
+	
+	kunmapmem (TASK_TEXT - PAGINA_SIZE, actual->cr3_backup);
 
-
+	// Antes de liberar a este muñequin, debo liberar a las tablas de pagina
 	kfree_page (actual->cr3_backup);
 //	kfree_page (actual);
 

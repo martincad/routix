@@ -43,6 +43,7 @@ kprintf                                           sys_misc.o
                                                   sys_proc.o
                                                   sys_mem.o
                                                   syscalls.o
+kunmapmem                                         sys_proc.o
 lseek                                             sys_proc.o
 malloc                                            sys_time.o
                                                   sys_proc.o

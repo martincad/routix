@@ -92,15 +92,15 @@ int kmapmem ( addr_t fisica, addr_t logica, addr_t directorio, word atributo)
 	}
 
     if ( getvar("pagedebug")==1 ) 	{
-		 kprintf("Debug Mode - Fis2log: Mapeando 0x%x en 0x%x\n", fisica, logica);
-		 kprintf("Debug Mode - Fis2log: Indice DIR: %d  Indice Tabla: %d\n", indice.dir_index, indice.tabla_index);
+		 kprintf("Kmapmem: Mapeando 0x%x en 0x%x\n", fisica, logica);
+		 kprintf("Kmapmem: Indice DIR: %d  Indice Tabla: %d\n", indice.dir_index, indice.tabla_index);
 	}
 
 	dir= (pd_t *) directorio;
 
 	if (dir->entry[indice.dir_index] ==  0 ) 	{
 	    if ( getvar("pagedebug")==1 )
-		 	kprintf("Debug Mode - Fis2log: Debe alocarse una nueva tabla de paginas\n");
+		 	kprintf("Kmapmem: Debe alocarse una nueva tabla de paginas\n");
 	
 		dir->entry[indice.dir_index]= (pde_t) make_pde ( kmalloc_page(), PAGE_PRES | PAGE_SUPER | PAGE_RW);
 		tabla = (pt_t *) (dir->entry[indice.dir_index] & 0xfffff000);
@@ -114,7 +114,7 @@ int kmapmem ( addr_t fisica, addr_t logica, addr_t directorio, word atributo)
 		tabla = (pt_t *) (dir->entry[indice.dir_index] & 0xfffff000);
 		if (tabla->entry[indice.tabla_index]) {
 		    if ( getvar("pagedebug")==1 )
-    			kprintf("Debug Mode - Fis2log: Pagina ya en uso\n");
+    			kprintf("Kmapmem: Pagina ya en uso\n");
 			return ERR_DIR_BUSY;
 		}
 	}
@@ -129,7 +129,7 @@ int kunmapmem (addr_t logica, addr_t directorio)
 {
     if ( logica & 0xfff)  {
 	    if ( getvar("pagedebug")==1 )
-		    kprintf("Debug Mode - KunmapMem: la direccion debe estar alineada a 4KB\n");
+		    kprintf("KunmapMem: la direccion debe estar alineada a 4KB\n");
 		return ERR_NO_ALIGN;
     }
 
@@ -156,9 +156,12 @@ int kunmapmem (addr_t logica, addr_t directorio)
     //ocupada, no puedo hacerlo
     word i;
     for ( i=0 ; i < PAGINAS_POR_TABLA ; i++)
-	if ( tabla->entry[indice.tabla_index] )
-	        return OK;
+//	if ( tabla->entry[indice.tabla_index] )
+		if ( tabla->entry[i] )
+			return OK;
 
+	if (getvar("pagedebug")==1)
+		kprintf("Kunmapmem: liberando tabla en: 0x%x\n", dir->entry[indice.dir_index] & 0xfffff000);
     kfree_page( (addr_t) (dir->entry[indice.dir_index] & 0xfffff000) );    
     dir->entry[indice.dir_index] = 0;
     return OK;

@@ -14,6 +14,8 @@
 #include "../../include/errno.h"
 #include "../../include/timer.h"
 #include "../../include/atomic.h"
+#include "../../include/kalloc.h"
+#include "../../include/stdio.h"
 
 #ifndef __TASK
 #include "../../include/task.h"
@@ -45,6 +47,7 @@ int (*syscall_timer[MAX_SYSCALLS]) (void) = {
 int sys_sleep(int segundos)
 {
  sys_usleep(segundos*1000000);
+ return OK;
 }
 
 int sys_usleep(int usegundos)
@@ -106,7 +109,6 @@ int sys_proc_dump(void)
 // Sys Proc Dump Verbose
 int sys_proc_dump_v(int pid)
 {
-    int i;
     task_struct_t *tmp;
     //Ubicar el pid en la lista de procesos
 

@@ -1,5 +1,7 @@
 /* teclado.h */
 
+#ifndef _TECLADO_H
+#define _TECLADO_H
 #define TECLADO_PORT 0x60
 
 #define ALT	    0x0100
@@ -67,5 +69,4 @@ unsigned int keymap_std_shift[] =
    CURSOR_LEFT, 0, CURSOR_RIGHT, '+', END, CURSOR_DOWN, PAGE_DOWN, INSERT, DELETE, ENTER, 0, '<', F11, F12
 };
 
-
-
+#endif

@@ -7,6 +7,7 @@ void scroll_up ( void );
 unsigned char *gotoxy ( int , int );
 void kprintf ( char *string, ... );
 char getascii_v ( char );	// Getascii para video
+char *gets(char *s);
 void printn( unsigned int num, int base);
 
 unsigned char inportb (word puerto);

@@ -18,3 +18,7 @@ typedef struct timer_t {
   task_struct_t *proceso;
   struct timer_t *proximo;
 } timer_t;
+
+void actualizar_timers(void);
+int insertar_timer(timer_t *nuevo);
+int remover_timer(timer_t *timer);

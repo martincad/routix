@@ -10,9 +10,12 @@
 #include "../../include/debug.h"
 #include "../../include/syscalls.h"
 #include "../../include/errno.h"
+#include "../../include/stdio.h"
+#include "../../include/string.h"
 #ifndef __TASK
 #include "../../include/task.h"
 #endif
+//#include "../../include/teclado.h"
 
 
 //Nuevas
@@ -43,9 +46,7 @@ int sys_print (void *buff, size_t largo)
 	
     size_t aux;
 
-	int i;
-
-	static volatile spinlock_t candado = 1;
+	static spinlock_t candado = 1;
 
 	spin_lock(&candado);
 	

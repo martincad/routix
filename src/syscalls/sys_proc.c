@@ -14,6 +14,8 @@
 #include "../../include/errno.h"
 #include "../../include/timer.h"
 #include "../../include/kalloc.h"
+#include "../../include/stdio.h"
+#include "../../include/string.h"
 #ifndef __TASK
 #include "../../include/task.h"
 #endif
@@ -133,8 +135,6 @@ int sys_fork (void)
     
     struct user_page *src = actual->mdata;
     struct user_page *dest = (struct user_page *) malloc (sizeof(struct user_page));
-
-    addr_t addr_virtual_data;
 
     //Para datos y bss debo pedir memoria, copiar la del proceso actual en ella, y finalmente mapearla
     for( i=0  ;  i < new_task->num_data ;  i++) {
@@ -325,7 +325,7 @@ int sys_exec (char *nombre)
 	// Direccion fisica de la ubicacion de wrappers para tareas 	
 	extern addr_t *exit_addr;
 	//mapeo los wrappers en una direccion virtual EXIT_TASK   
-    if( kmapmem( exit_addr , EXIT_TASK , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
+    if( kmapmem((addr_t)exit_addr , EXIT_TASK , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
         kprintf("Kmapmem EXIT_TASK error\n");
         return -1;
     }
@@ -558,7 +558,7 @@ pid_t sys_wait (int *status)
 		if (getvar("waitdebug")==1)
 			kprintf("SYS_WAIT: se intenta remover a un hijo que no esta enlistado");
 	}
-	else rematar_task;
+	else rematar_task(hijo);
 	
 
 	return actual->last_child_died;

@@ -191,9 +191,9 @@ Linker script and memory map
                 0xc0004b74                _sys_timer
                 0xc0005192                _sys_exec
                 0xc0004b52                _sys_process
-                0xc0006180                _rematar_task
+                0xc0006190                _rematar_task
                 0xc0004cf5                _sys_free_mem
-                0xc00062bf                _sys_usleep
+                0xc00062c4                _sys_usleep
                 0xc0006241                _sys_gets
                 0xc0004b63                _sys_console
                 0xc0004d25                _sys_void

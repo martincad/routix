@@ -13,6 +13,8 @@
 #include "../../include/syscalls.h"
 #include "../../include/errno.h"
 #include "../../include/kalloc.h"
+#include "../../include/stdio.h"
+#include "../../include/string.h"
 #ifndef __TASK
 #include "../../include/task.h"
 #endif

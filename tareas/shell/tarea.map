@@ -1,0 +1,81 @@
+Archive member included because of file (symbol)
+
+../lib/routstd.a(routix.o)    shell.o (proc_dump)
+../lib/routstd.a(string.o)    shell.o (strcmp)
+
+Allocating common symbols
+Common symbol       size              file
+
+msg                 0x40              shell.o
+msg2                0x40              shell.o
+msg1                0x40              shell.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x80000000      0xa00
+ *.o(.text)
+ .text          0x80000000      0x360 shell.o
+                0x80000000                main
+ .text          0x80000360      0x450 ../lib/routstd.a(routix.o)
+                0x8000037d                usleep
+                0x80000533                putchar
+                0x800003fe                free_mem
+                0x80000360                sleep
+                0x800004cc                renice
+                0x8000055a                puts
+                0x8000039a                proc_dump
+                0x80000471                exec
+                0x80000723                printn_
+                0x8000048e                gets
+                0x800003cc                malloc_page
+                0x800003e1                free_page
+                0x800003af                proc_dump_v
+                0x80000413                perror
+                0x800004fb                get_pid
+                0x8000077e                getascii
+                0x800004a8                fork
+                0x80000517                get_ppid
+                0x8000042d                kill
+                0x800004ba                voido
+                0x800005a0                printf
+                0x8000058e                clrscr
+ .text          0x800007b0      0x250 ../lib/routstd.a(string.o)
+                0x80000840                strcat
+                0x800007b0                strcmp
+                0x800008b0                strncpy
+                0x80000997                atoi
+                0x80000979                memcpy
+                0x800008ea                str_to_upper
+                0x80000881                strcpy
+                0x80000927                memcmp
+                0x80000813                strlen
+                0x00000a00                __code_size = SIZEOF (.text)
+
+.data           0x88000000      0x180 load address 0x80000a00
+ *.o(.data)
+ .data          0x88000000      0x160 shell.o
+                0x88000000                str
+ .data          0x88000160       0x20 ../lib/routstd.a(routix.o)
+                0x88000176                sposicion
+                0x00000180                __data_size = SIZEOF (.data)
+
+.bss            0x88000180       0xc0
+ *.o(.bss)
+ COMMON         0x88000180       0xc0 shell.o
+                                  0x0 (size before relaxing)
+                0x88000180                msg
+                0x880001c0                msg2
+                0x88000200                msg1
+
+.comment
+ *(.comment)
+TARGET(coff-go32)
+LOAD shell.o
+LOAD ../lib/routstd.a
+OUTPUT(shell.bin coff-go32)

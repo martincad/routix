@@ -1,0 +1,45 @@
+
+Cross Reference Table
+
+Symbol                                            File
+actual                                            sched.o
+                                                  taska.o
+despertar_task                                    task.o
+                                                  sched.o
+dormir_task                                       task.o
+encontrar_proceso_por_pid                         task.o
+entrada_de_inicio                                 taska.o
+exec                                              sched.o
+flag_fork                                         sched.o
+                                                  taska.o
+flag_veces                                        sched.o
+get_new_pid                                       task.o
+inc_tareas_activas                                task.o
+inicializarTss                                    task.o
+                                                  sched.o
+inicializar_task                                  task.o
+init_new_task                                     task.o
+                                                  sched.o
+insertar_tarea                                    task.o
+intProximaTarea                                   taska.o
+kfree_page                                        task.o
+kmalloc_page                                      sched.o
+                                                  task.o
+kprintf                                           sched.o
+make_pdt                                          task.o
+perror                                            sched.o
+scheduler                                         sched.o
+                                                  taska.o
+start_scheduler                                   sched.o
+str_to_lower                                      task.o
+strcpy                                            task.o
+strlen                                            task.o
+switch_to_kernel_mode                             taska.o
+tarea_init                                        sched.o
+tareas_inicio                                     sched.o
+                                                  task.o
+timertick_handler                                 taska.o
+tomar_nombre_tarea                                task.o
+tss                                               sched.o
+                                                  taska.o
+                                                  task.o

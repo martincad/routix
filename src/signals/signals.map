@@ -1,0 +1,8 @@
+
+Cross Reference Table
+
+Symbol                                            File
+despertar_task                                    signal.o
+encontrar_proceso_por_pid                         signal.o
+kprintf                                           signal.o
+sys_kill                                          signal.o

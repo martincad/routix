@@ -1,0 +1,25 @@
+
+Cross Reference Table
+
+Symbol                                            File
+actual                                            taskdeb.o
+asctime                                           timedeb.o
+atoi                                              timedeb.o
+bisiestos                                         timedeb.o
+dump_tm                                           timedeb.o
+es_bisiesto                                       timedeb.o
+estados                                           taskdeb.o
+gets                                              taskdeb.o
+                                                  timedeb.o
+jiffies                                           timedeb.o
+kprintf                                           taskdeb.o
+                                                  timedeb.o
+local                                             timedeb.o
+localtime                                         timedeb.o
+mktime                                            timedeb.o
+ps                                                taskdeb.o
+strcmp                                            taskdeb.o
+                                                  timedeb.o
+tareas_inicio                                     taskdeb.o
+task_debug                                        taskdeb.o
+time_debug                                        timedeb.o

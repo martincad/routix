@@ -1,0 +1,132 @@
+Documento de cambios
+
+
+08/09/2003 - prop Cero 0.4
+
+	+ Reubica el kernel en memoria (segmentos de código, datos y stack)
+
+			    MEMORIA FÍSICA
+
+			|--------------------| 0x0
+			|	KCODE	     |
+			|		     |
+			|--------------------| 0x0a0000
+			|     Reservado      |
+			|--------------------| 0x100000
+			|		     |
+			|	KDATA	     |
+			|		     |
+			|--------------------| Depende de como cuantas
+			|  Tablas del Kernel | tablas se inicien
+			|  (gdt, page dir)   |
+			|--------------------| 0x200000 - 0x20000
+			|	KSTACK	     |
+			|		     |
+			|--------------------| 0x200000
+			|	Kernel	     |
+			|   Memory Manager   |
+			|   Area de datos    |
+			|--------------------| La calcula el kernel en función
+			|		     | de la cantidad
+			|   Memoria Libre    |
+			~  Alocada en forma  ~
+			~	dinámica     ~
+			|  (kmalloc_page y   |
+			|     kfree_page)    |
+			|		     |
+			|--------------------| Fin Mem Física
+
+
+
+
+	+ Inicialización y mapeo de toda la memoria física en un espacio de igual direccionamiento virtual.
+
+	+ Memoria Virtual
+
+			    MEMORIA VIRTUAL
+			|--------------------| La calcula el kernel en función
+			|		     | de la cantidad
+			|   Memoria física   |
+			| mapeada linealmente|
+			|   		     |
+			~  		     ~
+			~  		     ~
+			|		     |
+			|		     |
+			|		     |
+			|		     |
+			|--------------------| 0xc0000000
+			|		     |
+			|	KCODE	     |
+			|		     |
+			|--------------------| 0xc8000000
+			|		     |
+			|	KDATA	     |
+			|		     |
+			|--------------------| 0xd0000000
+			|		     |
+			|	KSTACK	     |
+			|		     |
+			|--------------------| 0xd8000000 (0xd7ffffff -> TOP del Stack)
+			|	IDT	     |
+			|--------------------| La calcula el kernel en función
+			|		     | de la cantidad
+			|		     |
+			~  		     ~
+			~  		     ~
+			|		     |
+			|--------------------| 0xffffffff Fin Mem Virtual
+
+
+
+
+	+ Ajuste del stack pointer (en kmain.c) para llevarlo de su dirección real a la virtual
+
+	+ Mapea las interrupciones en la dirección virtual KERNEL_INTERRUPT (0xd800000)
+
+	+ Malloc de Páginas DINÁMICO (funciones kmalloc_page y kmalloc_free)
+
+	+ Función de Mapeo kmapmen (mapea una dirección fisica a una lógica y agrega todas las entradas
+	  necesarias en el directorio de página correspondiente).
+
+	+ Multitasking básico con 3 tareas (el scheduler básico, un mini shell y un símbolo rotario).
+	  El switching se realiza sobre 2 tss, uno contiene el contexto del scheduler y el otro el
+	  contexto de cada tarea en forma alternativa (se usa como tss temporal, antes de switchear
+          a una tarea determinada carga su contexto en este tss).
+
+	+ Hay que revisar las funciones de VIDEO concensuadas, ya que arrojan una excepción. Ahora estoy
+	  utilizando otras (les agregué un par de detalles para que no haya problema de interrupciones durante
+	  su ejecución).
+
+	En este punto, todo debería estar correctamente inicializado.
+
+
+Para hacer (por ahora):
+
+
+	+ El código y datos de cada tarea debería ser copiado a otra dirección de memoria física (kmalloc_page()) y
+	  mapeado a las direcciones virtuales correspondientes. (La copia a otra posición de memoria física podríamos
+	  obviarla alineando los bloques a 4Kb, tenemos que analizar esta alternativa).
+
+	+ Los stacks de las tareas estan trabajando sobre las direcciones físicas y no remapeados a las virtuales.
+
+	+ Agregar al scheduler mas inteligencia de manera de poder asignar tiempos de ejecución en base a prioridades
+	  de las tareas, estado de la tarea, y demás condiciones a definir.
+
+	+ Optimizar el switching de tareas
+
+	+ Cada tarea debe debe guardar en su estructura task_t todos lás páginas de memoria física alocadas a ella
+	  por el kernel, para una vez terminada poder liberar todo ese espacio.
+
+	+ Función malloc para alocamiento de bytes.
+
+	+ Las tareas deben estar corriendo en Nivel de Privilegio 3 mientras que el scheduler en Nivel 0.
+
+	+ Agregar llamadas al sistema mediante interrupciones (Interrupt Gate).
+
+	
+
+
+04/10/03 - prop Cero 0.5.2.2d
+
+	+ Se migra la estructura de task switching por hardware (via tss) a una por software vía el stack. En iguales condiciones de prioridad las tareas corren con una velocidad superior a las 2 veces.

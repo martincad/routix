@@ -1,0 +1,62 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+string_stdio        0x70              ../lib/routix.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x80000000      0x560
+ *.o(.text)
+ .text          0x80000000       0x20 tarea.o
+                0x80000000                main
+ .text          0x80000020      0x350 ../lib/routix.o
+                0x80000098                putchar
+                0x80000020                sleep
+                0x800000bf                puts
+                0x8000003d                proc_dump
+                0x80000052                exec
+                0x8000006f                gets
+                0x800000f3                sputchar
+                0x80000343                getascii
+                0x80000080                fork
+                0x800002e8                sprintn
+                0x8000008c                voido
+                0x80000131                printf
+                0x800000e7                clrscr
+ .text          0x80000370      0x1f0 ../lib/string.o
+                0x80000400                strcat
+                0x80000370                strcmp
+                0x80000470                strncpy
+                0x80000539                memcpy
+                0x800004aa                str_to_upper
+                0x80000441                strcpy
+                0x800004e7                memcmp
+                0x800003d3                strlen
+                0x00000560                __code_size = SIZEOF (.text)
+
+.data           0x88000000       0x10 load address 0x80000560
+ *.o(.data)
+ .data          0x88000000       0x10 ../lib/routix.o
+                0x88000000                sposicion
+                0x00000010                __data_size = SIZEOF (.data)
+
+.bss            0x88000010       0x70
+ *.o(.bss)
+ COMMON         0x88000010       0x70 ../lib/routix.o
+                                  0x0 (size before relaxing)
+                0x88000010                string_stdio
+
+.comment
+ *(.comment)
+TARGET(coff-go32)
+LOAD tarea.o
+LOAD ../lib/routix.o
+LOAD ../lib/string.o
+OUTPUT(ps.bin coff-go32)

@@ -1,0 +1,26 @@
+
+Cross Reference Table
+
+Symbol                                            File
+actual                                            teclado.o
+bufferTeclado                                     teclado.o
+clrscr                                            video.o
+cursor_caracteristicas                            video.o
+dormir_task                                       teclado.o
+free                                              teclado.o
+getascii                                          video.o
+getchar                                           teclado.o
+gets                                              teclado.o
+gotoxy                                            video.o
+insertar_evento                                   teclado.o
+kprintf                                           video.o
+malloc                                            teclado.o
+nextpos                                           video.o
+pos                                               video.o
+printn                                            video.o
+ptrbufferTeclado                                  teclado.o
+putchar                                           video.o
+                                                  teclado.o
+puts                                              video.o
+remover_evento                                    teclado.o
+scroll_up                                         video.o

@@ -1,0 +1,28 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x80000000       0x20
+ *.o(.text)
+ .text          0x80000000       0x20 punto.o
+                0x80000000                main
+                0x00000020                __code_size = SIZEOF (.text)
+
+.data           0x88000000        0x0 load address 0x80000020
+ *.o(.data)
+                0x00000000                __data_size = SIZEOF (.data)
+
+.bss            0x88000000        0x0
+ *.o(.bss)
+
+.comment
+ *(.comment)
+TARGET(coff-go32)
+LOAD punto.o
+LOAD ../lib/routstd.a
+OUTPUT(punto.bin coff-go32)

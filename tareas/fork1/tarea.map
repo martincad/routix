@@ -1,0 +1,80 @@
+Archive member included because of file (symbol)
+
+../lib/routstd.a(alloc.o)     tarea.o (malloc)
+../lib/routstd.a(string.o)    tarea.o (strcat)
+../lib/routstd.a(routix.o)    ../lib/routstd.a(alloc.o) (malloc_page)
+
+Allocating common symbols
+Common symbol       size              file
+
+i                   0x3f0             tarea.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x80000000      0x8b0
+ *.o(.text)
+ .text          0x80000000       0x80 tarea.o
+                0x80000000                main
+ .text          0x80000080      0x200 ../lib/routstd.a(alloc.o)
+                0x8000015e                morecore
+                0x800001a4                free
+                0x80000080                malloc
+ .text          0x80000280      0x250 ../lib/routstd.a(string.o)
+                0x80000310                strcat
+                0x80000280                strcmp
+                0x80000380                strncpy
+                0x80000467                atoi
+                0x80000449                memcpy
+                0x800003ba                str_to_upper
+                0x80000351                strcpy
+                0x800003f7                memcmp
+                0x800002e3                strlen
+ .text          0x800004d0      0x3e0 ../lib/routstd.a(routix.o)
+                0x800004ed                usleep
+                0x8000063c                putchar
+                0x8000056e                free_mem
+                0x800004d0                sleep
+                0x80000663                puts
+                0x8000050a                proc_dump
+                0x800005e1                exec
+                0x8000082b                printn_
+                0x800005fe                gets
+                0x8000053c                malloc_page
+                0x80000551                free_page
+                0x8000051f                proc_dump_v
+                0x80000583                perror
+                0x80000886                getascii
+                0x80000618                fork
+                0x8000059d                kill
+                0x8000062a                voido
+                0x800006a9                printf
+                0x80000697                clrscr
+                0x000008b0                __code_size = SIZEOF (.text)
+
+.data           0x88000000       0x60 load address 0x800008b0
+ *.o(.data)
+ .data          0x88000000       0x30 tarea.o
+ .data          0x88000030       0x10 ../lib/routstd.a(alloc.o)
+ .data          0x88000040       0x20 ../lib/routstd.a(routix.o)
+                0x88000056                sposicion
+                0x00000060                __data_size = SIZEOF (.data)
+
+.bss            0x88000060      0x400
+ *.o(.bss)
+ .bss           0x88000060       0x10 ../lib/routstd.a(alloc.o)
+ COMMON         0x88000070      0x3f0 tarea.o
+                                  0x0 (size before relaxing)
+                0x88000070                i
+
+.comment
+ *(.comment)
+TARGET(coff-go32)
+LOAD tarea.o
+LOAD ../lib/routstd.a
+OUTPUT(tarea.bin coff-go32)

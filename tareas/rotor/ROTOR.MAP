@@ -1,0 +1,56 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x80000000      0x600
+ *.o(.text)
+ .text          0x80000000       0x70 rotor.o
+                0x80000000                main
+ .text          0x80000070      0x340 ../lib/routix.o
+                0x8000008d                usleep
+                0x80000149                putchar
+                0x80000070                sleep
+                0x80000170                puts
+                0x800000aa                proc_dump
+                0x80000103                exec
+                0x80000327                printn_
+                0x80000120                gets
+                0x80000382                getascii
+                0x80000131                fork
+                0x800000bf                kill
+                0x8000013d                voido
+                0x800001a4                printf
+                0x80000198                clrscr
+ .text          0x800003b0      0x250 ../lib/string.o
+                0x80000440                strcat
+                0x800003b0                strcmp
+                0x800004b0                strncpy
+                0x80000597                atoi
+                0x80000579                memcpy
+                0x800004ea                str_to_upper
+                0x80000481                strcpy
+                0x80000527                memcmp
+                0x80000413                strlen
+                0x00000600                __code_size = SIZEOF (.text)
+
+.data           0x88000000       0x20 load address 0x80000600
+ *.o(.data)
+ .data          0x88000000       0x20 ../lib/routix.o
+                0x88000016                sposicion
+                0x00000020                __data_size = SIZEOF (.data)
+
+.bss            0x88000020        0x0
+ *.o(.bss)
+
+.comment
+ *(.comment)
+TARGET(coff-go32)
+LOAD rotor.o
+LOAD ../lib/routix.o
+LOAD ../lib/string.o
+OUTPUT(rotor.bin coff-go32)

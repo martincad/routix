@@ -80,7 +80,7 @@ $(OBJDIR)/spinlock.o: $(SRCDIR)/spinlock.c $(INCDIR)/atomic.h
 
 $(OBJDIR)/boot.o $(OBJDIR)/bootstrap.a : src/bootstrap/*
 	cd src/bootstrap
-	make
+	make 
 	cd ../..
 
 $(OBJDIR)/mm.a: $(SRCDIR)/mm/*

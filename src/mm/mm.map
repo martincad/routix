@@ -17,6 +17,7 @@ contar_memoria                                    mm.o
 convertir_direccion                               paging.o
 copy_page                                         paging.o
 free                                              alloc.o
+                                                  kalloc.o
 get_free_page                                     kalloc.o
 get_page_index                                    paging.o
                                                   mm.o
@@ -57,4 +58,5 @@ morecores                                         alloc.o
 print_free_pages                                  kalloc.o
 puts                                              kalloc.o
 tss                                               mm.o
+ufree_page                                        kalloc.o
 umalloc_page                                      kalloc.o

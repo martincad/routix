@@ -11,25 +11,26 @@
 #define SYS_MEM		(4 << 16)
 
 // Funciones de grupo PROCESS
-#define SYS_EXEC	0
-#define SYS_VOID	1 
-#define SYS_FORK	2
-#define SYS_PERROR	3
-#define SYS_RENICE	4
-#define SYS_GET_PID	5
+#define SYS_EXEC		0
+#define SYS_VOID		1	 
+#define SYS_FORK		2
+#define SYS_PERROR		3
+#define SYS_RENICE		4
+#define SYS_GET_PID		5
 #define SYS_GET_PPID	6
-#define SYS_EXIT	7
+#define SYS_EXIT		7
+#define SYS_SHOW		8
 
 // Funciones de grupo CONSOLE
-#define SYS_PRINT	0
-#define SYS_GETS	1
-#define SYS_CLRSCR	2
+#define SYS_PRINT		0
+#define SYS_GETS		1
+#define SYS_CLRSCR		2
 
 // Funciones de grupo TIMER
-#define SYS_SLEEP	0
+#define SYS_SLEEP		0
 #define SYS_PROC_DUMP	1
-#define SYS_KILL	2
-#define SYS_USLEEP	3
+#define SYS_KILL		2
+#define SYS_USLEEP		3
 #define SYS_PROC_DUMP_V	4
 
 // Funciones de grupo MEM
@@ -51,6 +52,7 @@ int sys_print (void *buff, size_t largo);
 // Grupo process
 int sys_void (void);
 int sys_exec (char *nombre);
+void sys_show(int);
 
 // Grupo Timer
 int sys_sleep(int segundos);

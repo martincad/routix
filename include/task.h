@@ -115,7 +115,7 @@ typedef struct task_struct_t
     word cuenta;
     dword tiempo_cpu;
     struct file *open_files [MAX_FILES_POR_TAREA];  //definido en file.h
-    void *paginas[MAX_PAGINAS_POR_TAREA];
+//  void *paginas[MAX_PAGINAS_POR_TAREA];
     word num_code, num_data, num_stack;	    //Cantidad de paginas de Codigo, Datos y stack
     int err_no;
     signal_struct_t senales;
@@ -130,8 +130,8 @@ enum estado { TASK_RUNNING, TASK_STOPPED, TASK_INTERRUMPIBLE, TASK_ININTERRUMPIB
 
 
 // Estructura que describe las paginas utilizadas por las tareas
-#define PAGINA_DATA	0	    //pagina de datos
-#define PAGINA_CODE	1	    //pagina de codigo
+#define PAGINA_DATA		0	    //pagina de datos
+#define PAGINA_CODE		1	    //pagina de codigo
 #define	PAGINA_STACK	0	    //pagina de stack	    
 #define PAGINA_ALLOC	2	    //pagina alocada dinamicamente
 

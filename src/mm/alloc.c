@@ -86,6 +86,8 @@ Header *morecore(void)
 //    kprintf("Morecore entrego: %x\n", up);
 
 //    up->s.size= (PAGINA_SIZE + sizeof(Header)-1) / sizeof(Header) +1;
+
+	morecores++;
     
     up->s.size= PAGINA_SIZE / sizeof(Header);
     free ( (void *) (up+1));

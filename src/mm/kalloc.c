@@ -65,6 +65,8 @@ direccion = *_sp;
 kprintf("KMALLOC: _inicio=0x%x _fin=0x%x _sp=0x%x - valor: %x\n",_inicio,_fin,_sp,direccion);
 #endif
 
+//kprintf("TEMP: get_free_page: Entregando pagina\n");
+
 return direccion;
 }
 
@@ -136,14 +138,14 @@ struct user_page *umalloc_page ( word flags, addr_t vdir)
 {
     addr_t aux = get_free_page();
     if (!aux) {
-	actual->err_no = ENOMEM;
-	return NULL;
+		actual->err_no = ENOMEM;
+		return NULL;
     }
     struct user_page *mem = (struct user_page *) malloc (sizeof(struct user_page));
     if (!mem) {
-	kfree_page (aux);
-	actual->err_no = ENOMEM;
-	return NULL;
+		kfree_page (aux);
+		actual->err_no = ENOMEM;
+		return NULL;
     }
     mem->dir = aux;
     mem->vdir = vdir;
@@ -151,5 +153,18 @@ struct user_page *umalloc_page ( word flags, addr_t vdir)
     mem->count = 1;
     mem->next = NULL;    
     return mem;    
+}
+
+//Libera una estructura descriptora de pagina de tarea, incluyendo al nodo que contiene su direccion
+struct user_page *ufree_page (struct user_page *aux)
+{
+	aux->count--;
+	if (aux->count > 0)
+		return aux;
+
+	if (aux->dir)
+		kfree_page(aux->dir);
+
+	free(aux);
 }
 

@@ -149,6 +149,13 @@ void exit(int valor)
 	_syscall1(SYS_PROCESS | SYS_EXIT, retorno, valor);
 }
 
+void show(int valor)
+{
+	int retorno;
+	_syscall1(SYS_PROCESS | SYS_SHOW, retorno, valor);
+}
+
+
 // Funcion de libraria "putchar"
 int putchar (char car)
 {

@@ -327,13 +327,7 @@ fat_file_find_break:
 
 
 
-struct floppy_cache
-{
-    dword sector;
-    byte bloque[512];
-    struct floppy_cache  *next;
 
-};
 
 struct floppy_cache *header_floppy_cache=NULL;
 
@@ -342,22 +336,28 @@ dword sectores_cache=0;
 // Esta funcion mantiene una lista enlazada con sectores leidos del floppy. Cualquier funcion de fs que quiera leer
 // o escribir un sector, deberia recurrir a esta. (Debe controlarse perfectamente que esta funcion mantenga 
 // espejados a los sectores, es decir, en algun momento debera sincronizar los sectores con el disco
-
+/*
 struct flop_cache
 {
     dword sector;
     byte *bloque;
-};
+};*/
+/*
 #define MAX_CACHE_ENTRYS    100
 struct flop_cache cache_index[MAX_CACHE_ENTRYS];
-
+*/
 void floppy_cache_init (void)
 {
+
+	return;	////////
+
+	/*	
     word i;
     for(i=0 ; i< MAX_CACHE_ENTRYS ; i++) {
 	cache_index[i].sector=0;
 	cache_index[i].bloque=NULL;
     }
+	*/
 }
 
 /*

@@ -70,9 +70,20 @@ void main(void)
 
 		proc_dump();
 	}
-
 	
 	else if ( ! strcmp(msg, "free mem") ) {  printf("Paginas disponibles: %d\n",free_mem() ) ; }
+	
+	else if (! strcmp(msg, "show morecores")) {
+		show(1);
+	}
+
+	else if (! strcmp(msg, "show cache")) {
+		show(2);
+	}
+
+	else if (! strcmp(msg, "show 3")) {
+		show(3);
+	}
 	
 	else printf("comando o nombre de archivo erroneo\n");
     }

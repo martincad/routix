@@ -22,9 +22,11 @@ encontrar_proceso_por_pid                         sys_time.o
 exit_addr                                         sys_proc.o
 free                                              sys_time.o
 gets                                              sys_con.o
+header_floppy_cache                               sys_proc.o
 init_new_task                                     sys_proc.o
 insertar_timer                                    sys_time.o
 intSysCall                                        syscalla.o
+kfree_page                                        sys_proc.o
 kmapmem                                           sys_proc.o
                                                   sys_mem.o
 kmem_free                                         sys_proc.o
@@ -37,6 +39,7 @@ lseek                                             sys_proc.o
 malloc                                            sys_time.o
                                                   sys_proc.o
 memcpy                                            sys_proc.o
+morecores                                         sys_proc.o
 open                                              sys_proc.o
 perror                                            sys_proc.o
 putchar                                           sys_con.o
@@ -69,6 +72,7 @@ sys_proc_dump_v                                   sys_time.o
 sys_process                                       syscalla.o
                                                   syscalls.o
 sys_renice                                        sys_proc.o
+sys_show                                          sys_proc.o
 sys_sleep                                         sys_time.o
 sys_timer                                         syscalla.o
                                                   syscalls.o
@@ -87,5 +91,6 @@ syscall_timer                                     sys_time.o
                                                   syscalla.o
 tareas_inicio                                     sys_time.o
 tomar_nombre_tarea                                sys_proc.o
+ufree_page                                        sys_proc.o
 umalloc_page                                      sys_proc.o
                                                   sys_mem.o

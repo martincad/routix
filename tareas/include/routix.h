@@ -21,5 +21,6 @@ size_t strlen(const char *s);
 
 int sleep(int);
 int proc_dump(void);
+void show(int);
 
 size_t free_mem(void);

@@ -77,7 +77,13 @@ typedef struct fat12_entry_ext_t
     char nombre[MAX_PATH_LEN];
 }fat12_entry_ext_t;
 
+struct floppy_cache
+{
+    dword sector;
+    byte bloque[512];
+    struct floppy_cache  *next;
 
+};
 
 //Valores que puede tomar el 1er byte del campo nombre ( estructura dir_entry_t)
 //Cualquier otro valor, significa el valor del primer caracter del nombre de archivo

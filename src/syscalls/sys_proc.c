@@ -30,7 +30,9 @@ int (*syscall_process[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_renice,	
 	(int (*) (void)) sys_get_pid,
 	(int (*) (void)) sys_get_ppid,
-	(int (*) (void)) sys_exit	
+	(int (*) (void)) sys_exit,
+	(int (*) (void)) sys_show
+			
 };
 
    
@@ -354,55 +356,55 @@ kprintf("new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->ms
     lseek(fd, sec_text.s_scnptr,SEEK_SET);
     new_task->mcode = umalloc_page (PAGINA_CODE,TASK_TEXT);
     if (!new_task->mcode)    //liberar
-	return -1;
+		return -1;
     mem = new_task->mcode;
     bytes_leidos =  read( fd, (void *)mem->dir, PAGINA_SIZE);
 	
     for( i=1 ;  i < paginas_texto ; i++) {
-	mem->next = umalloc_page (PAGINA_CODE, TASK_TEXT + (i*PAGINA_SIZE) );
+		mem->next = umalloc_page (PAGINA_CODE, TASK_TEXT + (i*PAGINA_SIZE) );
         bytes_leidos =  read(fd, (void *)mem->dir , PAGINA_SIZE);
-	if (bytes_leidos < 0) {	    //error de algo.... liberar memoria
-	    actual->err_no = EIO;
-	    close(fd);
-	    return -1;
-	}
-	mem = mem->next;
+		if (bytes_leidos < 0) {	    //error de algo.... liberar memoria
+		    actual->err_no = EIO;
+		    close(fd);
+		    return -1;
+		}
+		mem = mem->next;
     }
 
     //Pedir memoria para los datos (.DATA + .BSS)
     new_task->mdata = umalloc_page (PAGINA_DATA, TASK_DATA);
     if (!new_task->mdata)   //liberar
-	return -1;
+		return -1;
     for ( mem=new_task->mdata,i=1 ; i<paginas_datos ; i++, mem=mem->next ) {
         mem->next = umalloc_page (PAGINA_DATA, TASK_DATA + (i*PAGINA_SIZE) );
-	if (!mem->next)	    //liberar
-	    return -1;
+		if (!mem->next)	    //liberar
+		    return -1;
     }
 
     //Levantar .DATA
     lseek(fd, sec_data.s_scnptr,SEEK_SET);
     for( i=0, mem=new_task->mdata ;   i < paginas_data  ;  i++, mem=mem->next ) {
-	bytes_leidos =  read(fd, (void *)mem->dir, PAGINA_SIZE);
-	if (bytes_leidos < 0) {	    //error de algo.... liberar memoria
-	    actual->err_no = EIO;
-	    close(fd);
-	    return -1;
-	}
+		bytes_leidos =  read(fd, (void *)mem->dir, PAGINA_SIZE);
+		if (bytes_leidos < 0) {	    //error de algo.... liberar memoria
+		    actual->err_no = EIO;
+		    close(fd);
+		    return -1;
+		}
     };
 
     //Mapear codigo y datos a sus direcciones virtuales correspondientes (TASK_TEXT, TASK_DATA)
     for( mem=new_task->mcode,i=0 ;  mem  ;  mem=mem->next,i++ ) {
-	if ( kmapmem( mem->dir , TASK_TEXT + (i*PAGINA_SIZE), new_task->cr3 ,PAGE_PRES|PAGE_SUPER|PAGE_RW)!=OK ) {
-	    kprintf("Kmapmem TASK_TEXT error\n");
-	    return -1;
-	}
+		if ( kmapmem( mem->dir , TASK_TEXT + (i*PAGINA_SIZE), new_task->cr3 ,PAGE_PRES|PAGE_SUPER|PAGE_RW)!=OK ) {
+	    	kprintf("Kmapmem TASK_TEXT error\n");
+		    return -1;
+		}
     }
 
     for( mem=new_task->mdata,i=0 ; mem ;  mem=mem->next,i++ ) {
-	if( kmapmem( mem->dir , TASK_DATA +(i*PAGINA_SIZE), new_task->cr3, PAGE_PRES|PAGE_SUPER|PAGE_RW)!=OK ) {
-	    kprintf("Kmapmem TASK_DATA error\n");
-	    return -1;
-        }
+		if( kmapmem( mem->dir , TASK_DATA +(i*PAGINA_SIZE), new_task->cr3, PAGE_PRES|PAGE_SUPER|PAGE_RW)!=OK ) {
+		    kprintf("Kmapmem TASK_DATA error\n");
+		    return -1;
+	    }
     }
     
     new_task->ppid = actual->pid;
@@ -457,6 +459,57 @@ void sys_exit (int valor)
 	kprintf("SYS_EXIT: Implementacion a medio hacer de SYS_EXIT. recibio: %d\n", valor);
 	kprintf("SYS_EXIT: Momentaneamente pongo a dormir a la tarea\n");
 	dormir_task(actual);
+	
+
+	struct user_page *aux, *tmp;
+
+	for (aux=tmp=actual->mcode ; aux && tmp ; aux=tmp) {
+		tmp=aux->next;
+		ufree_page(aux);
+		kprintf("TEMP: Libero Codigo\n");
+	}
+	for (aux=tmp=actual->mdata ; aux && tmp ; aux=tmp) {
+		tmp=aux->next;
+		ufree_page(aux);
+		kprintf("TEMP: Libero Datos\n");
+	}
+	for (aux=tmp=actual->mstack ; aux && tmp ; aux=tmp) {
+		tmp=aux->next;
+		ufree_page(aux);
+		kprintf("TEMP: Libero UserStack\n");
+	}
+
+	kfree_page (actual->cr3);
+	kfree_page (actual);
+
+	//Liberar memoria, solo si no comparte las paginas con ningun pariente
+
+	
+	
 	_reschedule();
-	while(1);
+}
+
+//Cantidad de veces que la función malloc llamo a morecore solicitandole una página
+extern word morecores;
+extern struct floppy_cache *header_floppy_cache;
+
+void sys_show (int valor)
+{
+	int i;
+	switch (valor) {
+		case 1: 
+			kprintf ("Cantidad de paginas asignadas via Morecores: %d\n", morecores);
+			break;
+		case 2:
+			kprintf("Sectores en cache: ");
+			struct floppy_cache *aux;
+			for (aux = header_floppy_cache, i=0 ; aux ; aux=aux->next, i++)
+				kprintf("%d ", aux->sector);
+			kprintf("\nSizeof floppy_cache: %d\n", sizeof(struct floppy_cache));
+			kprintf("Sectores cacheados: %d\tPaginas usadas: %d\n", i, sizeof(struct floppy_cache) * i / 4096 + 1);
+			break;
+		default:
+			break;
+	}
+			
 }

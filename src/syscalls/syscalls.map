@@ -94,6 +94,7 @@ sys_timer                                         syscalla.o
                                                   syscalls.o
 sys_usleep                                        sys_time.o
 sys_void                                          sys_proc.o
+sys_wait                                          sys_proc.o
 syscall                                           syscalla.o
 syscall_console                                   sys_con.o
                                                   syscalla.o

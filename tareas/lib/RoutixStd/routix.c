@@ -156,6 +156,12 @@ void show(int valor)
 	_syscall1(SYS_PROCESS | SYS_SHOW, retorno, valor);
 }
 
+pid_t wait(int *valor)
+{
+	int retorno;
+	_syscall1(SYS_PROCESS | SYS_WAIT, retorno, valor);
+	return retorno;
+}
 
 // Funcion de libraria "putchar"
 int putchar (char car)

@@ -216,6 +216,9 @@ task_struct_t *init_new_task(word cs, word ds, dword eip, dword esp, dword eflag
     word j;
     for (j=0 ; j<MAX_FILES_POR_TAREA; j++)
 	nueva->open_files[j] = NULL;
+
+ //Flag indica si esta esperando la terminación del hijo	
+ nueva->wait_child = 0;
  
  // Insertamos la tarea en la lista
  if ( ! insertar_tarea(nueva) ) {

@@ -2,7 +2,7 @@
 Allocating common symbols
 Common symbol       size              file
 
-string_stdio        0x70              ../lib/routix.o
+str                 0xd0              tarea.o
 
 Memory Configuration
 
@@ -12,46 +12,64 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0x80000000      0x560
+.text           0x80000000      0xa70
  *.o(.text)
- .text          0x80000000       0x20 tarea.o
+ .text          0x80000000       0x90 tarea.o
                 0x80000000                main
- .text          0x80000020      0x350 ../lib/routix.o
-                0x80000098                putchar
-                0x80000020                sleep
-                0x800000bf                puts
-                0x8000003d                proc_dump
-                0x80000052                exec
-                0x8000006f                gets
-                0x800000f3                sputchar
-                0x80000343                getascii
-                0x80000080                fork
-                0x800002e8                sprintn
-                0x8000008c                voido
-                0x80000131                printf
-                0x800000e7                clrscr
- .text          0x80000370      0x1f0 ../lib/string.o
-                0x80000400                strcat
-                0x80000370                strcmp
-                0x80000470                strncpy
-                0x80000539                memcpy
-                0x800004aa                str_to_upper
-                0x80000441                strcpy
-                0x800004e7                memcmp
-                0x800003d3                strlen
-                0x00000560                __code_size = SIZEOF (.text)
+ .text          0x80000090      0x790 ../lib/routix.o
+                0x800000ad                usleep
+                0x800002b9                putchar
+                0x800004fa                sprintf
+                0x8000012e                free_mem
+                0x80000090                sleep
+                0x800001fc                renice
+                0x800002e0                puts
+                0x800007d5                setvar
+                0x800000ca                proc_dump
+                0x800001a1                exec
+                0x800006f3                printn_
+                0x800007f5                getvar
+                0x800001be                gets
+                0x800000fc                malloc_page
+                0x80000111                free_page
+                0x800000df                proc_dump_v
+                0x80000297                wait
+                0x8000027d                show
+                0x80000143                perror
+                0x8000022b                get_pid
+                0x800007ae                getascii
+                0x800001d8                fork
+                0x80000247                get_ppid
+                0x8000074e                printn_s
+                0x8000015d                kill
+                0x80000263                exit
+                0x800001ea                voido
+                0x80000326                printf
+                0x80000314                clrscr
+ .text          0x80000820      0x250 ../lib/string.o
+                0x800008b0                strcat
+                0x80000820                strcmp
+                0x80000920                strncpy
+                0x80000a07                atoi
+                0x800009e9                memcpy
+                0x8000095a                str_to_upper
+                0x800008f1                strcpy
+                0x80000997                memcmp
+                0x80000883                strlen
+                0x00000a70                __code_size = SIZEOF (.text)
 
-.data           0x88000000       0x10 load address 0x80000560
+.data           0x88000000       0xc0 load address 0x80000a70
  *.o(.data)
- .data          0x88000000       0x10 ../lib/routix.o
-                0x88000000                sposicion
-                0x00000010                __data_size = SIZEOF (.data)
+ .data          0x88000000       0xa0 tarea.o
+ .data          0x880000a0       0x20 ../lib/routix.o
+                0x880000b6                sposicion
+                0x000000c0                __data_size = SIZEOF (.data)
 
-.bss            0x88000010       0x70
+.bss            0x880000c0       0xd0
  *.o(.bss)
- COMMON         0x88000010       0x70 ../lib/routix.o
+ COMMON         0x880000c0       0xd0 tarea.o
                                   0x0 (size before relaxing)
-                0x88000010                string_stdio
+                0x880000c0                str
 
 .comment
  *(.comment)

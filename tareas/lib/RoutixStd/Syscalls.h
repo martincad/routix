@@ -21,6 +21,7 @@
 #define SYS_GET_PPID	6
 #define SYS_EXIT		7
 #define SYS_SHOW		8
+#define SYS_WAIT		9
 
 // Funciones de grupo CONSOLE
 #define SYS_PRINT		0

@@ -35,7 +35,8 @@ int (*syscall_process[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_get_pid,
 	(int (*) (void)) sys_get_ppid,
 	(int (*) (void)) sys_exit,
-	(int (*) (void)) sys_show
+	(int (*) (void)) sys_show,
+	(int (*) (void)) sys_wait
 			
 };
 
@@ -486,6 +487,23 @@ void sys_exit (int valor)
 	kfree_page (actual->cr3_backup);
 //	kfree_page (actual);
 
+// Verificar si el padre esta esperando por la terminación del hijo
+	task_struct_t *padre;
+	
+	// Si no existe el padre, INIT deberá hacerse cargo del proceso huerfano
+    if ( (padre = encontrar_proceso_por_pid(actual->ppid))!=NULL ) {
+if (getvar("exitdebug")==1)
+kprintf("Padre Vive: %d\n", actual->ppid);
+		if (padre->estado == TASK_INTERRUMPIBLE && padre->wait_child) {
+if (getvar("exitdebug")==1)
+kprintf("Padre Esperando su muerte: %d\n", actual->ppid);
+			padre->retorno = valor;		//Pasarle el valor de salida del hijo
+			padre->last_child_died = actual->pid;
+			despertar_task (padre);
+		}
+
+		actual->estado = TASK_CLEAN;
+	}
 
 	sti();
 	_reschedule();
@@ -521,3 +539,16 @@ struct {
 	char nombre[15];
 	int	 valor;
 } variables[15];
+
+pid_t sys_wait (int *status)
+{
+    status = convertir_direccion( status , actual->cr3_backup);
+	actual->wait_child = 1;
+	kprintf("Llamada al sistema Wait... status: %d\n", *status);
+	dormir_task(actual);
+	_reschedule();
+	actual->wait_child = 0;
+	*status = actual->retorno;
+
+	return actual->last_child_died;
+}

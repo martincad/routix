@@ -34,7 +34,8 @@
 #define SYS_GET_PPID	6
 #define SYS_EXIT		7
 #define SYS_SHOW		8
-#define SYS_PROCESS_MAX	9		// Cantidad de llamadas en el grupo PROCESS. Debe ser siempre el ultimo valor
+#define SYS_WAIT		9
+#define SYS_PROCESS_MAX	10		// Cantidad de llamadas en el grupo PROCESS. Debe ser siempre el ultimo valor
 
 // Funciones de grupo CONSOLE
 #define SYS_PRINT		0
@@ -83,6 +84,7 @@ inline pid_t sys_get_pid (void);
 inline pid_t sys_get_ppid (void);
 void sys_exit (int);
 void sys_show (int);
+pid_t sys_wait(int *);
 
 // Grupo timer
 int sys_sleep(int segundos);

@@ -123,9 +123,12 @@ typedef struct task_struct_t
     struct user_page *mdata;
     struct user_page *mstack;
     pid_t ppid;
+    int retorno;
+    int wait_child;
+    pid_t last_child_died;
 } task_struct_t ;
 
-enum estado { TASK_RUNNING, TASK_STOPPED, TASK_INTERRUMPIBLE, TASK_ININTERRUMPIBLE, TASK_ZOMBIE};
+enum estado { TASK_RUNNING, TASK_STOPPED, TASK_INTERRUMPIBLE, TASK_ININTERRUMPIBLE, TASK_ZOMBIE, TASK_CLEAN };
 
 
 

@@ -88,13 +88,14 @@ int sys_proc_dump(void)
 {
  task_struct_t *tmp;
 
- char *estados[] = { "TASK_RUNNING", "TASK_STOPPED", "TASK_INTERRUMPIBLE", "TASK_ININTERRUMPIBLE", "TASK_ZOMBIE" };
+ char *estados[] = { "TASK_RUNNING", "TASK_STOPPED", "TASK_INTERRUMPIBLE", "TASK_ININTERRUMPIBLE", "TASK_ZOMBIE", \
+					"TASK_CLEAN" };
 
- kprintf("pid ppid descripcion estado pri cuenta cpu senpend\n");
+ kprintf("pid ppid wait descripcion estado pri cuenta cpu senpend\n");
  for (tmp = tareas_inicio; tmp != NULL ; tmp=tmp->proxima ) {
 
-  kprintf("%d\t%d\t%s", tmp->pid, tmp->ppid, tmp->descripcion);
-  kprintf(" %s %d %d %d",estados[tmp->estado],tmp->prioridad,tmp->cuenta,tmp->tiempo_cpu);
+  kprintf("%d\t%d\t%d\t%s", tmp->pid, tmp->ppid, tmp->wait_child, tmp->descripcion);
+  kprintf(" %s %d %d %d",estados[tmp->estado], tmp->prioridad,tmp->cuenta,tmp->tiempo_cpu);
   kprintf(" 0x%x\n", tmp->senales.senales_pendientes);
 
  }

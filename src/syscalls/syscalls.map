@@ -16,8 +16,10 @@ convertir_direccion                               sys_con.o
 copy_page                                         sys_proc.o
 despertar_task                                    sys_proc.o
 dormir_task                                       sys_time.o
+                                                  sys_proc.o
 encontrar_proceso_por_pid                         sys_time.o
                                                   sys_proc.o
+exit_addr                                         sys_proc.o
 free                                              sys_time.o
 gets                                              sys_con.o
 init_new_task                                     sys_proc.o
@@ -47,6 +49,7 @@ sys_clrscr                                        sys_con.o
 sys_console                                       syscalla.o
                                                   syscalls.o
 sys_exec                                          sys_proc.o
+sys_exit                                          sys_proc.o
 sys_fork                                          sys_proc.o
 sys_free_mem                                      sys_mem.o
 sys_free_page                                     sys_mem.o

@@ -29,7 +29,8 @@ int (*syscall_process[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_perror,	
 	(int (*) (void)) sys_renice,	
 	(int (*) (void)) sys_get_pid,
-	(int (*) (void)) sys_get_ppid	
+	(int (*) (void)) sys_get_ppid,
+	(int (*) (void)) sys_exit	
 };
 
    
@@ -314,8 +315,9 @@ int sys_exec (char *nombre)
     tomar_nombre_tarea(nombre,nuevo_nombre);
 
     // init_new_task devuelve la tarea creada como TASK_STOPPED, la mantendremos así hasta el final    
-    new_task = init_new_task(DESC_CODE_USUARIO, DESC_DATA_USUARIO, TASK_TEXT, TASK_STACK + 4096, 0x202,\
+    new_task = init_new_task(DESC_CODE_USUARIO, DESC_DATA_USUARIO, TASK_TEXT, TASK_STACK + 4096 - 4, 0x202,\
 		    nuevo_nombre, 10);
+	
 
     if (!new_task) {	    //liberar
 	return -1;
@@ -323,15 +325,27 @@ int sys_exec (char *nombre)
 
     new_task->mstack = umalloc_page (PAGINA_STACK, TASK_STACK);
     if (!new_task->mstack)  //liberar
-	return -1;
+		return -1;
 
 
     if( kmapmem( new_task->mstack->dir , TASK_STACK, new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
-	kprintf("new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
+kprintf("new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
         kprintf("Kmapmem TASK_STACK error\n");
         return -1;
     }
-    
+
+	// Direccion fisica de la ubicacion de wrappers para tareas 	
+	extern addr_t *exit_addr;
+	//mapeo los wrappers en una direccion virtual EXIT_TASK   
+    if( kmapmem( exit_addr , EXIT_TASK , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
+        kprintf("Kmapmem EXIT_TASK error\n");
+        return -1;
+    }
+
+	// Poner al fondo del stack la direccion de comienzo del codigo del wrapper exit
+	unsigned long *qwe = (unsigned long *) (new_task->mstack->dir + 4096 - 4);
+	*qwe = (unsigned long) EXIT_TASK;
+	
     new_task->num_code = paginas_texto;
     new_task->num_data = paginas_datos;
     new_task->num_stack = 1;
@@ -438,3 +452,11 @@ pid_t sys_get_ppid (void)
     return actual->ppid;
 }
 
+void sys_exit (int valor)
+{
+	kprintf("SYS_EXIT: Implementacion a medio hacer de SYS_EXIT. recibio: %d\n", valor);
+	kprintf("SYS_EXIT: Momentaneamente pongo a dormir a la tarea\n");
+	dormir_task(actual);
+	_reschedule();
+	while(1);
+}

@@ -166,4 +166,9 @@ void despertar_task(task_struct_t *tarea);
 #define TASK_DATA   0x88000000
 #define TASK_STACK  0x90000000
 
+// Ubicacion logica de una pagina de kernel que poseera permisos de usuario para contener algunos wrappers 
+// (como por ejemplo, una llamada a Syscall EXIT cuando termina el main de una tarea).
+// EL pedido de la pagina, y la asignacion del código de EXIT está realizado en Kmain.c
+#define EXIT_TASK	(TASK_TEXT - PAGINA_SIZE)
+
 

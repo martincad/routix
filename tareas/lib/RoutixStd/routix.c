@@ -143,6 +143,11 @@ pid_t get_ppid (void)
     return retorno;
 }
 
+void exit(int valor)
+{
+	int retorno;
+	_syscall1(SYS_PROCESS | SYS_EXIT, retorno, valor);
+}
 
 // Funcion de libraria "putchar"
 int putchar (char car)

@@ -5,12 +5,10 @@ int buff[50];
 char str[]="Mi nombre es martin  ";
 
 void pepito(int,int,int);
-
+char a[10];
 void main(void) 
 {
-    pepito(10,10,1);
-    printf("Saliendo...");
-    while(1);
+	printf("Antes de ejecutar exit implicitamente\n");
 }    
 
 void pepito(int a, int b, int i)

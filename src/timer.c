@@ -7,6 +7,8 @@
 #include "../include/debug.h"
 #include "../include/task.h"
 
+#include "../include/atomic.h"
+
 #define __TIMER
 #include "../include/timer.h"
 
@@ -64,14 +66,16 @@ void actualizar_timers(void)
  
 }
 
+volatile spinlock_t timer_lock = 1;
 
 int insertar_timer(timer_t *nuevo)
 {
 	cli();
+	
 	volatile timer_t *tmp;
 	
  if ( nuevo == NULL ) { return 0; }
- 
+
  // Nos paramos al ppio de la lista
  tmp = timer_inicio;
 
@@ -98,15 +102,16 @@ int insertar_timer(timer_t *nuevo)
 // interrupciones (bajo análisis)
 int remover_timer(timer_t *timer)
 {
-	cli();
+ cli();
  volatile timer_t *tmp;
+
 
  // Es el primer timer ?
  if ( timer == timer_inicio ) {
    timer_inicio = timer->proximo;
-   // Lo tengo que reemplazar por la constante correcta según la definición de errno.h
-   sti();
-   return 0;
+	 sti();
+
+	 return 0;
  }
  
  // Buscamos nuestro timer entonces
@@ -115,7 +120,7 @@ int remover_timer(timer_t *timer)
  // Si no encontramos el timer devolvemos error
  if ( tmp == NULL ) {
    // Lo tengo que reemplazar por la constante correcta según la definición de errno.h
-   sti();
+ sti();
    return -1;
  }
  else {

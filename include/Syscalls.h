@@ -26,6 +26,7 @@
 #define SYS_RENICE	4
 #define SYS_GET_PID	5
 #define SYS_GET_PPID	6
+#define SYS_EXIT	7
 
 
 // Funciones de grupo CONSOLE
@@ -67,6 +68,7 @@ void sys_perror (char *str);
 int sys_renice (word pid, word prioridad);
 pid_t sys_get_pid (void);
 pid_t sys_get_ppid (void);
+void sys_exit (int);
 
 // Grupo timer
 int sys_sleep(int segundos);

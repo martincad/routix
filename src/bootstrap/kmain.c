@@ -5,7 +5,10 @@
 
 #include "../../include/task.h"
 #include "../../include/fat.h"
+#include "../../include/syscalls.h"
 
+// Puntero a pagina de wrappers de usuario
+addr_t *exit_addr;
 
 void kmain (void)
 {
@@ -66,11 +69,27 @@ void kmain (void)
 	 
 	// Habilitamos solo teclado, timertick y floppy
 
-	kprintf("Tamaño del task_Struct: %d\n", sizeof(task_struct_t));
+	kprintf("Task Struct Size: %d\n", sizeof(task_struct_t));
 
 	enable_irq(0);
 	enable_irq(1);
 	enable_irq(6);
+	
+	// Pedimos una pagina, la cual pertenecera al Kernel pero tendra privilegios de usuario (solo lectura) donde se ubicaran
+	// algunos wrappers, como ser la llamada a la System call EXIT
+	exit_addr = (addr_t *) kmalloc_page();
+
+	char *ptr_exit = (char *) exit_addr;
+	
+	// Ubicamos en el wrapper el codigo de libreria routstd de llamada EXIT:
+	*ptr_exit = 0xb8; 	// Codigo de operacion: "mov eax, "
+	*(unsigned long *)(ptr_exit+1) = SYS_PROCESS | SYS_EXIT; 
+	*(ptr_exit+5) = 0xbb; // "mov ebx, "
+	*(unsigned long *)(ptr_exit+6) = 0; // parametro que recibe la función EXIT... 0 en este caso
+	*(ptr_exit+10) = 0xcd;	// int
+	*(ptr_exit+11) = 0x50;	// 0x50
+
+	kprintf("Ubicacion del Wrappeo de Exit: 0x%x\n", ptr_exit);
 
 	entrada_de_inicio();
 

@@ -18,6 +18,7 @@
 #define SYS_RENICE	4
 #define SYS_GET_PID	5
 #define SYS_GET_PPID	6
+#define SYS_EXIT	7
 
 // Funciones de grupo CONSOLE
 #define SYS_PRINT	0

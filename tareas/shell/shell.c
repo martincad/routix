@@ -66,7 +66,9 @@ void main(void)
 	    printf("Ingrese la nueva prioridad: ");
 	    gets(msg2);
 	    if (renice( atoi(msg1), atoi(msg2)) == -1)
-		perror("renice");
+			perror("renice");
+
+		proc_dump();
 	}
 
 	

@@ -18,7 +18,10 @@ inline int TestAndSet(volatile int *candado)
 			  : "=m" (retorno), "=m" (*candado)
 			  : "r" (*candado));
 */
+	cli();
+	
 	__asm__ __volatile__ ("movl %0, %%ebx ; movl $1, %%eax ; xchg %%eax, (%%ebx)" : : "m" (candado) : "ebx");
+	sti();
 	
   //  return retorno;    
 }

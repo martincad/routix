@@ -8,6 +8,7 @@ clrscr                                            kmain.o
 dev_fat                                           kmain.o
 enable_irq                                        kmain.o
 entrada_de_inicio                                 kmain.o
+exit_addr                                         kmain.o
 floppy_cache_init                                 kmain.o
 inicializacion_kmalloc                            kmain.o
 inicializarInterrupciones                         kmain.o
@@ -19,6 +20,7 @@ init_all_memory                                   kmain.o
 init_time                                         kmain.o
 kmain                                             kmain.o
                                                   init.o
+kmalloc_page                                      kmain.o
 kprintf                                           kmain.o
 mascarasPics                                      kmain.o
 memoria                                           kmain.o

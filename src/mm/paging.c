@@ -19,7 +19,7 @@ page_index_t get_page_index (addr_t p)
 }
 
 
-// Convierte una direccion logica respecto a cierto CR3 a una direccion de memoria fisica
+//! Convierte una direccion logica respecto a cierto CR3 a una direccion de memoria fisica
 void *convertir_direccion ( void *dir_logica, addr_t cr3 )
 {
     void *dir_fisica;

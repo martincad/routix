@@ -1,6 +1,6 @@
-#include "../include/system.h"
-#include "../include/task.h"
-#include "../include/stdio.h"
+#include "system.h"
+#include "task.h"
+#include "stdio.h"
 
 
 extern task_struct_t *actual;

@@ -5,10 +5,10 @@
 */
 
 
-#include "../../include/segm.h"
+#include "segm.h"
 
 #ifndef __SYSTEM
-#include "../../include/system.h"
+#include "system.h"
 #endif
 
 

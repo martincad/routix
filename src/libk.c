@@ -2,12 +2,12 @@
 
 /* Aca van todas las funciones que inician la llamada al sistema. Usadas, por ejemplo, por INIT */
 
-#include "../include/system.h"
-#include "../include/time.h"
-#include "../include/paging.h"
-#include "../include/task.h"
-#include "../include/syscalls.h"
-#include "../include/stdio.h"
+#include "system.h"
+#include "time.h"
+#include "paging.h"
+#include "task.h"
+#include "syscalls.h"
+#include "stdio.h"
 
 #include <stdarg.h>
 

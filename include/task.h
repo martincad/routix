@@ -159,7 +159,9 @@ task_struct_t *encontrar_proceso_por_pid(pid_t pid);
 void tomar_nombre_tarea (const char *viejo, char *nuevo);
 void dormir_task(task_struct_t *tarea);
 void despertar_task(task_struct_t *tarea);
+int insertar_tarea(task_struct_t *nueva);
 int remover_task (task_struct_t *tarea);
+
 
 // Macro para reschedulear, genera una llamada a la int 0x51 quien busca la próxima tarea a correr
 #define _reschedule() __asm__ __volatile__("int $0x51")

@@ -1,29 +1,70 @@
 /* spinlock.c */
 
-#include "../include/system.h"
-#include "../include/atomic.h"
-#include "../include/debug.h"
+#include "system.h"
+#include "atomic.h"
+#include "debug.h"
 
+// Funciones que aseguran la atomicidad de operaciones basicas
+
+inline int atomic_inc (int *p)
+{
+	cli();
+	(*p)++;
+	sti();
+	return *p;
+}
+
+inline int atomic_dec (int *p)
+{
+	cli();
+	(*p)--;
+	sti();
+	return *p;
+}
+
+inline int atomic_asign (int *p, int x)
+{
+	cli();
+	*p = x;
+	sti();
+	return *p;
+}
+
+inline int atomic_add (int *p, int x)
+{
+	cli();
+	*p += x;
+	sti();
+	return *p;
+}
+
+inline int atomic_sub (int *p, int x)
+{
+	cli();
+	*p -= x;
+	sti();
+	return *p;
+}
 
 // Retorna el valor que posee la variable candado, y luego la setea a 1
 inline int TestAndSet(spinlock_t *candado)
 {
-//    int retorno;
-/*	
+    int retorno;
+	
     __asm__ __volatile__ ("pushf\n\t"
-			  "cli\n\t"
-			  "movl %2, %0\n\t"
-			  "movl $1, %1\n\t"
-			  "popf"
-			  : "=m" (retorno), "=m" (*candado)
-			  : "r" (*candado));
-*/
-	cli();
+						  "cli\n\t"
+						  "movl %2, %0\n\t"
+						  "movl $1, %1\n\t"
+						  "popf"
+						  : "=m" (retorno), "=m" (*candado)
+						  : "r" (*candado));
+
+/*	cli();
 	
 	__asm__ __volatile__ ("movl %0, %%ebx ; movl $1, %%eax ; xchg %%eax, (%%ebx)" : : "m" (candado) : "ebx");
 	sti();
-	
-  //  return retorno;    
+*/	
+	return retorno;    
 }
 
 /* Momentaneamente solo usadas por funciones de kernel */

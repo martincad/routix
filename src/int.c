@@ -1,19 +1,19 @@
 /* int.c */
 
-#include "../include/paging.h"
-#include "../include/segm.h"
-#include "../include/8259.h"
-#include "../include/debug.h"
-#include "../include/kalloc.h"
-#include "../include/stdio.h"
+#include "paging.h"
+#include "segm.h"
+#include "8259.h"
+#include "debug.h"
+#include "kalloc.h"
+#include "stdio.h"
 
-#include "../include/fat.h"
+#include "fat.h"
 
 #ifndef __SYSTEM
-#include "../include/system.h"
+#include "system.h"
 #endif
 
-#include "../include/event.h"
+#include "event.h"
 
 
 //extern byte floppy_continuar;

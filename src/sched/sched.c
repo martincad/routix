@@ -4,13 +4,14 @@
 */
 
 
-#include "../../include/system.h"
-#include "../../include/segm.h"
-#include "../../include/paging.h"
-#include "../../include/kalloc.h"
-#include "../../include/task.h"
-#include "../../include/debug.h"
-#include "../../include/stdio.h"
+#include "system.h"
+#include "segm.h"
+#include "paging.h"
+#include "kalloc.h"
+#include "task.h"
+#include "debug.h"
+#include "stdio.h"
+#include "error.h"
 
 void idle_task(void);
 extern void shell(void);
@@ -52,7 +53,7 @@ void start_scheduler(void)
 }
 
 
-
+int exec (char *);
 void tarea_init()
 {
     kprintf("ejecutando INIT.....\n");

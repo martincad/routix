@@ -1,7 +1,7 @@
 /* event.c */
 
 
-#include "../include/event.h"
+#include "event.h"
 
 // Puntero al inicio de la lista de eventos
 event_t *event_inicio=NULL;

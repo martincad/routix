@@ -4,11 +4,11 @@
 	a lineales y viceversa. Prepara los directorios y tablas de páginas, para accesos lógicos.
 */
 
-#include "../../include/system.h"
-#include "../../include/paging.h"
-#include "../../include/debug.h"
-#include "../../include/stdio.h"
-#include "../../include/kalloc.h"
+#include "system.h"
+#include "paging.h"
+#include "debug.h"
+#include "stdio.h"
+#include "kalloc.h"
 
 
 

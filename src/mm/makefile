@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -c -fpack-struct -ffreestanding -Wall
+CFLAGS = -c -fpack-struct -ffreestanding -Wall -I$(INCDIR)
 
 ASM = nasmw
 AFLAGS = -f coff

@@ -4,21 +4,21 @@
 */
 
 
-#include "../../include/system.h"
-#include "../../include/paging.h"
-#include "../../include/segm.h"
-#include "../../include/debug.h"
-#include "../../include/syscalls.h"
-#include "../../include/elf.h"
-#include "../../include/file.h"
-#include "../../include/error.h"
-#include "../../include/timer.h"
-#include "../../include/atomic.h"
-#include "../../include/kalloc.h"
-#include "../../include/stdio.h"
+#include "system.h"
+#include "paging.h"
+#include "segm.h"
+#include "debug.h"
+#include "syscalls.h"
+#include "elf.h"
+#include "file.h"
+#include "error.h"
+#include "timer.h"
+#include "atomic.h"
+#include "kalloc.h"
+#include "stdio.h"
 
 #ifndef __TASK
-#include "../../include/task.h"
+#include "task.h"
 #endif
 
 

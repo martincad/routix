@@ -4,12 +4,12 @@
 */
 
 #ifndef __SYSTEM
-#include "../../include/system.h"
+#include "system.h"
 #endif
-#include "../../include/stdio.h"
-#include "../../include/paging.h"
-#include "../../include/kalloc.h"
-#include "../../include/debug.h"
+#include "stdio.h"
+#include "paging.h"
+#include "kalloc.h"
+#include "debug.h"
 
 
 void free (void *);

@@ -1,12 +1,12 @@
 /* floppy.c */
-#include "../include/system.h"
-#include "../include/string.h"
-#include "../include/fat.h"
-#include "../include/paging.h"
-#include "../include/kalloc.h"
-#include "../include/stdio.h"
-#include "../include/file.h"
-#include "../include/drivers/floppy.h"
+#include "system.h"
+#include "string.h"
+#include "fat.h"
+#include "paging.h"
+#include "kalloc.h"
+#include "stdio.h"
+#include "file.h"
+#include "drivers/floppy.h"
 
 //void printing (file_loaded_t *archivo);
 

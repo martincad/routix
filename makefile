@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -c -fpack-struct -ffreestanding -Wall
+CFLAGS = -c -fpack-struct -ffreestanding -Wall -I$(INCDIR)
 
 ASM = nasmw
 AFLAGS = -f aout
@@ -16,12 +16,12 @@ TASKDIR = $(SRCDIR)/tareas
 
 OBJECTS = $(OBJDIR)/boot.o	$(OBJDIR)/bootstrap.a	$(OBJDIR)/mm.a		\
   	  $(OBJDIR)/syscalls.a	$(OBJDIR)/console.a 	$(OBJDIR)/sched.a	\
-	  $(OBJDIR)/signals.a   $(OBJDIR)/inta.o	$(OBJDIR)/int.o	   	\
+	  $(OBJDIR)/signals.a   $(OBJDIR)/inta.o		$(OBJDIR)/int.o	   	\
 	  $(OBJDIR)/io.o		$(OBJDIR)/taskdeb.a 	$(OBJDIR)/string.o	\
   	  $(OBJDIR)/pic.o  		$(OBJDIR)/floppy.a   	$(OBJDIR)/file.o   	\
-  	  $(OBJDIR)/libk.o      $(OBJDIR)/stdlib.o	$(OBJDIR)/fat12.o  	\
- 	  $(OBJDIR)/time.o      $(OBJDIR)/8254.o	$(OBJDIR)/timer.o  	\
-   	  $(OBJDIR)/error.o 	$(OBJDIR)/event.o	$(OBJDIR)/spinlock.o
+  	  $(OBJDIR)/libk.o      $(OBJDIR)/stdlib.o		$(OBJDIR)/fat12.o  	\
+ 	  $(OBJDIR)/time.o      $(OBJDIR)/8254.o		$(OBJDIR)/timer.o  	\
+   	  $(OBJDIR)/error.o 	$(OBJDIR)/event.o		$(OBJDIR)/atomic.o
 
 	  
 
@@ -70,8 +70,8 @@ $(OBJDIR)/libk.o: $(SRCDIR)/libk.c $(INCDIR)/syscalls.h
 $(OBJDIR)/event.o: $(SRCDIR)/event.c $(INCDIR)/event.h $(INCDIR)/task.h
 	$(CC) $(CFLAGS) $(SRCDIR)/event.c -o $(OBJDIR)/event.o
 
-$(OBJDIR)/spinlock.o: $(SRCDIR)/spinlock.c $(INCDIR)/atomic.h
-	$(CC) $(CFLAGS) $(SRCDIR)/spinlock.c -o $(OBJDIR)/spinlock.o
+$(OBJDIR)/atomic.o: $(SRCDIR)/atomic.c $(INCDIR)/atomic.h
+	$(CC) $(CFLAGS) $(SRCDIR)/atomic.c -o $(OBJDIR)/atomic.o
 
 
 

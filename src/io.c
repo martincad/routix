@@ -1,6 +1,6 @@
 /* io.c */
 
-#include "../include/system.h"
+#include "system.h"
 
 
 unsigned char inportb(word puerto )

@@ -4,12 +4,12 @@
 	No es utilizado una vez que el sistema ha sido inicializado.
 */
 
-#include "../../include/system.h"
-#include "../../include/paging.h"
-#include "../../include/segm.h"
-#include "../../include/kalloc.h"
-#include "../../include/task.h"
-#include "../../include/debug.h"
+#include "system.h"
+#include "paging.h"
+#include "segm.h"
+#include "kalloc.h"
+#include "task.h"
+#include "debug.h"
 
 addr_t KERNEL_PDT = POSICION_DIR_PAGINAS;
 

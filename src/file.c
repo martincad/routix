@@ -1,13 +1,13 @@
 /* file.c */
-#include "../include/system.h"
-#include "../include/string.h"
-#include "../include/fat.h"
-#include "../include/paging.h"
-#include "../include/kalloc.h"
-#include "../include/stdio.h"
-#include "../include/file.h"
-#include "../include/task.h"
-#include "../include/drivers/floppy.h"
+#include "system.h"
+#include "string.h"
+#include "fat.h"
+#include "paging.h"
+#include "kalloc.h"
+#include "stdio.h"
+#include "file.h"
+#include "task.h"
+#include "drivers/floppy.h"
 
 file_opened_t *header_archivos_abiertos;
 

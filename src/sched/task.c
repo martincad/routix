@@ -3,13 +3,13 @@
 	Se incluyen todas las funciones relacionadas con la creación y estado de las tareas y el manejo del TSS.
 */
 
-#include "../../include/system.h"
-#include "../../include/task.h"
-#include "../../include/paging.h"
-#include "../../include/kalloc.h"
-#include "../../include/error.h"
-#include "../../include/file.h"
-#include "../../include/string.h"
+#include "system.h"
+#include "task.h"
+#include "paging.h"
+#include "kalloc.h"
+#include "error.h"
+#include "file.h"
+#include "string.h"
 
 // Un solo tss
 tss_t	tss;

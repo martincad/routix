@@ -1,13 +1,13 @@
 /*!  \addtogroup Consola
 	\page teclado.c		Contiene las funciones de manejo de teclado. 
 */
-#include "../../include/system.h"
-#include "../../include/teclado.h"
-#include "../../include/video.h"
-#include "../../include/atomic.h"
-#include "../../include/event.h"
-#include "../../include/8259.h"
-#include "../../include/stdio.h"
+#include "system.h"
+#include "teclado.h"
+#include "video.h"
+#include "atomic.h"
+#include "event.h"
+#include "8259.h"
+#include "stdio.h"
 
 /*! Puntero a tabla de caracteres (por default keymap_std) */
 unsigned int *keymap = keymap_std;

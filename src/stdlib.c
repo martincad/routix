@@ -1,7 +1,7 @@
 /* stdlib.c */
 
-#include "../include/system.h"
-#include "../include/string.h"
+#include "system.h"
+#include "string.h"
 
 /* Ascii to Integer
  * "1943" => 1 * 10^3 + 9 * 10^2 + 4 * 10^1 + 3 * 10^0

@@ -1,11 +1,11 @@
 /* time.c */
 
-#include "../include/time.h"
-#include "../include/8254.h"
-#include "../include/stdio.h"
+#include "time.h"
+#include "8254.h"
+#include "stdio.h"
 
 #ifndef __SYSTEM
-#include "../include/system.h"
+#include "system.h"
 #endif
 
 

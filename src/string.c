@@ -1,7 +1,7 @@
 /* string.c */
 
-#include "../include/system.h"
-#include "../include/string.h"
+#include "system.h"
+#include "string.h"
 
 int strcmp(const char *s1, const char *s2)
 {

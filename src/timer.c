@@ -2,16 +2,16 @@
 
 /* Manejo de la interrupcion de timertick y timers */
 
-#include "../include/system.h"
-#include "../include/8254.h"
-#include "../include/8259.h"
-#include "../include/debug.h"
-#include "../include/task.h"
+#include "system.h"
+#include "8254.h"
+#include "8259.h"
+#include "debug.h"
+#include "task.h"
 
-#include "../include/atomic.h"
+#include "atomic.h"
 
 #define __TIMER
-#include "../include/timer.h"
+#include "timer.h"
 
 dword jiffies=0;
 

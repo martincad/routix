@@ -2,10 +2,10 @@
 
 /* Rutinas de inicialización y manejo del timer 8254 */
 
-#include "../include/system.h"
-#include "../include/8254.h"
-#include "../include/stdio.h"
-#include "../include/debug.h"
+#include "system.h"
+#include "8254.h"
+#include "stdio.h"
+#include "debug.h"
 
 
 

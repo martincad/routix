@@ -5,15 +5,15 @@
 
 
 #ifndef __SYSTEM
-#include "../../include/system.h"
+#include "system.h"
 #endif
-#include "../../include/stdio.h"
-#include "../../include/kalloc.h"
-#include "../../include/task.h"
-#include "../../include/error.h"
-#include "../../include/debug.h"
+#include "stdio.h"
+#include "kalloc.h"
+#include "task.h"
+#include "error.h"
+#include "debug.h"
 
-#include "../../include/misc.h"
+#include "misc.h"
 
 addr_t *_inicio,*_fin,*_sp;
 

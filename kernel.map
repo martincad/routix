@@ -23,7 +23,7 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0xc0000000     0x7ea0
+.text           0xc0000000     0x7e20
  obj/boot.o(.text)
  .text          0xc0000000       0x10 obj/boot.o
                 0xc0000000                _start
@@ -152,7 +152,7 @@ Linker script and memory map
  .text          0xc0003b10      0x3d0 obj/bootstrap.a
                 0xc0003b10                _init
                 0xc0003d05                _kmain
- .text          0xc0003ee0     0x11c0 obj/mm.a
+ .text          0xc0003ee0     0x1160 obj/mm.a
                 0xc0003fbe                _morecore
                 0xc000400b                _free
                 0xc0004b6d                _convertir_direccion
@@ -160,8 +160,8 @@ Linker script and memory map
                 0xc0004647                _make_int_gate
                 0xc0004cc8                _kmapmem
                 0xc0004905                _inicializacion_kmalloc
-                0xc000502d                _make_pdt
-                0xc000507c                _copy_page
+                0xc0004fe2                _make_pdt
+                0xc000501e                _copy_page
                 0xc0004b40                _get_page_index
                 0xc000477d                _kfree_page
                 0xc00045e0                _make_descriptor
@@ -184,73 +184,73 @@ Linker script and memory map
                 0xc00047b8                _kmalloc_page
                 0xc0004760                _kmalloc_page_start
                 0xc0004749                _lgdt
- .text          0xc00050a0     0x1a50 obj/syscalls.a
-                0xc00052dd                _sys_free_page
-                0xc00061a7                _sys_get_ppid
-                0xc0006550                _sys_print
-                0xc0006194                _sys_get_pid
-                0xc00065fe                _sys_clrscr
-                0xc0005195                _sys_mem
-                0xc000629a                _sys_exit
-                0xc0006761                _sys_proc_dump
-                0xc00060fa                _sys_perror
-                0xc0005184                _sys_timer
-                0xc0005792                _sys_exec
-                0xc0005162                _sys_process
-                0xc00052f5                _sys_free_mem
-                0xc000663f                _sys_usleep
-                0xc00065c1                _sys_gets
-                0xc0005173                _sys_console
-                0xc0005325                _sys_void
-                0xc00051ea                _sys_malloc_page
-                0xc0005374                _sys_fork
-                0xc0006610                _sys_sleep
-                0xc00050ca                _sys_no_existe
-                0xc0006918                _sys_proc_dump_v
-                0xc0005120                _intSysCall
-                0xc000647b                _sys_show
-                0xc0006129                _sys_renice
- .text          0xc0006af0      0x5d0 obj/console.a
-                0xc0006c60                _putchar
-                0xc0006d58                _puts
-                0xc0007037                _printn
-                0xc0006bb6                _gets
-                0xc0006af0                _getchar
-                0xc0006eb3                _kprintf
-                0xc0007092                _getascii
-                0xc0006e02                _scroll_up
-                0xc0006d90                _nextpos
-                0xc0006e7c                _gotoxy
-                0xc0006dbc                _clrscr
- .text          0xc00070c0      0x6c0 obj/sched.a
-                0xc00075b0                _entrada_de_inicio
-                0xc00070c0                _inicializarTss
-                0xc0007279                _inc_tareas_activas
-                0xc000746d                _insertar_tarea
-                0xc00072d1                _despertar_task
-                0xc0007655                _start_scheduler
-                0xc0007262                _get_new_pid
-                0xc000772e                _scheduler
-                0xc00076e9                _tarea_init
-                0xc0007580                _switch_to_kernel_mode
-                0xc0007514                _tomar_nombre_tarea
-                0xc0007153                _inicializar_task
-                0xc00074da                _encontrar_proceso_por_pid
-                0xc0007310                _init_new_task
-                0xc00075e5                _intProximaTarea
-                0xc0007284                _dormir_task
- .text          0xc0007780       0xa0 obj/signals.a
-                0xc000779a                _sys_kill
- .text          0xc0007820      0x680 obj/taskdeb.a
-                0xc0007ddb                _ps
-                0xc0007a7c                _dump_tm
-                0xc0007ba5                _local
-                0xc0007b10                _bisiestos
-                0xc0007877                _time_debug
-                0xc0007cd6                _task_debug
-                0x00007ea0                __code_size = SIZEOF (.text)
+ .text          0xc0005040     0x1a30 obj/syscalls.a
+                0xc000527d                _sys_free_page
+                0xc000612e                _sys_get_ppid
+                0xc00064d0                _sys_print
+                0xc000611b                _sys_get_pid
+                0xc000657e                _sys_clrscr
+                0xc0005135                _sys_mem
+                0xc000621a                _sys_exit
+                0xc00066e1                _sys_proc_dump
+                0xc0006081                _sys_perror
+                0xc0005124                _sys_timer
+                0xc0005732                _sys_exec
+                0xc0005102                _sys_process
+                0xc0005295                _sys_free_mem
+                0xc00065bf                _sys_usleep
+                0xc0006541                _sys_gets
+                0xc0005113                _sys_console
+                0xc00052c5                _sys_void
+                0xc000518a                _sys_malloc_page
+                0xc0005314                _sys_fork
+                0xc0006590                _sys_sleep
+                0xc000506a                _sys_no_existe
+                0xc0006898                _sys_proc_dump_v
+                0xc00050c0                _intSysCall
+                0xc00063fb                _sys_show
+                0xc00060b0                _sys_renice
+ .text          0xc0006a70      0x5d0 obj/console.a
+                0xc0006be0                _putchar
+                0xc0006cd8                _puts
+                0xc0006fb7                _printn
+                0xc0006b36                _gets
+                0xc0006a70                _getchar
+                0xc0006e33                _kprintf
+                0xc0007012                _getascii
+                0xc0006d82                _scroll_up
+                0xc0006d10                _nextpos
+                0xc0006dfc                _gotoxy
+                0xc0006d3c                _clrscr
+ .text          0xc0007040      0x6c0 obj/sched.a
+                0xc0007530                _entrada_de_inicio
+                0xc0007040                _inicializarTss
+                0xc00071f9                _inc_tareas_activas
+                0xc00073ed                _insertar_tarea
+                0xc0007251                _despertar_task
+                0xc00075d5                _start_scheduler
+                0xc00071e2                _get_new_pid
+                0xc00076ae                _scheduler
+                0xc0007669                _tarea_init
+                0xc0007500                _switch_to_kernel_mode
+                0xc0007497                _tomar_nombre_tarea
+                0xc00070d3                _inicializar_task
+                0xc000745d                _encontrar_proceso_por_pid
+                0xc0007290                _init_new_task
+                0xc0007565                _intProximaTarea
+                0xc0007204                _dormir_task
+ .text          0xc0007700       0xa0 obj/signals.a
+                0xc000771a                _sys_kill
+ .text          0xc00077a0      0x680 obj/taskdeb.a
+                0xc0007d5b                _ps
+                0xc00079fc                _dump_tm
+                0xc0007b25                _local
+                0xc0007a90                _bisiestos
+                0xc00077f7                _time_debug
+                0xc0007c56                _task_debug
+                0x00007e20                __code_size = SIZEOF (.text)
 
-.data           0xc8000000     0x1dd0 load address 0xc0007ea0
+.data           0xc8000000     0x1dd0 load address 0xc0007e20
  obj/*(.data)
  .data          0xc8000000       0x30 obj/mm.a
                 0xc8000010                _KERNEL_PDT

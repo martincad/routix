@@ -329,7 +329,7 @@ int sys_exec (char *nombre)
     if (!new_task->mstack)  //liberar
 		return -1;
 
-kprintf("TEMP: exec cr3: 0x%x\n", new_task->cr3);
+//kprintf("TEMP: exec cr3: 0x%x\n", new_task->cr3);
 	
     if( kmapmem( new_task->mstack->dir , TASK_STACK, new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
 kprintf("TEMP 1:new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	

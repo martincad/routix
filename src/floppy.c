@@ -1,5 +1,8 @@
 /* floppy.c */
 #include "../include/floppy.h"
+#include "../include/atomic.h"
+
+
 
 int block(void);
 int floppy_get_result(void);

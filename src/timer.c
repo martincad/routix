@@ -66,7 +66,7 @@ void actualizar_timers(void)
  
 }
 
-volatile spinlock_t timer_lock = 1;
+spinlock_t timer_lock = 1;
 
 int insertar_timer(timer_t *nuevo)
 {

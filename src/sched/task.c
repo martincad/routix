@@ -243,6 +243,8 @@ int insertar_tarea(task_struct_t *nueva)
 	
  if ( nueva == NULL ) { return 0; }
 
+ cli();
+
  // Nos paramos al ppio de la lista
  tmp = tareas_inicio;
 
@@ -260,6 +262,7 @@ int insertar_tarea(task_struct_t *nueva)
  // La nueva tarea queda apuntando a NULL
  nueva->proxima = NULL;
 
+ sti();
  return 1;
 }
 

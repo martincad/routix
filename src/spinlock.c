@@ -6,7 +6,7 @@
 
 
 // Retorna el valor que posee la variable candado, y luego la setea a 1
-inline int TestAndSet(volatile int *candado)
+inline int TestAndSet(spinlock_t *candado)
 {
 //    int retorno;
 /*	
@@ -29,11 +29,11 @@ inline int TestAndSet(volatile int *candado)
 /* Momentaneamente solo usadas por funciones de kernel */
 
 // Candado, utilizado para verificar si algun proceso está evaluando el contenido de "valor"
-volatile int kernel_lock = 0;
+spinlock_t kernel_lock = 0;
 
 
 //Funcion de bloqueo del semaforo (equivalente a down o wait)
-void spin_lock (volatile spinlock_t *valor)
+void spin_lock (spinlock_t *valor)
 {
     while(1) {
 		// Esperar mientras algún proceso este dentro de spin_lock/spin_unlock
@@ -50,7 +50,7 @@ void spin_lock (volatile spinlock_t *valor)
 
 
 //Funcion de desbloqueo del semaforo (equivalente a up o signal)
-void spin_unlock (volatile spinlock_t *valor)
+void spin_unlock (spinlock_t *valor)
 {
 	// Esperar mientras algún proceso este dentro de spin_lock/spin_unlock
     while (TestAndSet(&kernel_lock));

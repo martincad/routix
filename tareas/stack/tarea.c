@@ -8,7 +8,8 @@ void pepito(int,int,int);
 char a[10];
 void main(void) 
 {
-	printf("Antes de ejecutar exit implicitamente\n");
+	printf("Antes de ejecutar una llamada invalida\n");
+	__asm__ __volatile__ ("mov $0x0110, %eax ; int $0x50");
 }    
 
 void pepito(int a, int b, int i)

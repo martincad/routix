@@ -118,11 +118,11 @@ int sys_fork (void)
     
     //Mapear las direcciones del segmento de codigo en memoria virtual, e incrementar el contador de procesos (count)
     for ( i=0 ; i < new_task->num_code ; i++,mem=mem->next ) {
-	if ( kmapmem( mem->dir , mem->vdir , new_task->cr3 ,PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ){
-	    kprintf("Kmapmem TASK_TEXT error\n");
-	    return -1;
-	}
-	mem->count++;
+		if ( kmapmem( mem->dir , mem->vdir , new_task->cr3 ,PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ){
+		    kprintf("Kmapmem TASK_TEXT error\n");
+		    return -1;
+		}
+		mem->count++;
     }
     
     struct user_page *src = actual->mdata;
@@ -132,21 +132,21 @@ int sys_fork (void)
 
     //Para datos y bss debo pedir memoria, copiar la del proceso actual en ella, y finalmente mapearla
     for( i=0  ;  i < new_task->num_data ;  i++) {
-	dest->next = umalloc_page ( src->flags, src->vdir );
-	if (!dest) { //liberar
-	    actual->err_no = ENOMEM;
-	    return -1;
-	}
-	if (i==0)	//Apuntar el mdata al comienzo de la lista
-	    new_task->mdata = dest->next;
+		dest->next = umalloc_page ( src->flags, src->vdir );
+		if (!dest) { //liberar
+		    actual->err_no = ENOMEM;
+		    return -1;
+		}
+		if (i==0)	//Apuntar el mdata al comienzo de la lista
+		    new_task->mdata = dest->next;
 
-	dest = dest->next;
-	copy_page ( (void *)dest->dir, (void *)src->dir);
-	if ( kmapmem( dest->dir , dest->vdir , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ){
-	    kprintf("Kmapmem TASK_DATA error\n");
-	    return -1;
-	}
-	src = src->next;
+		dest = dest->next;
+		copy_page ( (void *)dest->dir, (void *)src->dir);
+		if ( kmapmem( dest->dir , dest->vdir , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ){
+		    kprintf("Kmapmem TASK_DATA error\n");
+		    return -1;
+		}
+		src = src->next;
     }
 /* 
     // Pedir espacio para el stack de modo user, y mapearlo virtualmente al fondo de los datos
@@ -171,21 +171,21 @@ int sys_fork (void)
     dest = (struct user_page *) malloc (sizeof(struct user_page));
 
     for( i=0  ;  i < new_task->num_stack ;  i++) {
-	dest->next = umalloc_page ( src->flags, src->vdir );
-	if (!dest) { //liberar
-	    actual->err_no = ENOMEM;
-	    return -1;
-	}
-	if (i==0)	//Apuntar el mdata al comienzo de la lista
-	    new_task->mstack = dest->next;
+		dest->next = umalloc_page ( src->flags, src->vdir );
+		if (!dest) { //liberar
+		    actual->err_no = ENOMEM;
+		    return -1;
+		}
+		if (i==0)	//Apuntar el mdata al comienzo de la lista
+		    new_task->mstack = dest->next;
 
-	dest = dest->next;
-	copy_page ( (void *)dest->dir, (void *)src->dir);
-	if ( kmapmem( dest->dir , dest->vdir , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ){
-	    kprintf("Kmapmem TASK_DATA error\n");
-	    return -1;
-	}
-	src = src->next;
+		dest = dest->next;
+		copy_page ( (void *)dest->dir, (void *)src->dir);
+		if ( kmapmem( dest->dir , dest->vdir , new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ){
+		    kprintf("Kmapmem TASK_DATA error\n");
+		    return -1;
+		}
+		src = src->next;
     }
 
     // Poner en eax del hijo un 0, para que tome como retorno de fork 0
@@ -234,9 +234,9 @@ int sys_exec (char *nombre)
     }
     byte num_secciones;
     if ( (num_secciones = p->f_nscns)!= 3) {
-	actual->err_no = ENOEXEC;
-	close(fd);
-	return -1;
+		actual->err_no = ENOEXEC;
+		close(fd);
+		return -1;
     }
     // Pararse donde comienzan las estructuras de las secciones ( header + datos_opcionales)
     lseek (fd, sizeof(struct coff_header) + p->f_opthdr , SEEK_SET);
@@ -246,8 +246,8 @@ int sys_exec (char *nombre)
     struct coff_sections *q;
     //Levantar las 3 secciones que debe tener el ejecutable
     while (num_secciones--) {
-	read(fd, buff_aux, sizeof(struct coff_sections));
-	q = (struct coff_sections *) buff_aux;
+		read(fd, buff_aux, sizeof(struct coff_sections));
+		q = (struct coff_sections *) buff_aux;
     
 	//Por ahora no puede ejecutarse tareas con mas de 1 PAGINA de codigo
 	if (q->s_size >= PAGINA_SIZE) {
@@ -278,15 +278,15 @@ int sys_exec (char *nombre)
     //Verificar que posea una seccion de codigo, una de datos inicializados y sin inicializar
     if (verificacion != (COFF32_TEXT | COFF32_DATA | COFF32_BSS) ) {
     	close(fd);
-	actual->err_no = ENOEXEC;
-	return -1;
+		actual->err_no = ENOEXEC;
+		return -1;
     }
     
     //Verificar que haya memoria suficiente    
     if (kmem_free() < ((actual->open_files[fd]->size / PAGINA_SIZE)+4) ) {
-	actual->err_no = ENOMEM;
-	close(fd);
-	return -1;
+		actual->err_no = ENOMEM;
+		close(fd);
+		return -1;
     }
 
     // Aca voy a guardar la cantidad de paginas requeridas por cada segmento
@@ -294,7 +294,7 @@ int sys_exec (char *nombre)
 
     paginas_texto = sec_text.s_size / PAGINA_SIZE;
     if ( sec_text.s_size % PAGINA_SIZE )
-	paginas_texto++;
+		paginas_texto++;
     
     //Tamaño en bytes del .DATA + .BSS
     int size_datos = sec_data.s_size + sec_bss.s_size;
@@ -302,12 +302,12 @@ int sys_exec (char *nombre)
     //Cantidad de paginas requeridas por .DATA + .BSS
     paginas_datos = size_datos / PAGINA_SIZE;
     if ( size_datos % PAGINA_SIZE )
-	paginas_datos++;
+		paginas_datos++;
 
     //Cantidad de paginas requeridas solo por .DATA
     int paginas_data = sec_data.s_size / PAGINA_SIZE;
     if ( sec_data.s_size % PAGINA_SIZE )
-	paginas_data++;
+		paginas_data++;
 
     task_struct_t *new_task;
     struct user_page *mem;
@@ -322,16 +322,17 @@ int sys_exec (char *nombre)
 	
 
     if (!new_task) {	    //liberar
-	return -1;
+		return -1;
     }
 
     new_task->mstack = umalloc_page (PAGINA_STACK, TASK_STACK);
     if (!new_task->mstack)  //liberar
 		return -1;
 
-
+kprintf("TEMP: exec cr3: 0x%x\n", new_task->cr3);
+	
     if( kmapmem( new_task->mstack->dir , TASK_STACK, new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
-kprintf("new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
+kprintf("TEMP 1:new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
         kprintf("Kmapmem TASK_STACK error\n");
         return -1;
     }
@@ -457,12 +458,12 @@ pid_t sys_get_ppid (void)
 void sys_exit (int valor)
 {
 	kprintf("SYS_EXIT: Implementacion a medio hacer de SYS_EXIT. recibio: %d\n", valor);
-	kprintf("SYS_EXIT: Momentaneamente pongo a dormir a la tarea\n");
 	dormir_task(actual);
-	
 
 	struct user_page *aux, *tmp;
 
+	cli();
+	
 	for (aux=tmp=actual->mcode ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
 		ufree_page(aux);
@@ -479,14 +480,16 @@ void sys_exit (int valor)
 		kprintf("TEMP: Libero UserStack\n");
 	}
 
-	kfree_page (actual->cr3);
-	kfree_page (actual);
+//	kfree_page (actual->cr3);
+//	kfree_page (actual);
 
 	//Liberar memoria, solo si no comparte las paginas con ningun pariente
 
-	
+	sti();
 	
 	_reschedule();
+
+	kprintf("TEMP: Exit: MATANGA, no deberia esta acá\n");
 }
 
 //Cantidad de veces que la función malloc llamo a morecore solicitandole una página

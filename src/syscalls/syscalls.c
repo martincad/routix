@@ -32,11 +32,20 @@ int (*syscall_group_vector[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_mem	
 };
 
+// Definen la cantidad máxima de llamadas al sistema por grupo. Son pasadas a una variable para poder levantar
+// su valor desde syscalls.asm
 
+unsigned int syscall_group_max[MAX_SYSCALLS] = {
+	SYS_PROCESS_MAX,
+	SYS_CONSOLE_MAX,
+	0,
+	SYS_TIMER_MAX,
+	SYS_MEM_MAX
+};
 
 int sys_no_existe (dword numero)
 {
-    kprintf("Llamada no existe: %d\n", numero);
+    kprintf("SysCall Inexistente: Grupo %d\tLlamada %d\n", numero>>16 , (word)numero);
     actual->err_no = ENOSYS;
     return -1;
 }	

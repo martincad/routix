@@ -180,8 +180,11 @@ void *make_pdt (void)
 	return NULL;
     }
 
+//	memset(nuevo_directorio, 0, PAGINA_SIZE);
     copy_page( (void *) nuevo_directorio, (void *) KERNEL_PDT);
-    return (void *) nuevo_directorio;
+kprintf("TEMP: make_pdt: Retornando directorio: 0x%x\n", nuevo_directorio);
+	return (void *) nuevo_directorio;
+	
     
 }	
 

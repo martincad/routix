@@ -26,7 +26,6 @@ header_floppy_cache                               sys_proc.o
 init_new_task                                     sys_proc.o
 insertar_timer                                    sys_time.o
 intSysCall                                        syscalla.o
-kfree_page                                        sys_proc.o
 kmapmem                                           sys_proc.o
                                                   sys_mem.o
 kmem_free                                         sys_proc.o
@@ -80,6 +79,8 @@ sys_usleep                                        sys_time.o
 sys_void                                          sys_proc.o
 syscall                                           syscalla.o
 syscall_console                                   sys_con.o
+                                                  syscalla.o
+syscall_group_max                                 syscalls.o
                                                   syscalla.o
 syscall_group_vector                              syscalls.o
                                                   syscalla.o

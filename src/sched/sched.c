@@ -64,9 +64,6 @@ void tarea_init()
 }	
 
 
-word flag_fork=0;
-word flag_veces=0;
-
 
 // Busca la próxima tarea activa
 void scheduler()

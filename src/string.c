@@ -122,5 +122,14 @@ void *memcpy( void *dest, const void *src, dword n)
     return dest;
 }
 
+void *memset(void *dest, int c, size_t n) 
+{
+	size_t i;
+	char *dst = (char *) dest;
+	for (i=0 ; i<n ; i++)
+		dst[i] = c;
+	return dest;
+}
+	
 
 

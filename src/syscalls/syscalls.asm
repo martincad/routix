@@ -20,11 +20,13 @@ segment .text
 
 
 [extern _syscall]
-[extern _syscall_group_vector]
+[extern _syscall_group_vector]	;array de punteros a grupos de funciones
+[extern _syscall_group_max]		;array con cantidad maxima de llamadas al sistema por gupo
 [extern _sys_no_existe]
 
 [extern _KERNEL_PDT]	    ; Valor del CR3 del Kernel
 [extern _actual]
+
 
 MAX_SYSCALLS_GROUPS	EQU	5
 MAX_SYSCALLS		EQU	10
@@ -32,6 +34,7 @@ MAX_SYSCALLS		EQU	10
 ;Aca me trae la interrupcion 0x50
 _intSysCall:
 
+	push ebx
 	push eax
 
 	shr eax, 16	;Verificar si el numero de grupo existe
@@ -39,7 +42,15 @@ _intSysCall:
 	cmp eax, MAX_SYSCALLS_GROUPS
 	ja  error_syscall_no
 
+	mov ebx, [_syscall_group_max + eax * 4]		;Recuperar la cantidad maxima de llamadas que posee ese grupo
+
 	pop eax
+
+	;En ax tengo el numero de indice dentro del grupo. En bx el numero total de llamadas para ese grupo
+	cmp ax, bx			
+	pop ebx
+	;Si intento llamar a una mayor que la "mayor", ERROR
+	ja error_syscall_no
 
 	;Pusheo los registros donde recibo los parametros   
 	push ebp

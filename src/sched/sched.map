@@ -10,9 +10,7 @@ dormir_task                                       task.o
 encontrar_proceso_por_pid                         task.o
 entrada_de_inicio                                 taska.o
 exec                                              sched.o
-flag_fork                                         sched.o
-                                                  taska.o
-flag_veces                                        sched.o
+flag_fork                                         taska.o
 get_new_pid                                       task.o
 inc_tareas_activas                                task.o
 inicializarTss                                    task.o

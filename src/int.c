@@ -4,6 +4,8 @@
 #include "../include/segm.h"
 #include "../include/debug.h"
 
+#include "../include/fat.h"
+
 #ifndef __SYSTEM
 #include "../include/system.h"
 #endif
@@ -47,13 +49,6 @@ void DefaultHandler(void)
     endOfInterrupt();
 }
 
-struct floppy_cache
-{
-    dword sector;
-    byte bloque[512];
-    struct floppy_cache  *next;
-
-};
 
 void ExcepcionHandler(int numero,dword err1, dword err2, dword err3)
 {
@@ -84,12 +79,6 @@ void ExcepcionHandler(int numero,dword err1, dword err2, dword err3)
  kprintf(" Error 3: 0x%x\n",err3);
  kprintf("Deteniendo el sistema.");
 
- extern dword sectores_cache;
- extern word morecores;
- 
- kprintf("Sectores cache: %d\n", sectores_cache);
- kprintf("Cantidad de morecores: %d\n", morecores);
- 
  while(1);
 }
 

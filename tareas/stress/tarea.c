@@ -12,16 +12,26 @@ void main(void)
 	int mem_before = free_mem();
 	int mem_after;
 	
+	int pepe = getvar("veces");
+	if (pepe==-1) {
+		printf("Debe setear el valor de la variable veces. Ejecutandolo 10 veces\n");
+		pepe=10;
+	}
 	
-	for (j=0 ; j<100 ; j++) {
+	for (j=0 ; j<pepe ; j++) {
 	
-		for( i=0 ; i<0x8ffff ; i++);
-		if (exec("stack.bin")==-1) {
+		setvar("stress",1);
+		if (exec("wait2.bin")==-1) {
 			perror("exec");
 			exit (0);
 		}
 			
-		printf("\nStress info: se ha logrado ejecutar %d procesos", j+1);
+		while (getvar("stress")==1)
+			usleep(0xfffff);
+
+		printf("*** Se ejecutaron: %d wait2.bin ***\n", j+1);
 	}
+
+	printf("Memoria antes: %d\tAhora: %d\n", mem_before, free_mem());
 }
 

@@ -17,6 +17,7 @@ segment .text
 [global _sys_console]
 [global _sys_timer]
 [global _sys_mem]
+[global _sys_misc]
 
 
 [extern _syscall]
@@ -116,6 +117,13 @@ _sys_mem:
 	call [_syscall_mem + eax * 4 ]
 	jmp syscall_fin
 
+;Entrada a manejo de llamadas miscelaneas (provisorias o temporales)
+[extern _syscall_misc]
+_sys_misc:
+	
+	and eax, 0xffff
+	call [_syscall_misc + eax * 4 ]
+	jmp syscall_fin
 
 
 ; Balanceo el stack, reacomodo el CR3 y actual->cr3 con el valor de actual->cr3_backup

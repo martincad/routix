@@ -14,3 +14,9 @@ __asm__ __volatile__ (		\
         " decw %%ax\n\t"	\
 	" jnz sigue\n\t"	\
 	 : : "i" (valor) : "ax"  );
+
+#define __debug() __asm__ __volatile__ ("push %eax; \
+										movl $1, %eax; \
+										debug1: cmp $1, %eax; \
+										je debug1; \
+										pop %eax");

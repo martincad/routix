@@ -457,7 +457,7 @@ pid_t sys_get_ppid (void)
 
 void sys_exit (int valor)
 {
-	kprintf("SYS_EXIT: Implementacion a medio hacer de SYS_EXIT. recibio: %d\n", valor);
+	kprintf("SYS_EXIT: Implementacion a medio hacer de exit... recibio: %d\n", valor);
 	dormir_task(actual);
 
 	struct user_page *aux, *tmp;
@@ -467,18 +467,22 @@ void sys_exit (int valor)
 	for (aux=tmp=actual->mcode ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
 		ufree_page(aux);
-		kprintf("TEMP: Libero Codigo\n");
+//		kprintf("TEMP: Libero Codigo\n");
 	}
 	for (aux=tmp=actual->mdata ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
 		ufree_page(aux);
-		kprintf("TEMP: Libero Datos\n");
+//		kprintf("TEMP: Libero Datos\n");
 	}
 	for (aux=tmp=actual->mstack ; aux && tmp ; aux=tmp) {
 		tmp=aux->next;
 		ufree_page(aux);
-		kprintf("TEMP: Libero UserStack\n");
+//		kprintf("TEMP: Libero UserStack\n");
 	}
+
+//	kprintf("Libero Directorio: 0x%x\n", actual->cr3);
+
+//	__debug();
 
 //	kfree_page (actual->cr3);
 //	kfree_page (actual);
@@ -516,3 +520,8 @@ void sys_show (int valor)
 	}
 			
 }
+
+struct {
+	char nombre[15];
+	int	 valor;
+} variables[15];

@@ -24,3 +24,8 @@ int proc_dump(void);
 void show(int);
 
 size_t free_mem(void);
+
+
+int setvar(char *nombre, int valor);
+int getvar(char *nombre);
+

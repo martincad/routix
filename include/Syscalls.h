@@ -19,6 +19,7 @@
 #define SYS_FLOW	(2 << 16)
 #define SYS_TIMER	(3 << 16)
 #define SYS_MEM		(4 << 16)
+#define SYS_MISC	(5 << 16)
 
 //El valor SYS_%_MAX determina cual es el número de llamadas al sistema para ese grupo, evitando problemas
 // % equivale al nombre del grupo
@@ -55,6 +56,10 @@
 #define SYS_FREE_MEM	2
 #define SYS_MEM_MAX		3		// Cantidad de llamadas en el grupo MEM. Debe ser siempre el ultimo valor
 
+// Funciones de grupo MEM
+#define SYS_SETVAR		0
+#define SYS_GETVAR		1
+#define SYS_MISC_MAX	2		// Cantidad de llamadas en el grupo MEM. 
 
 void syscall (void);
 int sys_no_existe (dword numero);

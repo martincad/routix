@@ -3,7 +3,8 @@ Cross Reference Table
 
 Symbol                                            File
 KERNEL_PDT                                        syscalla.o
-actual                                            sys_time.o
+actual                                            sys_misc.o
+                                                  sys_time.o
                                                   sys_con.o
                                                   sys_proc.o
                                                   sys_mem.o
@@ -11,7 +12,8 @@ actual                                            sys_time.o
                                                   syscalls.o
 close                                             sys_proc.o
 clrscr                                            sys_con.o
-convertir_direccion                               sys_con.o
+convertir_direccion                               sys_misc.o
+                                                  sys_con.o
                                                   sys_proc.o
 copy_page                                         sys_proc.o
 despertar_task                                    sys_proc.o
@@ -30,7 +32,8 @@ kmapmem                                           sys_proc.o
                                                   sys_mem.o
 kmem_free                                         sys_proc.o
                                                   sys_mem.o
-kprintf                                           sys_time.o
+kprintf                                           sys_misc.o
+                                                  sys_time.o
                                                   sys_proc.o
                                                   sys_mem.o
                                                   syscalls.o
@@ -46,6 +49,8 @@ read                                              sys_proc.o
 remover_timer                                     sys_time.o
 spin_lock                                         sys_con.o
 spin_unlock                                       sys_con.o
+strcmp                                            sys_misc.o
+strcpy                                            sys_misc.o
 strlen                                            sys_con.o
 sys_clrscr                                        sys_con.o
 sys_console                                       syscalla.o
@@ -58,9 +63,12 @@ sys_free_page                                     sys_mem.o
 sys_get_pid                                       sys_proc.o
 sys_get_ppid                                      sys_proc.o
 sys_gets                                          sys_con.o
+sys_getvar                                        sys_misc.o
 sys_kill                                          sys_time.o
 sys_malloc_page                                   sys_mem.o
 sys_mem                                           syscalla.o
+                                                  syscalls.o
+sys_misc                                          syscalla.o
                                                   syscalls.o
 sys_no_existe                                     syscalls.o
                                                   syscalla.o
@@ -71,6 +79,7 @@ sys_proc_dump_v                                   sys_time.o
 sys_process                                       syscalla.o
                                                   syscalls.o
 sys_renice                                        sys_proc.o
+sys_setvar                                        sys_misc.o
 sys_show                                          sys_proc.o
 sys_sleep                                         sys_time.o
 sys_timer                                         syscalla.o
@@ -86,6 +95,8 @@ syscall_group_vector                              syscalls.o
                                                   syscalla.o
 syscall_mem                                       sys_mem.o
                                                   syscalla.o
+syscall_misc                                      sys_misc.o
+                                                  syscalla.o
 syscall_process                                   sys_proc.o
                                                   syscalla.o
 syscall_timer                                     sys_time.o
@@ -95,3 +106,5 @@ tomar_nombre_tarea                                sys_proc.o
 ufree_page                                        sys_proc.o
 umalloc_page                                      sys_proc.o
                                                   sys_mem.o
+variables                                         sys_misc.o
+                                                  sys_proc.o

@@ -9,6 +9,7 @@
 #define SYS_FLOW	(2 << 16)
 #define SYS_TIMER	(3 << 16)
 #define SYS_MEM		(4 << 16)
+#define SYS_MISC	(5 << 16)
 
 // Funciones de grupo PROCESS
 #define SYS_EXEC		0
@@ -38,6 +39,9 @@
 #define SYS_FREE_PAGE	1
 #define SYS_FREE_MEM	2
 
+// Funciones de grupo MEM
+#define SYS_SETVAR		0
+#define SYS_GETVAR		1	
 
 void syscall (void);
 int sys_no_existe (dword numero);
@@ -60,4 +64,6 @@ int sys_usleep(int usegundos);
 int sys_proc_dump(int segundos);
 int sys_kill(int pid, int sig);
 
-
+// Grupo Misc
+int setvar (char *nombre, int valor);
+int getvar (char *nombre);

@@ -34,5 +34,5 @@ alloc.o: $(Alloc)/alloc.c
 	$(CC) $(CFLAGS) $(Alloc)/alloc.c -o alloc.o
 
 clean:
-	rm *.o 
-
+	rm *.a
+	rm *.o

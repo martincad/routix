@@ -8,8 +8,12 @@ void pepito(int,int,int);
 char a[10];
 void main(void) 
 {
-	printf("Antes de ejecutar una llamada invalida\n");
-	__asm__ __volatile__ ("mov $0x0110, %eax ; int $0x50");
+	printf("Antes de ejecutar setvar\n");
+	setvar("Martino",100);
+	setvar("Martino",100);
+
+	printf("GETVAR pepe: %d\n", getvar("pepe"));
+	printf("GETVAR Martino: %d\n", getvar("Martino"));
 }    
 
 void pepito(int a, int b, int i)

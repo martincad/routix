@@ -263,4 +263,18 @@ char getascii ( char c )
  return valor;
 }
 
+////////////////// Grupo Misc ///////////////////////////
+int setvar (char *nombre, int valor)
+{
+    int retorno;
+    _syscall2( SYS_MISC | SYS_SETVAR, retorno, nombre, valor);
+    return retorno;
+}
+
+int getvar (char *nombre)
+{
+    int retorno;
+	 _syscall1( SYS_MISC | SYS_GETVAR, retorno, nombre);
+    return retorno;
+}
 

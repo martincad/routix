@@ -13,7 +13,7 @@ OBJDIR = ../../obj
 SRCDIR = ../../src
 INCDIR = ../../include
 
-OBJECTS = syscalls.o syscalla.o sys_mem.o sys_proc.o sys_con.o sys_time.o
+OBJECTS = syscalls.o syscalla.o sys_mem.o sys_proc.o sys_con.o sys_time.o sys_misc.o
 
 
 all : syscalls.a $(OBJECTS)
@@ -40,6 +40,9 @@ sys_con.o: sys_con.c $(INCDIR)/syscalls.h $(INCDIR)/task.h
 
 sys_time.o: sys_time.c $(INCDIR)/syscalls.h $(INCDIR)/task.h
 	$(CC) $(CFLAGS) sys_time.c -o sys_time.o
+
+sys_misc.o: sys_misc.c $(INCDIR)/syscalls.h $(INCDIR)/task.h
+	$(CC) $(CFLAGS) sys_misc.c -o sys_misc.o
 
 clean:
 	del  *.o

@@ -19,6 +19,7 @@ extern int sys_process (void);
 extern int sys_console (void);
 extern int sys_timer (void);
 extern int sys_mem (void);
+extern int sys_misc (void);		//Grupo de llamadas al sistema provisorias (cualquier fruta... va acá).
 
 extern task_struct_t *actual;
 
@@ -29,7 +30,8 @@ int (*syscall_group_vector[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_console,	
 	(int (*) (void)) NULL,				// Llamada a sistema para el grupo de FLOWS
 	(int (*) (void)) sys_timer,	
-	(int (*) (void)) sys_mem	
+	(int (*) (void)) sys_mem,	
+	(int (*) (void)) sys_misc	
 };
 
 // Definen la cantidad máxima de llamadas al sistema por grupo. Son pasadas a una variable para poder levantar
@@ -40,7 +42,8 @@ unsigned int syscall_group_max[MAX_SYSCALLS] = {
 	SYS_CONSOLE_MAX,
 	0,
 	SYS_TIMER_MAX,
-	SYS_MEM_MAX
+	SYS_MEM_MAX,
+	SYS_MISC_MAX
 };
 
 int sys_no_existe (dword numero)

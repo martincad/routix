@@ -30,6 +30,8 @@ extern int sys_mem (void);
 
 extern task_struct_t *actual;
 
+// Acceso al listado
+extern timer_t *timer_inicio;
 
 
 
@@ -39,9 +41,19 @@ int (*syscall_timer[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_proc_dump,
 	(int (*) (void)) sys_kill,
 	(int (*) (void)) sys_usleep,
-	(int (*) (void)) sys_proc_dump_v
+	(int (*) (void)) sys_proc_dump_v,
+	(int (*) (void)) sys_timer_dump
 };
 
+
+
+// Funcion llamada por el timer en el retorno
+static void despertar(timer_t *info)
+{
+  if ( info != NULL ) {
+    despertar_task(info->proceso);
+  }
+}
 
 
 int sys_sleep(int segundos)
@@ -62,6 +74,7 @@ int sys_usleep(int usegundos)
  // Lo llenamos
  timer->ticks = usegundos / 10000;
  timer->proceso = actual;
+ timer->func=despertar;
 
  // Insertamos el timer
  insertar_timer(timer);
@@ -82,7 +95,7 @@ int sys_usleep(int usegundos)
  // Liberamos el espacio alocado
  free(timer);
 
- return 0;
+ return OK;
 }
 
 
@@ -140,5 +153,22 @@ int sys_proc_dump_v(int pid)
 
     return OK;
 }	
-    
+
+
+
+int sys_timer_dump(void)
+{
+  timer_t *tmp;
+
+  cli();
+
+  kprintf("Pid Estado\n");
+  for (tmp=timer_inicio; tmp != NULL; tmp=tmp->proximo) {
+    kprintf("%d %s\n", tmp->proceso->pid, (tmp->estado == PENDIENTE) ? "Pendiente" : "Finalizado" );
+  }
+
+	  sti();
+
+   
+}
 

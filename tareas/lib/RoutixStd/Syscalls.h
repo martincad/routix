@@ -30,10 +30,11 @@
 
 // Funciones de grupo TIMER
 #define SYS_SLEEP		0
-#define SYS_PROC_DUMP	1
+#define SYS_PROC_DUMP		1
 #define SYS_KILL		2
 #define SYS_USLEEP		3
-#define SYS_PROC_DUMP_V	4
+#define SYS_PROC_DUMP_V		4
+#define SYS_TIMER_DUMP		5
 
 // Funciones de grupo MEM
 #define SYS_MALLOC_PAGE	0

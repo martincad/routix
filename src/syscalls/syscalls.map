@@ -16,7 +16,8 @@ convertir_direccion                               sys_misc.o
                                                   sys_con.o
                                                   sys_proc.o
 copy_page                                         sys_proc.o
-despertar_task                                    sys_proc.o
+despertar_task                                    sys_time.o
+                                                  sys_proc.o
 dormir_task                                       sys_time.o
                                                   sys_proc.o
 encontrar_proceso_por_pid                         sys_time.o
@@ -26,6 +27,7 @@ find_empty_var                                    sys_misc.o
 find_var                                          sys_misc.o
 free                                              sys_time.o
                                                   sys_proc.o
+get_new_pid                                       sys_proc.o
 gets                                              sys_con.o
 getvar                                            sys_misc.o
                                                   sys_proc.o
@@ -55,7 +57,6 @@ open                                              sys_proc.o
 perror                                            sys_proc.o
 putchar                                           sys_con.o
 read                                              sys_proc.o
-rematar_task                                      sys_proc.o
 remover_task                                      sys_proc.o
 remover_timer                                     sys_time.o
 setvar                                            sys_misc.o
@@ -98,6 +99,7 @@ sys_show                                          sys_proc.o
 sys_sleep                                         sys_time.o
 sys_timer                                         syscalla.o
                                                   syscalls.o
+sys_timer_dump                                    sys_time.o
 sys_usleep                                        sys_time.o
 sys_void                                          sys_proc.o
 sys_wait                                          sys_proc.o
@@ -117,6 +119,7 @@ syscall_process                                   sys_proc.o
 syscall_timer                                     sys_time.o
                                                   syscalla.o
 tareas_inicio                                     sys_time.o
+timer_inicio                                      sys_time.o
 tomar_nombre_tarea                                sys_proc.o
 ufree_page                                        sys_proc.o
 umalloc_page                                      sys_proc.o

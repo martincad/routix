@@ -20,50 +20,54 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0x80000000      0xca0
+.text           0x80000000      0xf40
  *.o(.text)
- .text          0x80000000      0x560 shell.o
+ .text          0x80000000      0x550 shell.o
                 0x80000000                main
- .text          0x80000560      0x4f0 ../lib/routstd.a(routix.o)
-                0x8000057d                usleep
-                0x80000767                putchar
-                0x800005fe                free_mem
-                0x80000560                sleep
-                0x800006cc                renice
-                0x8000078e                puts
-                0x80000a05                setvar
-                0x8000059a                proc_dump
-                0x80000671                exec
-                0x80000983                printn_
-                0x80000a25                getvar
-                0x8000068e                gets
-                0x800005cc                malloc_page
-                0x800005e1                free_page
-                0x800005af                proc_dump_v
-                0x8000074d                show
-                0x80000613                perror
-                0x800006fb                get_pid
-                0x800009de                getascii
-                0x800006a8                fork
-                0x80000717                get_ppid
-                0x8000062d                kill
-                0x80000733                exit
-                0x800006ba                voido
-                0x800007d4                printf
-                0x800007c2                clrscr
- .text          0x80000a50      0x250 ../lib/routstd.a(string.o)
-                0x80000ae0                strcat
-                0x80000a50                strcmp
-                0x80000b50                strncpy
-                0x80000c37                atoi
-                0x80000c19                memcpy
-                0x80000b8a                str_to_upper
-                0x80000b21                strcpy
-                0x80000bc7                memcmp
-                0x80000ab3                strlen
-                0x00000ca0                __code_size = SIZEOF (.text)
+ .text          0x80000550      0x7a0 ../lib/routstd.a(routix.o)
+                0x8000056d                usleep
+                0x8000078e                putchar
+                0x800009ce                sprintf
+                0x80000603                free_mem
+                0x80000550                sleep
+                0x800006d1                renice
+                0x800007b5                puts
+                0x80000ca9                setvar
+                0x8000058a                proc_dump
+                0x80000676                exec
+                0x80000bc7                printn_
+                0x80000cc9                getvar
+                0x800005bc                timer_dump
+                0x80000693                gets
+                0x800005d1                malloc_page
+                0x800005e6                free_page
+                0x8000059f                proc_dump_v
+                0x8000076c                wait
+                0x80000752                show
+                0x80000618                perror
+                0x80000700                get_pid
+                0x80000c82                getascii
+                0x800006ad                fork
+                0x8000071c                get_ppid
+                0x80000c22                printn_s
+                0x80000632                kill
+                0x80000738                exit
+                0x800006bf                voido
+                0x800007fb                printf
+                0x800007e9                clrscr
+ .text          0x80000cf0      0x250 ../lib/routstd.a(string.o)
+                0x80000d80                strcat
+                0x80000cf0                strcmp
+                0x80000df0                strncpy
+                0x80000ed7                atoi
+                0x80000eb9                memcpy
+                0x80000e2a                str_to_upper
+                0x80000dc1                strcpy
+                0x80000e67                memcmp
+                0x80000d53                strlen
+                0x00000f40                __code_size = SIZEOF (.text)
 
-.data           0x88000000      0x240 load address 0x80000ca0
+.data           0x88000000      0x240 load address 0x80000f40
  *.o(.data)
  .data          0x88000000      0x220 shell.o
                 0x88000000                str

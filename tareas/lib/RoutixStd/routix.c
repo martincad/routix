@@ -51,6 +51,14 @@ int proc_dump_v(int pid)
  return retorno;
 }
 
+int timer_dump(void)
+{
+  int retorno;
+
+  _syscall0( SYS_TIMER | SYS_TIMER_DUMP, retorno);
+
+  return retorno;
+}
 
 //Entrega una pagina al espacio de usuario
 void *malloc_page(void)

@@ -44,6 +44,8 @@ void main(void)
 	
 	else if ( ! strcmp(msg, "ps count") ) {  proc_dump(); }
 
+	else if ( ! strcmp(msg, "timers") ) {  timer_dump(); }
+
 	else if ( ! strcmp(msg, "kill") ) {
 
           puts("Pid: ");

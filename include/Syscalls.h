@@ -45,11 +45,12 @@
 
 // Funciones de grupo TIMER
 #define SYS_SLEEP		0
-#define SYS_PROC_DUMP	1
+#define SYS_PROC_DUMP		1
 #define SYS_KILL		2
 #define SYS_USLEEP		3
-#define SYS_PROC_DUMP_V	4
-#define SYS_TIMER_MAX	5		// Cantidad de llamadas en el grupo TIMER. Debe ser siempre el ultimo valor
+#define SYS_PROC_DUMP_V		4
+#define SYS_TIMER_DUMP		6
+#define SYS_TIMER_MAX		7	// Cantidad de llamadas en el grupo TIMER. Debe ser siempre el ultimo valor
 
 // Funciones de grupo MEM
 #define SYS_MALLOC_PAGE	0
@@ -92,6 +93,8 @@ int sys_usleep(int usegundos);
 int sys_proc_dump(void);
 extern int sys_kill(pid_t pid, int sig);
 int sys_proc_dump_v(int);
+int sys_timer_dump(void);
+
 
 // Grupo mem
 void *sys_malloc_page(void);

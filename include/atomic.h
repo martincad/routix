@@ -4,10 +4,10 @@
 #include "system.h"
 #endif
 
-typedef int sem_t;
+typedef int spinlock_t;
 
 int TestAndSet(volatile int *);
 
-void sem_wait (sem_t *);
-void sem_post (sem_t *);
+void spin_lock (spinlock_t *);
+void spin_unlock (spinlock_t *);
 

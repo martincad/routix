@@ -1,0 +1,26 @@
+
+Cross Reference Table
+
+Symbol                                            File
+_code_size                                        init.o
+_data_size                                        init.o
+clrscr                                            kmain.o
+dev_fat                                           kmain.o
+enable_irq                                        kmain.o
+entrada_de_inicio                                 kmain.o
+floppy_cache_init                                 kmain.o
+inicializacion_kmalloc                            kmain.o
+inicializarInterrupciones                         kmain.o
+inicializarPics                                   kmain.o
+init                                              init.o
+init_8254                                         kmain.o
+init_MM                                           kmain.o
+init_all_memory                                   kmain.o
+init_time                                         kmain.o
+kmain                                             kmain.o
+                                                  init.o
+kprintf                                           kmain.o
+mascarasPics                                      kmain.o
+memoria                                           kmain.o
+puts                                              kmain.o
+start_scheduler                                   kmain.o

@@ -39,6 +39,8 @@ void main(void)
 	else if ( ! strcmp(msg, "\n") ) {
 	}
 	else if ( ! strcmp(msg, "ps") ) {  proc_dump(); }
+	
+	else if ( ! strcmp(msg, "ps count") ) {  proc_dump(); }
 
 	else if ( ! strcmp(msg, "kill") ) {
 

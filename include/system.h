@@ -55,3 +55,8 @@ extern addr_t KERNEL_PDT;
 
 //Kernel PANIC (suceso inesperado o irrecuperable)
 void kpanic(char *str);
+
+#define nop() __asm__ __volatile__ ("nop")
+
+#define cli() __asm__ __volatile__ ("pushf ; cli")
+#define sti() __asm__ __volatile__ ("popf")

@@ -9,6 +9,8 @@
 #include "../../include/file.h"
 #include "../../include/errno.h"
 #include "../../include/timer.h"
+#include "../../include/atomic.h"
+
 #ifndef __TASK
 #include "../../include/task.h"
 #endif
@@ -35,6 +37,7 @@ int (*syscall_timer[MAX_SYSCALLS]) (void) = {
 };
 
 
+
 int sys_sleep(int segundos)
 {
  sys_usleep(segundos*1000000);
@@ -47,27 +50,28 @@ int sys_usleep(int usegundos)
  // Creamos espacio en mem para la structura del timer
  timer = (timer_t *) malloc( sizeof(timer_t) );
 
+// timer = &timer_array[timer_index++];
+
  // Lo llenamos
  timer->ticks = usegundos / 10000;
  timer->proceso = actual;
 
  // Insertamos el timer
  insertar_timer(timer);
-
+ 
  // Dormimos la tarea actual
  dormir_task(actual);
 
  // Switcheamos de proceso mediante la macro _reschedule quien realiza una llamada
  // a la interrupción 0x51
  _reschedule();
- 
 
  // Volvemos ! el timer se venció. Este es nuestro punto de retorno.
  // todavía estamos en modo kernel en la llamada al sistema
 
  // Sacamos el timer vencido de la estructura de timers
  remover_timer(timer);
-
+ 
  // Liberamos el espacio alocado
  free(timer);
 

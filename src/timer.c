@@ -13,7 +13,7 @@
 dword jiffies=0;
 
 // Puntero al inicio de la lista de timers
-timer_t *timer_inicio=NULL;
+volatile timer_t *timer_inicio=NULL;
 
 void actualizar_timers(void);
 
@@ -47,7 +47,7 @@ void timertick_handler()
 
 void actualizar_timers(void)
 {
- timer_t *tmp;
+ volatile timer_t *tmp;
 
  // Chequeamos si hay timers activos
  if ( timer_inicio == NULL ) {
@@ -55,7 +55,7 @@ void actualizar_timers(void)
  }
 
  for ( tmp=timer_inicio; tmp != NULL; tmp = tmp->proximo ) {
-	 
+
    if ( --(tmp->ticks) <= 0 ) {
      despertar_task(tmp->proceso);
    }
@@ -67,10 +67,11 @@ void actualizar_timers(void)
 
 int insertar_timer(timer_t *nuevo)
 {
- timer_t *tmp;
+	cli();
+	volatile timer_t *tmp;
 	
  if ( nuevo == NULL ) { return 0; }
-
+ 
  // Nos paramos al ppio de la lista
  tmp = timer_inicio;
 
@@ -80,7 +81,7 @@ int insertar_timer(timer_t *nuevo)
  
    // Buscamos la última tarea
    for ( tmp = timer_inicio; tmp->proximo != NULL ; tmp = tmp->proximo );
-   	
+
    // Nos colgamos de ella
    tmp->proximo = nuevo;
  }
@@ -88,6 +89,7 @@ int insertar_timer(timer_t *nuevo)
  // La nueva tarea queda apuntando a NULL
  nuevo->proximo = NULL;
 
+ sti();
  return 1;
 }
 
@@ -96,12 +98,14 @@ int insertar_timer(timer_t *nuevo)
 // interrupciones (bajo análisis)
 int remover_timer(timer_t *timer)
 {
- timer_t *tmp;
+	cli();
+ volatile timer_t *tmp;
 
  // Es el primer timer ?
  if ( timer == timer_inicio ) {
    timer_inicio = timer->proximo;
    // Lo tengo que reemplazar por la constante correcta según la definición de errno.h
+   sti();
    return 0;
  }
  
@@ -111,6 +115,7 @@ int remover_timer(timer_t *timer)
  // Si no encontramos el timer devolvemos error
  if ( tmp == NULL ) {
    // Lo tengo que reemplazar por la constante correcta según la definición de errno.h
+   sti();
    return -1;
  }
  else {
@@ -118,5 +123,6 @@ int remover_timer(timer_t *timer)
  }
 
  // Lo tengo que reemplazar por la constante correcta según la definición de errno.h
+   sti();
  return 0;
 }

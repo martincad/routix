@@ -27,7 +27,7 @@ volatile int kernel_lock=0;
 
 
 //Funcion de bloqueo del semaforo (equivalente a down o wait)
-void sem_wait (sem_t *valor)
+void spin_lock (spinlock_t *valor)
 {
     while(1) {
 	while (TestAndSet(&kernel_lock));
@@ -44,7 +44,7 @@ void sem_wait (sem_t *valor)
 
 
 //Funcion de desbloqueo del semaforo (equivalente a up o signal)
-void sem_post (sem_t *valor)
+void spin_unlock (spinlock_t *valor)
 {
     while (TestAndSet(&kernel_lock));
     (*valor)++;

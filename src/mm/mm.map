@@ -21,6 +21,8 @@ free                                              alloc.o
 get_free_page                                     kalloc.o
 get_page_index                                    paging.o
                                                   mm.o
+getvar                                            paging.o
+                                                  kalloc.o
 inicializacion_kmalloc                            kalloc.o
 init_MM                                           mm.o
 init_MM_base                                      mm.o

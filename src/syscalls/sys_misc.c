@@ -11,14 +11,16 @@
 #include "../../include/task.h"
 #endif
 
-extern task_struct_t *actual;
+#include "../../include/misc.h"
 
+extern task_struct_t *actual;
+/*
 int sys_setvar(char *nombre, int valor);
 int sys_getvar(char *nombre);
 
 int find_var(char *nombre);
 int find_empty_var(void);
-
+*/
 // Vector de funciones de llamadas al sistema (grupo Misc)
 int (*syscall_misc[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_setvar,
@@ -38,7 +40,7 @@ struct {
 	int valor;
 } variables[VARIABLES_MAX];
 
-
+// Inicializar como vacias (-1) todas los pares (nombre, valor)
 void init_var(void)
 {
 	int i;
@@ -46,37 +48,50 @@ void init_var(void)
 		variables[i].valor = -1;
 }
 
-int sys_setvar(char *nombre, int valor)
+
+inline int sys_setvar(char *nombre, int valor)
 {
-    nombre = convertir_direccion (nombre , actual->cr3_backup);
+	return setvar(convertir_direccion (nombre , actual->cr3_backup), valor);
+}
+
+inline int sys_getvar(char *nombre)
+{
+	return getvar(convertir_direccion (nombre , actual->cr3_backup));
+}
+
+
+// Setea una variable en el array variables[] si no existe alli, y modifica su valor en caso de ya encontrarse
+int setvar(char *nombre, int valor)
+{
 	int i;
 	
 	if ( (i=find_var(nombre)) ==-1 )	{		//Variable no esta definida. Agregarla
 		if ( (i = find_empty_var()) ==-1 )	{
-kprintf("SYS_SETVAR: no hay espacio libre\n");
+			if (getvar("vardebug")==1)	// Imprimir info de debug ???
+				kprintf("SYS_SETVAR: no hay espacio libre\n");
 			return -1;					//No hay un espacio libre
 		}
 		strncpy(variables[i].nombre, nombre, VAR_NAME_MAX);
 		variables[i].valor = valor;
-kprintf("SYS_SETVAR: no estaba definida... definiendola en indice: %d\n", i);
+		if (getvar("vardebug")==1)	// Imprimir info de debug ???
+			kprintf("SYS_SETVAR: no estaba definida... definiendola en indice: %d\n", i);
 		return 0;
 	}
 	
 	//Si llegó aquí, la variable esta definida en el indice "i", debo modificarla
-kprintf("SYS_SETVAR: estaba definida ... modificandola en indice: %d\n", i);
+	if (getvar("vardebug")==1)	// Imprimir info de debug ???
+		kprintf("SYS_SETVAR: estaba definida ... modificandola en indice: %d\n", i);
 	
 	variables[i].valor = valor;
 	return 0;
 	
 }
-
-int sys_getvar(char *nombre)
+	
+int getvar(char *nombre)
 {
-    nombre = convertir_direccion (nombre , actual->cr3_backup);
 	int i;
 
 	if ( (i=find_var(nombre))!=-1) {
-kprintf("SYS_GET_VAR: se encontro en indice: %d\n", i);
 		return variables[i].valor;
 	}
 

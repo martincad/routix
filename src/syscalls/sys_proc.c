@@ -148,23 +148,6 @@ int sys_fork (void)
 		}
 		src = src->next;
     }
-/* 
-    // Pedir espacio para el stack de modo user, y mapearlo virtualmente al fondo de los datos
-    mem = umalloc_page (PAGINA_STACK, TASK_STACK);
-    if (!mem) {	//liberar
-	actual->err_no = ENOMEM;
-	return -1;
-    }
-
-    new_task->mstack = mem; 
-    if (kmapmem( mem->dir ,TASK_STACK, new_task->cr3 ,PAGE_PRES|PAGE_SUPER|PAGE_RW)!=OK){
-	kprintf("Kmapmem TASK_STACK error\n");
-	return -1;
-    }
-    
-    // Copiar el contenido del stack del padre al hijo (debo convertir la dir logica a la fisica primero)
-    copy_page( (void *) mem->dir , (void *) actual->mstack->dir);
-*/
 
     ////////// STACK
     src = actual->mstack;
@@ -316,26 +299,31 @@ int sys_exec (char *nombre)
     char nuevo_nombre[13];
     tomar_nombre_tarea(nombre,nuevo_nombre);
 
+if (getvar("mmdebug")==1)
+kprintf("1 ");
     // init_new_task devuelve la tarea creada como TASK_STOPPED, la mantendremos así hasta el final    
     new_task = init_new_task(DESC_CODE_USUARIO, DESC_DATA_USUARIO, TASK_TEXT, TASK_STACK + 4096 - 4, 0x202,\
 		    nuevo_nombre, 10);
 	
-
     if (!new_task) {	    //liberar
 		return -1;
     }
+if (getvar("mmdebug")==1)
+kprintf("2 ");
 
     new_task->mstack = umalloc_page (PAGINA_STACK, TASK_STACK);
     if (!new_task->mstack)  //liberar
 		return -1;
+if (getvar("mmdebug")==1)
+kprintf("3 ");
 
-//kprintf("TEMP: exec cr3: 0x%x\n", new_task->cr3);
-	
     if( kmapmem( new_task->mstack->dir , TASK_STACK, new_task->cr3 , PAGE_PRES|PAGE_USER|PAGE_RW)!=OK ) {
-kprintf("TEMP 1:new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
+		kprintf("TEMP 1:new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_task->mstack->dir);	
         kprintf("Kmapmem TASK_STACK error\n");
         return -1;
     }
+if (getvar("mmdebug")==1)
+kprintf("4 ");
 
 	// Direccion fisica de la ubicacion de wrappers para tareas 	
 	extern addr_t *exit_addr;
@@ -344,6 +332,8 @@ kprintf("TEMP 1:new_task->cr3: 0x%x \nStack_tarea: 0x%x\n", new_task->cr3, new_t
         kprintf("Kmapmem EXIT_TASK error\n");
         return -1;
     }
+if (getvar("mmdebug")==1)
+kprintf("5 ");
 
 	// Poner al fondo del stack la direccion de comienzo del codigo del wrapper exit
 	unsigned long *qwe = (unsigned long *) (new_task->mstack->dir + 4096 - 4);
@@ -444,13 +434,13 @@ int sys_renice (word pid, word prioridad)
     return OK;
 }
 
-pid_t sys_get_pid (void)
+inline pid_t sys_get_pid (void)
 {
     return actual->pid;
 }
 
 
-pid_t sys_get_ppid (void)
+inline pid_t sys_get_ppid (void)
 {
     return actual->ppid;
 }
@@ -481,15 +471,10 @@ void sys_exit (int valor)
 //		kprintf("TEMP: Libero UserStack\n");
 	}
 
-//	kprintf("Libero Directorio: 0x%x\n", actual->cr3_backup);
-
-//	if (sys_getvar("debug")==1)
-//		__debug();
 
 	kfree_page (actual->cr3_backup);
 //	kfree_page (actual);
 
-	//Liberar memoria, solo si no comparte las paginas con ningun pariente
 
 	sti();
 	_reschedule();

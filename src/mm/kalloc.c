@@ -11,6 +11,7 @@
 #include "../../include/errno.h"
 #include "../../include/debug.h"
 
+#include "../../include/misc.h"
 
 addr_t *_inicio,*_fin,*_sp;
 
@@ -41,6 +42,8 @@ _sp = fin;
 int kfree_page(addr_t direccion)
 {
 if ( _sp < _inicio ) { return NULL; }
+if (getvar("mmdebug")==1)
+	kprintf("KFREE: 0x%x\n", direccion);
 *_sp-- = direccion;
 
 return 1;
@@ -54,6 +57,7 @@ addr_t kmalloc_page()
 
 addr_t get_free_page()
 {
+		
 addr_t direccion;
 
 if ( _sp > _fin ) { return NULL; }
@@ -61,11 +65,9 @@ if ( _sp > _fin ) { return NULL; }
 _sp++;
 direccion = *_sp;
 
-#if __KMM_DEBUG
-kprintf("KMALLOC: _inicio=0x%x _fin=0x%x _sp=0x%x - valor: %x\n",_inicio,_fin,_sp,direccion);
-#endif
+if (getvar("mmdebug")==1)
+	kprintf("KMALLOC: _inicio=0x%x _fin=0x%x _sp=0x%x - valor: %x\n",_inicio,_fin,_sp,direccion);
 
-//kprintf("TEMP: get_free_page: Entregando pagina\n");
 
 return direccion;
 }

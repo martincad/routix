@@ -26,6 +26,8 @@ find_empty_var                                    sys_misc.o
 find_var                                          sys_misc.o
 free                                              sys_time.o
 gets                                              sys_con.o
+getvar                                            sys_misc.o
+                                                  sys_proc.o
 header_floppy_cache                               sys_proc.o
 init_new_task                                     sys_proc.o
 init_var                                          sys_misc.o
@@ -51,6 +53,7 @@ perror                                            sys_proc.o
 putchar                                           sys_con.o
 read                                              sys_proc.o
 remover_timer                                     sys_time.o
+setvar                                            sys_misc.o
 spin_lock                                         sys_con.o
 spin_unlock                                       sys_con.o
 strcmp                                            sys_misc.o

@@ -85,43 +85,36 @@ int kmapmem ( addr_t fisica, addr_t logica, addr_t directorio, word atributo)
 	atributo = atributo & 0xfff;
 
 	if ( (fisica & 0xfff) || (logica & 0xfff) ) {
-	    if ( DEBUG_PAGINACION ) 
-		kprintf("Debug Mode - Fis2log: las direcciones deben estar alineadas a 4KB\n");
+	    if ( getvar("pagedebug")==1 )
+			kprintf("Debug Mode - Fis2log: las direcciones deben estar alineadas a 4KB\n");
 	    return ERR_NO_ALIGN;
 
 	}
 
-	if ( DEBUG_PAGINACION )
-	{
-//	 kprintf("Debug Mode - Fis2log: Mapeando 0x%x en 0x%x\n", fisica, logica);
-//	 kprintf("Debug Mode - Fis2log: Indice DIR: %d  Indice Tabla: %d\n", indice.dir_index, indice.tabla_index);
+    if ( getvar("pagedebug")==1 ) 	{
+		 kprintf("Debug Mode - Fis2log: Mapeando 0x%x en 0x%x\n", fisica, logica);
+		 kprintf("Debug Mode - Fis2log: Indice DIR: %d  Indice Tabla: %d\n", indice.dir_index, indice.tabla_index);
 	}
 
 	dir= (pd_t *) directorio;
 
-	if (dir->entry[indice.dir_index] ==  0 )
-	{
-		if ( DEBUG_PAGINACION )
-		{
-  // 		  kprintf("Debug Mode - Fis2log: Debe alocarse una nueva tabla de paginas\n");
-		}
-
+	if (dir->entry[indice.dir_index] ==  0 ) 	{
+	    if ( getvar("pagedebug")==1 )
+		 	kprintf("Debug Mode - Fis2log: Debe alocarse una nueva tabla de paginas\n");
+	
 		dir->entry[indice.dir_index]= (pde_t) make_pde ( kmalloc_page(), PAGE_PRES | PAGE_SUPER | PAGE_RW);
 		tabla = (pt_t *) (dir->entry[indice.dir_index] & 0xfffff000);
 		/* Poner todas las pte en 0 */
 		for (i=0; i < PAGINAS_POR_TABLA ; i++)
-			tabla->entry[i]=(pte_t) make_pte ( 0, 0);
-			
+			tabla->entry[i]=(pte_t) make_pte (0, 0);
 	}
-	else /* Si la entrada existe, esa pagina puede ya estar asignada */
-	{
+	
+	else    {	// Si la entrada existe, esa pagina puede ya estar asignada
+
 		tabla = (pt_t *) (dir->entry[indice.dir_index] & 0xfffff000);
-		if (tabla->entry[indice.tabla_index])
-		{
-			if ( DEBUG_PAGINACION )
-			{
-   			  kprintf("Debug Mode - Fis2log: Pagina ya en uso\n");
-			}
+		if (tabla->entry[indice.tabla_index]) {
+		    if ( getvar("pagedebug")==1 )
+    			kprintf("Debug Mode - Fis2log: Pagina ya en uso\n");
 			return ERR_DIR_BUSY;
 		}
 	}
@@ -135,9 +128,9 @@ int kmapmem ( addr_t fisica, addr_t logica, addr_t directorio, word atributo)
 int kunmapmem (addr_t logica, addr_t directorio)
 {
     if ( logica & 0xfff)  {
-        if ( DEBUG_PAGINACION ) 
-	    kprintf("Debug Mode - KunmapMem: la direccion debe estar alineada a 4KB\n");
-	return ERR_NO_ALIGN;
+	    if ( getvar("pagedebug")==1 )
+		    kprintf("Debug Mode - KunmapMem: la direccion debe estar alineada a 4KB\n");
+		return ERR_NO_ALIGN;
     }
 
     
@@ -150,9 +143,9 @@ int kunmapmem (addr_t logica, addr_t directorio)
 
     
     if ( !tabla ) {	//Si la entrada correspondiente a "logica" esta vacia
-	if ( DEBUG_PAGINACION )
-	   kprintf("Debug Mode - KunmapMem: la tabla esta vacia\n");
-    return ERR_DIR_EMPTY;
+    	if ( getvar("pagedebug")==1 )
+	   		kprintf("Debug Mode - KunmapMem: la tabla esta vacia\n");
+	    return ERR_DIR_EMPTY;
     }
 
     //Liberar la entrada correspondiente
@@ -177,15 +170,13 @@ void *make_pdt (void)
 {
     addr_t nuevo_directorio = kmalloc_page();
     if ( nuevo_directorio == 0) {
-	return NULL;
+		return NULL;
     }
 
 //	memset(nuevo_directorio, 0, PAGINA_SIZE);
     copy_page( (void *) nuevo_directorio, (void *) KERNEL_PDT);
 //kprintf("TEMP: make_pdt: Retornando directorio: 0x%x\n", nuevo_directorio);
 	return (void *) nuevo_directorio;
-	
-    
 }	
 
 // Copia una pagina completa, moviendo de a 4 bytes (movsl) una cantidad de PAGINA_SIZE / sizeof(dword) (1024 veces

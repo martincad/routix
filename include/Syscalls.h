@@ -79,8 +79,8 @@ int sys_void (void);
 int sys_exec (char *nombre);
 void sys_perror (char *str);
 int sys_renice (word pid, word prioridad);
-pid_t sys_get_pid (void);
-pid_t sys_get_ppid (void);
+inline pid_t sys_get_pid (void);
+inline pid_t sys_get_ppid (void);
 void sys_exit (int);
 void sys_show (int);
 

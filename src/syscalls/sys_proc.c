@@ -188,7 +188,6 @@ int sys_fork (void)
  */
 int sys_exec (char *nombre)
 {
-
     nombre = convertir_direccion( nombre , actual->cr3_backup);
  
     int fd;
@@ -211,9 +210,9 @@ int sys_exec (char *nombre)
     p = (struct coff_header *) buff_aux;
 
     if (p->f_magic != COFF32_TYPE) {	    // Verificar numero magico
-	actual->err_no = ENOEXEC;
-	close(fd);
-	return -1;
+		actual->err_no = ENOEXEC;
+		close(fd);
+		return -1;
     }
     byte num_secciones;
     if ( (num_secciones = p->f_nscns)!= 3) {
@@ -232,30 +231,30 @@ int sys_exec (char *nombre)
 		read(fd, buff_aux, sizeof(struct coff_sections));
 		q = (struct coff_sections *) buff_aux;
     
-	//Por ahora no puede ejecutarse tareas con mas de 1 PAGINA de codigo
-	if (q->s_size >= PAGINA_SIZE) {
-	    actual->err_no = EFBIG;
-	    close(fd);
-	    return -1;
-	}		
-	
-	if ( q->s_flags == COFF32_TEXT ) {
-	    memcpy ( &sec_text , q , sizeof(struct coff_sections) );
-	    verificacion = verificacion | COFF32_TEXT;
-	}
-	else if ( q->s_flags == COFF32_DATA ) {
-	    memcpy ( &sec_data , q , sizeof(struct coff_sections) );
-	    verificacion = verificacion | COFF32_DATA;
-	}
-	else if ( q->s_flags == COFF32_BSS ) {
-	    memcpy ( &sec_bss , q , sizeof(struct coff_sections) );
-	    verificacion = verificacion | COFF32_BSS;
-	}
-	else {	    //No se puede identificar el tipo de seccion
-	    close(fd);
-	    actual->err_no = ENOEXEC;
-	    return -1;
-	}
+		//Por ahora no puede ejecutarse tareas con mas de 1 PAGINA de codigo
+/*		if (q->s_size >= PAGINA_SIZE) {
+		    actual->err_no = EFBIG;
+		    close(fd);
+		    return -1;
+		}		
+*/	
+		if ( q->s_flags == COFF32_TEXT ) {
+		    memcpy ( &sec_text , q , sizeof(struct coff_sections) );
+		    verificacion = verificacion | COFF32_TEXT;
+		}
+		else if ( q->s_flags == COFF32_DATA ) {
+		    memcpy ( &sec_data , q , sizeof(struct coff_sections) );
+		    verificacion = verificacion | COFF32_DATA;
+		}
+		else if ( q->s_flags == COFF32_BSS ) {
+		    memcpy ( &sec_bss , q , sizeof(struct coff_sections) );
+		    verificacion = verificacion | COFF32_BSS;
+		}
+		else {	    //No se puede identificar el tipo de seccion
+		    close(fd);
+		    actual->err_no = ENOEXEC;
+		    return -1;
+		}
     }
         	    
     //Verificar que posea una seccion de codigo, una de datos inicializados y sin inicializar
@@ -276,9 +275,9 @@ int sys_exec (char *nombre)
     word paginas_texto, paginas_datos;
 
     paginas_texto = sec_text.s_size / PAGINA_SIZE;
-    if ( sec_text.s_size % PAGINA_SIZE )
+    if ( sec_text.s_size % PAGINA_SIZE ) {
 		paginas_texto++;
-    
+	}
     //Tamaño en bytes del .DATA + .BSS
     int size_datos = sec_data.s_size + sec_bss.s_size;
 
@@ -328,7 +327,7 @@ int sys_exec (char *nombre)
 	// Poner al fondo del stack la direccion de comienzo del codigo del wrapper exit
 	unsigned long *qwe = (unsigned long *) (new_task->mstack->dir + 4096 - 4);
 	*qwe = (unsigned long) EXIT_TASK;
-	
+
     new_task->num_code = paginas_texto;
     new_task->num_data = paginas_datos;
     new_task->num_stack = 1;
@@ -343,13 +342,13 @@ int sys_exec (char *nombre)
 	
     for( i=1 ;  i < paginas_texto ; i++) {
 		mem->next = umalloc_page (PAGINA_CODE, TASK_TEXT + (i*PAGINA_SIZE) );
+		mem = mem->next;
         bytes_leidos =  read(fd, (void *)mem->dir , PAGINA_SIZE);
 		if (bytes_leidos < 0) {	    //error de algo.... liberar memoria
 		    actual->err_no = EIO;
 		    close(fd);
 		    return -1;
 		}
-		mem = mem->next;
     }
 
     //Pedir memoria para los datos (.DATA + .BSS)

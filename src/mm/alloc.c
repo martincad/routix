@@ -1,6 +1,7 @@
-/* alloc.c
- * Memory Manager */
-
+/*!  \addtogroup MemoryManager
+	\page alloc.c
+	Administración de bloques variables de memoria (malloc y free).
+*/
 
 #ifndef __SYSTEM
 #include "../../include/system.h"

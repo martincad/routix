@@ -1,4 +1,7 @@
-/* task.c */
+/*!  \addtogroup Scheduler
+	\page task.c
+	Se incluyen todas las funciones relacionadas con la creación y estado de las tareas y el manejo del TSS.
+*/
 
 #include "../../include/system.h"
 #include "../../include/task.h"
@@ -230,8 +233,6 @@ task_struct_t *init_new_task(word cs, word ds, dword eip, dword esp, dword eflag
 
  return nueva;
 }
-
-
 
 
 

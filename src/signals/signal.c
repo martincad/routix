@@ -1,4 +1,8 @@
-/* signal.c */
+/*!  \addtogroup Signals
+	\page signals.c
+	Implementación en desarrollo
+*/
+
 
 #ifndef __SIGNAL
 #include "../../include/signal.h"

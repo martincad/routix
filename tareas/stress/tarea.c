@@ -12,6 +12,7 @@ void main(void)
 	int mem_before = free_mem();
 	int mem_after;
 	
+	
 	for (j=0 ; j<100 ; j++) {
 	
 		for( i=0 ; i<0x8ffff ; i++);
@@ -22,12 +23,5 @@ void main(void)
 			
 		printf("\nStress info: se ha logrado ejecutar %d procesos", j+1);
 	}
-    
-	for( i=0 ; i<0xfffff ; i++);
-	printf("\nStress2 ha ejecutado con exito %d tareas", j);
-	mem_after = free_mem();
-	printf("\nPaginas libre antes: %d\tahora: %d\n", mem_before,mem_after);
-
-	while(1);	
 }
 

@@ -1,4 +1,9 @@
-/* sys_mem.c: llamadas al sistema del grupo SYS_MEM */
+/*!  \addtogroup Syscalls
+	\page sys_mem.c
+	Aquí se encuentran las llamadas relacionadas con la administración de
+	memoria del User Space
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/paging.h"

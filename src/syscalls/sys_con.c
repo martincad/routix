@@ -1,4 +1,8 @@
-/* sys_con.c: llamadas del grupo CONSOLE */
+/*!  \addtogroup Syscalls
+	\page sys_con.c
+	Syscalls relacionadas con la consola y las terminales
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/paging.h"

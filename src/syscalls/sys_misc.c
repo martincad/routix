@@ -1,4 +1,10 @@
-/* sys_mem.c: llamadas al sistema del grupo SYS_MEM */
+/*!  \addtogroup Syscalls
+	\page sys_misc.c
+	Llamadas al sistema varias. Aquí se encuentran las llamadas temporales
+	que no son parte de estandares, y de dudosa utilización en un kernel
+	estable
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/paging.h"

@@ -1,4 +1,7 @@
-/* init.c */
+/*!  \addtogroup BootStrap
+	\page init.c
+	Módulo de arranque de Routix. Encargado de reubicar al sistema en memoria.	
+*/
 
 #include "../../include/system.h"
 

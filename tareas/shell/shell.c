@@ -104,7 +104,7 @@ void main(void)
 			printf("%s no definida\n", msg1);
 		else printf ("Valor de %s: %d\n", msg1, j);
 	}
-	
+
 	else printf("comando o nombre de archivo erroneo\n");
     }
 

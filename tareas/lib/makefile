@@ -36,3 +36,5 @@ alloc.o: $(Alloc)/alloc.c
 clean:
 	rm *.a
 	rm *.o
+	del *.a
+	del *.o

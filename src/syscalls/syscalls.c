@@ -1,4 +1,8 @@
-/* int.c */
+/*!  \addtogroup Syscalls
+	\page syscalls.c
+	Core de las llamadas al sistema (junto con syscalls.asm).
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/paging.h"

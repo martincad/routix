@@ -1,3 +1,8 @@
+/*!  \addtogroup BootStrap
+	\page kmain.c
+	Núcleo de la inicialización del sistema. Una vez que termina de ejecutarse, el control del sistema lo toma la tarea init
+*/
+
 #include "../../include/system.h"
 #include "../../include/paging.h"
 #include "../../include/segm.h"

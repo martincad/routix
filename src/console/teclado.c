@@ -1,5 +1,6 @@
-/* teclado.c */
-
+/*!  \addtogroup Consola
+	\page teclado.c		Contiene las funciones de manejo de teclado. 
+*/
 #include "../../include/system.h"
 #include "../../include/teclado.h"
 #include "../../include/video.h"
@@ -8,11 +9,11 @@
 #include "../../include/event.h"
 
 
-/* Puntero a tabla de caracteres (por default keymap_std) */
+/*! Puntero a tabla de caracteres (por default keymap_std) */
 unsigned int *keymap = keymap_std;
 
-/* Buffer driver de teclado */
-#define MAX_BUFF_TECLADO  8 
+/*! Buffer driver de teclado */
+#define MAX_BUFF_TECLADO   16
 char buff_teclado[MAX_BUFF_TECLADO + 2];
 char *buff_head = buff_teclado;	    /* Apunta al lugar donde debo guardar el prox caracter */
 char *buff_tail = buff_teclado;	    /* apunta al caracter que debo sacar primero */
@@ -21,15 +22,15 @@ word buff_cant = 0;
 char shift=0, alt=0, ctrl=0;
 char num_lock, caps_lock, scr_lock;
 
-/* Buffer consola */
-#define MAX_BUFF_CONSOLA   16
+/*! Buffer consola, almacenado en una cola circular */
+#define MAX_BUFF_CONSOLA   32
 char buff_consola[MAX_BUFF_CONSOLA + 2];
 char *consola_head = buff_consola;	    /* Apunta al lugar donde debo guardar el prox caracter */
 char *consola_tail = buff_consola;	    /* apunta al caracter que debo sacar primero */
 word consola_cant = 0;
 
 
-/* Rutina de atención de interrupción de teclado. Solo toma los scan codes del puerto correspondiente y los coloca
+/*! Rutina de atención de interrupción de teclado. Solo toma los scan codes del puerto correspondiente y los coloca
  * en una cola circular de MAX_BUFF_TECLADO caracteres. */
 void Teclado(void) 
 {
@@ -70,6 +71,8 @@ salir_int_teclado:
     endOfInterrupt();	
 }
 
+/*! Toma los scancodes del buffer de teclado y según el estado de las teclas especiales, los transforma en 
+ * caracteres ascii los cuales coloca en el buffer "buff_consola" */
 void leer_buff_teclado (void)
 {
     unsigned int car;
@@ -97,44 +100,43 @@ void leer_buff_teclado (void)
 
 }
 
-/* Devuleve el caracter ASCII de un determinado scan code, sin tener en cuenta teclas especiales o de funciones */
-unsigned int _getascii (unsigned char code)
+/*! Devuleve el caracter ASCII de un determinado scan code, sin tener en cuenta teclas especiales o de funciones */
+inline unsigned int _getascii (unsigned char code)
 {
     return keymap[code];
 }
 
-/* Devuelve el ASCII, teniendo en cuenta el estado de las teclas de especiales. 
+/*! Devuelve el ASCII, teniendo en cuenta el estado de las teclas de especiales. 
  * Por ej: Si alguien presiona CTRL + m, esta función retirara primero el CTRL del buffer, y activará el flag "ctrl"
  * cuando retire el scan code correspondiente a "m", al ver que está activado "ctrl" devolverá un entero CTRL | M
  * Este tipo de combinaciones deberán ser reconocidas por la TTY */
-
 unsigned int getascii (unsigned char code)
 {
     unsigned int *_keymap = keymap;
     if (shift==1)
-	_keymap = keymap_std_shift;
+		_keymap = keymap_std_shift;
 
     char presionada = 1;
     unsigned int car = _keymap[code & 0x7F];
     if ( code >= 0x80 )	{	/* tecla fue soltada */
-	presionada = 0;	
+		presionada = 0;	
     }
     
     switch (car) {
-	case ALT:
-	    alt = TRUE & presionada;	    
-	    car = TECLA_MODIFICADORA;
-	    break;
-	case CTRL:
-	    ctrl = TRUE & presionada; 
-	    car = TECLA_MODIFICADORA;
-	    break;
-	case SHIFT: 
-	    shift = TRUE & presionada;
-	    car = TECLA_MODIFICADORA;
-	    break;
-	default: 
-	    car = car | alt | ctrl;
+		case ALT:
+		    alt = TRUE & presionada;	    
+	    	car = TECLA_MODIFICADORA;
+		    break;
+		case CTRL:
+		    ctrl = TRUE & presionada; 
+		    car = TECLA_MODIFICADORA;
+	    	break;
+		case SHIFT: 
+		    shift = TRUE & presionada;
+	    	car = TECLA_MODIFICADORA;
+		    break;
+		default: 
+	    	car = car | alt | ctrl;
     }
 
     return car;    
@@ -146,13 +148,13 @@ unsigned char getchar(void)
 {
     unsigned char car;
     while ( consola_cant <= 0 );
-    __asm__ __volatile__ ("cli");
+	cli();
     car = *consola_tail++;
     if (consola_tail == (buff_consola + MAX_BUFF_CONSOLA) )
-	consola_tail = buff_consola;
+		consola_tail = buff_consola;
     consola_cant--;
-    __asm__ __volatile__ ("sti");
-    return car;
+	sti();
+	return car;
 }
 
 
@@ -240,7 +242,7 @@ char *gets(char *s)
 			if ( valor == '\n' ) { string--; flag--; }
  		}
  
-}
+	}
 
 	if ( string == s ) { s=NULL; }
 	else { *string = '\0'; }

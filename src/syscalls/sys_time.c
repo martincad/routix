@@ -1,4 +1,8 @@
-/* sys_time.c: llamadas al sistema del grupo TIMER */
+/*!  \addtogroup Syscalls
+	\page sys_time.c
+	Funciones de control y administración de tiempo y timers.
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/paging.h"

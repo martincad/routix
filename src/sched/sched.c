@@ -1,4 +1,8 @@
-/* scheduler.c */
+/*!  \addtogroup Scheduler
+	\page sched.c
+	Contiene la base del scheduler y la tarea Init
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/segm.h"

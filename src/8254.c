@@ -7,7 +7,9 @@
 
 
 
-
+/*! Inicializa el timer 0 del 8254. Este genera ticks
+ * los cuales son usados tanto para mantener un patrón de tiempo
+ * como para darle control al Scheduler */
 void init_8254()
 {
 

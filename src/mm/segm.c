@@ -1,4 +1,9 @@
-/* segmentacion.c */
+/*!  \addtogroup MemoryManager
+	\page segm.c
+	Encargado de la segmentación. Como Routix basa su esquema de memoria en la paginación, este módulo
+	es sólo utilizado al inicializar el sistema.
+*/
+
 
 #include "../../include/segm.h"
 

@@ -1,4 +1,8 @@
-/* sys_proc.c: llamadas al sistema del grupo PROCESS */
+/*!  \addtogroup Syscalls
+	\page sys_proc.c
+	Contiene las llamadas al sistema relacionadas con procesos.
+*/
+
 
 #include "../../include/system.h"
 #include "../../include/paging.h"
@@ -265,7 +269,7 @@ int sys_exec (char *nombre)
     }
     
     //Verificar que haya memoria suficiente    
-    if (kmem_free() < ((actual->open_files[fd]->size / PAGINA_SIZE)+4) ) {
+    if (kmem_free() < ((actual->open_files[fd]->size / PAGINA_SIZE)+8) ) {
 		actual->err_no = ENOMEM;
 		close(fd);
 		return -1;

@@ -1,4 +1,6 @@
-/* Funciones de video grales */
+/*!  \addtogroup Consola
+	\page video.c		contiene el manejo de video a bajo nivel.
+*/
 
 #include "../../include/system.h"
 #include "../../include/stdio.h"

@@ -1,3 +1,9 @@
+/*!  \addtogroup MemoryManager
+	\page mm.c
+	Core de la administración de memoria. Inicializa la memoria y al mismo Memory Manager.
+	No es utilizado una vez que el sistema ha sido inicializado.
+*/
+
 #include "../../include/system.h"
 #include "../../include/paging.h"
 #include "../../include/segm.h"

@@ -1,4 +1,8 @@
-/* paging.c */
+/*!  \addtogroup MemoryManager
+	\page paging.c
+	Administración de la memoria paginada. Esta compuesto por funciones dedicadas a la traducción de direcciones físicas
+	a lineales y viceversa. Prepara los directorios y tablas de páginas, para accesos lógicos.
+*/
 
 #include "../../include/paging.h"
 #include "../../include/debug.h"

@@ -19,7 +19,6 @@ ctrl                                              teclado.o
 cursor_caracteristicas                            video.o
 endOfInterrupt                                    teclado.o
 getascii                                          teclado.o
-getascii_video                                    video.o
 getchar                                           teclado.o
 gets                                              teclado.o
 gotoxy                                            video.o
@@ -27,12 +26,10 @@ inportb                                           teclado.o
 keymap                                            teclado.o
 keymap_std                                        teclado.o
 keymap_std_shift                                  teclado.o
-kprintf                                           video.o
 leer_buff_teclado                                 teclado.o
 nextpos                                           video.o
 num_lock                                          teclado.o
 pos                                               video.o
-printn                                            video.o
 putchar                                           video.o
                                                   teclado.o
 puts                                              video.o

@@ -1,5 +1,7 @@
-/* kalloc.c
- * Memory Manager */
+/*!  \addtogroup MemoryManager
+	\page kalloc.c
+	Administra la memoria del kernel.
+*/
 
 
 #ifndef __SYSTEM

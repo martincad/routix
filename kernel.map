@@ -22,7 +22,7 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0xc0000000     0x7e10
+.text           0xc0000000     0x84b0
  obj/boot.o(.text)
  .text          0xc0000000       0x10 obj/boot.o
                 0xc0000000                _start
@@ -230,26 +230,28 @@ Linker script and memory map
                 0xc0007060                _bisiestos
                 0xc0006dc7                _time_debug
                 0xc0007226                _task_debug
- .text          0xc00073f0      0xa20 obj/floppy.a
-                0xc0007c46                _leer_escribir
-                0xc00076c7                _recalibrate
-                0xc0007b3b                _init_floppy_DMA
-                0xc0007dec                _Floppy
-                0xc000791d                _read_sector
-                0xc0007579                _init_floppy
-                0xc0007ae2                _block
+ .text          0xc00073f0     0x10c0 obj/floppy.a
+                0xc0007c66                _leer_escribir
+                0xc00076dc                _recalibrate
+                0xc000814a                _dump_status_register
+                0xc0007b52                _init_floppy_DMA
+                0xc000847d                _Floppy
+                0xc0007e0c                _dump_states
+                0xc0007953                _read_sector
+                0xc000757b                _init_floppy
+                0xc0007af9                _block
                 0xc00074e4                _floppy_get_result
-                0xc000783a                _seek
-                0xc0007791                _read_sector_id
+                0xc000786b                _seek
+                0xc00077c2                _read_sector_id
                 0xc0007423                _motor_off
                 0xc00073f0                _motor_on
-                0xc0007ac3                _read_msr
+                0xc0007ada                _read_msr
                 0xc000744b                _set_dor
                 0xc0007474                _floppy_sendbyte
-                0xc0007d5f                _leer_sec
-                0x00007e10                __code_size = SIZEOF (.text)
+                0xc0007d7f                _leer_sec
+                0x000084b0                __code_size = SIZEOF (.text)
 
-.data           0xc8000000     0x1dd0 load address 0xc0007e10
+.data           0xc8000000     0x1de0 load address 0xc00084b0
  obj/*(.data)
  .data          0xc8000000       0x30 obj/mm.a
                 0xc8000010                _KERNEL_PDT
@@ -274,59 +276,60 @@ Linker script and memory map
                 0xc80001e0                _directorio
  .data          0xc8000260       0x10 obj/taskdeb.a
                 0xc8000260                _estados
- .data          0xc8000270       0x10 obj/floppy.a
+ .data          0xc8000270       0x20 obj/floppy.a
+                0xc8000278                _ic_codes
                 0xc8000274                _dma_address
                 0xc8000271                _floppy_calibrado
                 0xc8000270                _motor_status
- .data          0xc8000280       0x10 obj/file.o
-                0xc8000284                _file_descriptor_actual
-                0xc8000280                _header_archivos_abiertos
- .data          0xc8000290       0x10 obj/fat12.o
-                0xc8000290                _header_floppy_cache
-                0xc8000294                _sectores_cache
- .data          0xc80002a0       0x80 obj/time.o
-                0xc80002e0                _mes
-                0xc80002b0                _dias
- .data          0xc8000320       0x10 obj/timer.o
-                0xc8000324                _timer_inicio
-                0xc8000328                _timer_lock
-                0xc8000320                _jiffies
- .data          0xc8000330     0x1a80 obj/error.o
-                0xc8000330                _error_types
- .data          0xc8001db0       0x10 obj/event.o
-                0xc8001db0                _event_inicio
- .data          0xc8001dc0       0x10 obj/spinlock.o
-                0xc8001dc0                _kernel_lock
-                0x00001dd0                __data_size = SIZEOF (.data)
+ .data          0xc8000290       0x10 obj/file.o
+                0xc8000294                _file_descriptor_actual
+                0xc8000290                _header_archivos_abiertos
+ .data          0xc80002a0       0x10 obj/fat12.o
+                0xc80002a0                _header_floppy_cache
+                0xc80002a4                _sectores_cache
+ .data          0xc80002b0       0x80 obj/time.o
+                0xc80002f0                _mes
+                0xc80002c0                _dias
+ .data          0xc8000330       0x10 obj/timer.o
+                0xc8000334                _timer_inicio
+                0xc8000338                _timer_lock
+                0xc8000330                _jiffies
+ .data          0xc8000340     0x1a80 obj/error.o
+                0xc8000340                _error_types
+ .data          0xc8001dc0       0x10 obj/event.o
+                0xc8001dc0                _event_inicio
+ .data          0xc8001dd0       0x10 obj/spinlock.o
+                0xc8001dd0                _kernel_lock
+                0x00001de0                __data_size = SIZEOF (.data)
 
-.bss            0xc8001dd0      0x380
+.bss            0xc8001de0      0x380
  obj/*(.bss)
- .bss           0xc8001dd0       0x10 obj/mm.a
- .bss           0xc8001de0       0x10 obj/floppy.a
- .bss           0xc8001df0       0x30 obj/time.o
- COMMON         0xc8001e20       0x10 obj/bootstrap.a
+ .bss           0xc8001de0       0x10 obj/mm.a
+ .bss           0xc8001df0       0x10 obj/floppy.a
+ .bss           0xc8001e00       0x30 obj/time.o
+ COMMON         0xc8001e30       0x10 obj/bootstrap.a
                                   0x0 (size before relaxing)
-                0xc8001e20                _exit_addr
- COMMON         0xc8001e30       0x40 obj/mm.a
+                0xc8001e30                _exit_addr
+ COMMON         0xc8001e40       0x40 obj/mm.a
                                   0x0 (size before relaxing)
-                0xc8001e30                __inicio
-                0xc8001e40                __fin
-                0xc8001e50                _memoria
-                0xc8001e60                __sp
- COMMON         0xc8001e70       0x70 obj/sched.a
+                0xc8001e40                __inicio
+                0xc8001e50                __fin
+                0xc8001e60                _memoria
+                0xc8001e70                __sp
+ COMMON         0xc8001e80       0x70 obj/sched.a
                                   0x0 (size before relaxing)
-                0xc8001e70                _tss
- COMMON         0xc8001ee0       0x10 obj/int.o
+                0xc8001e80                _tss
+ COMMON         0xc8001ef0       0x10 obj/int.o
                                   0x0 (size before relaxing)
-                0xc8001ee0                _bufferTeclado
- COMMON         0xc8001ef0       0x30 obj/floppy.a
+                0xc8001ef0                _bufferTeclado
+ COMMON         0xc8001f00       0x30 obj/floppy.a
                                   0x0 (size before relaxing)
-                0xc8001ef0                _status
- COMMON         0xc8001f20      0x230 obj/fat12.o
+                0xc8001f00                _status
+ COMMON         0xc8001f30      0x230 obj/fat12.o
                                   0x0 (size before relaxing)
-                0xc8001f20                _buffer
-                0xc8002120                _dev_fat
-                0xc8002140                _fat_header
+                0xc8001f30                _buffer
+                0xc8002130                _dev_fat
+                0xc8002150                _fat_header
 LOAD obj/boot.o
 LOAD obj/bootstrap.a
 LOAD obj/mm.a
@@ -353,29 +356,29 @@ LOAD obj/event.o
 LOAD obj/spinlock.o
 OUTPUT(kernel.bin binary)
 
-.comment        0xc8002150      0x2a8
- .comment       0xc8002150       0x28 obj/bootstrap.a
- .comment       0xc8002178       0x64 obj/mm.a
- .comment       0xc80021dc       0x64 obj/syscalls.a
- .comment       0xc8002240       0x28 obj/console.a
- .comment       0xc8002268       0x28 obj/sched.a
- .comment       0xc8002290       0x14 obj/signals.a
- .comment       0xc80022a4       0x14 obj/int.o
- .comment       0xc80022b8       0x14 obj/io.o
- .comment       0xc80022cc       0x28 obj/taskdeb.a
- .comment       0xc80022f4       0x14 obj/string.o
- .comment       0xc8002308       0x14 obj/pic.o
- .comment       0xc800231c       0x14 obj/floppy.a
- .comment       0xc8002330       0x14 obj/file.o
- .comment       0xc8002344       0x14 obj/libk.o
- .comment       0xc8002358       0x14 obj/stdlib.o
- .comment       0xc800236c       0x14 obj/fat12.o
- .comment       0xc8002380       0x14 obj/time.o
- .comment       0xc8002394       0x14 obj/8254.o
- .comment       0xc80023a8       0x14 obj/timer.o
- .comment       0xc80023bc       0x14 obj/error.o
- .comment       0xc80023d0       0x14 obj/event.o
- .comment       0xc80023e4       0x14 obj/spinlock.o
+.comment        0xc8002160      0x2a8
+ .comment       0xc8002160       0x28 obj/bootstrap.a
+ .comment       0xc8002188       0x64 obj/mm.a
+ .comment       0xc80021ec       0x64 obj/syscalls.a
+ .comment       0xc8002250       0x28 obj/console.a
+ .comment       0xc8002278       0x28 obj/sched.a
+ .comment       0xc80022a0       0x14 obj/signals.a
+ .comment       0xc80022b4       0x14 obj/int.o
+ .comment       0xc80022c8       0x14 obj/io.o
+ .comment       0xc80022dc       0x28 obj/taskdeb.a
+ .comment       0xc8002304       0x14 obj/string.o
+ .comment       0xc8002318       0x14 obj/pic.o
+ .comment       0xc800232c       0x14 obj/floppy.a
+ .comment       0xc8002340       0x14 obj/file.o
+ .comment       0xc8002354       0x14 obj/libk.o
+ .comment       0xc8002368       0x14 obj/stdlib.o
+ .comment       0xc800237c       0x14 obj/fat12.o
+ .comment       0xc8002390       0x14 obj/time.o
+ .comment       0xc80023a4       0x14 obj/8254.o
+ .comment       0xc80023b8       0x14 obj/timer.o
+ .comment       0xc80023cc       0x14 obj/error.o
+ .comment       0xc80023e0       0x14 obj/event.o
+ .comment       0xc80023f4       0x14 obj/spinlock.o
 
 Cross Reference Table
 
@@ -450,6 +453,8 @@ _dma_address                                      obj/floppy.a
 _dormir_task                                      obj/sched.a
                                                   obj/console.a
                                                   obj/syscalls.a
+_dump_states                                      obj/floppy.a
+_dump_status_register                             obj/floppy.a
 _dump_tm                                          obj/taskdeb.a
 _enable_irq                                       obj/pic.o
                                                   obj/floppy.a
@@ -550,6 +555,7 @@ _gotoxy                                           obj/console.a
 _header_archivos_abiertos                         obj/file.o
 _header_floppy_cache                              obj/fat12.o
                                                   obj/syscalls.a
+_ic_codes                                         obj/floppy.a
 _inc_tareas_activas                               obj/sched.a
 _inicializacion_kmalloc                           obj/mm.a
                                                   obj/bootstrap.a
@@ -702,6 +708,7 @@ _putchar                                          obj/console.a
                                                   obj/syscalls.a
 _puts                                             obj/console.a
                                                   obj/8254.o
+                                                  obj/floppy.a
                                                   obj/mm.a
                                                   obj/bootstrap.a
 _read                                             obj/file.o

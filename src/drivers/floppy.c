@@ -15,6 +15,19 @@
  *    + Proxima revision:
  *    		funciones de lectura y escritura
  *    		conversion de sectores logicos a fisicos (LBA)
+ * ----------------------------------------------------------------
+ *
+ * Revision: 24 Marzo 2004 - Mariano
+ *
+ *    + Se crea la funcion dump_status_register() con fin de poder dumpear y debugear el estado de los registros
+ *      de estado (ST0 a ST3)
+ *
+ *    + En la funcion read_sector se reemplaza la verificacion de todos los bits del ST0 por una macro "COMMAND_OK"
+ *      (definida en include/drivers/floppy.h) que solo chequea el valor del IC de este registro de estado.
+ *      Esto es ya que cuando estamos en la condicion de sector=18 el valor de "H" devuelto por ST0 cambia (de 0 a 1
+ *      por ejemplo), pienso que se debera que nos indica la proxima posicion de la cabeza para leer el proximo
+ *      sector (el sector numero 18 es el ultimo sector de un track en una cara).
+ *      Con este cambio se observa que pueden ejecutarse sin problemas todos los archivos de disco.
  */
 
 
@@ -27,6 +40,9 @@
 int block(void);
 int floppy_get_result(void);
 int leer_sec(byte cara, byte cilindro, byte sector , byte *buffer);
+void dump_states(void);
+void dump_status_register(int numero, byte valor);
+
 
 //Contiene el estado del motor (0=apagado , 1=encendido)
 byte motor_status=0;
@@ -115,8 +131,7 @@ int floppy_get_result()
       // Si RQM=1, DIO=1 y CMD_BUSY=1 ( Host puede leer info)
 	if ( msr == (RQM | CMDBUSY | DIO) )
 	{
-	    status[posicion]=inportb(DATA);
-	    posicion++;
+	    status[posicion++]=inportb(DATA);
 	    continue;
 	}
 	//Si el controller dejo de estar ocupado (CMD_BUSY=0), no hay mas resultados que levantar, salida Ok
@@ -181,7 +196,7 @@ int init_floppy()
  // 	CONF_EIS: habilitamos los seeks automaticos (implicitos)
  // 	CONF_EFIFO: deshabilitamos los fifos !! (modo 8272a)
  // 	CONF_POLL:  deshabilitamos el polling, esto esta oks
- //if ( ! floppy_sendbyte(CONF_EIS|CONF_EFIFO|CONF_POLL) ) {
+ //if ( ! floppy_sendbyte(CONF_EIS|CONF_EFIFO|CONF_POLL) ) {}
  if ( ! floppy_sendbyte( (CONF_EIS|CONF_POLL) | 0xa) ) {		// 10 bytes de threshold
 	return ERR_TIMEOUT;
  }
@@ -194,11 +209,10 @@ int init_floppy()
 	return ERR_TIMEOUT;
  } 
 
- //if ( ! floppy_sendbyte(0xDF) ) {			// Seteamos SRT y HUT
  if ( ! floppy_sendbyte(0xC1) ) {			// Seteamos SRT=4mseg (0xC0) y HUT=16mseg (0x01)
 	return ERR_TIMEOUT;
  }
- //if ( ! floppy_sendbyte(0x2) ) {		// Seteamos HLT y ND (Ahora esta en NON-DMA !!)
+
  if ( ! floppy_sendbyte(0x8<<1) ) {		// Seteamos HLT=16mseg (0x08 << 1) y ND (Ahora esta en NON-DMA !!)
 	return ERR_TIMEOUT;
  }
@@ -214,6 +228,9 @@ int init_floppy()
 
 int recalibrate()
 {
+
+    // Reseteamos el flag
+    floppy_calibrado=0;
 	 
     // Habilita el motor A y el Drive 0
     motor_on();
@@ -242,9 +259,14 @@ int recalibrate()
     }
    
     if ( (ST0 != (ST0_DRIVE_A | ST0_IC_OK | ST0_SEEK)) || (PCN!=0) )	{
+	dump_states();
 	return ERR_NEED_RESET;
     }
+
+    // Pudimos calibrarlo sin problemas
+    puts("Floppy calibrado !");
     floppy_calibrado=1;
+    
     return OK;
 }
 
@@ -323,6 +345,7 @@ byte seek (byte cara, byte pista)
     //Por comportamiento dispar de controladores (o mala interpretacion mia) voy a enmascarar el bit de Head
     //ya que a veces lo setea al valor que corresponde y a veces no
     if ( (ST0 & 0xF8) != (ST0_DRIVE_A |  ST0_SEEK ))	{
+	dump_states();
 	return ERR_TIMEOUT;
     }
 
@@ -385,7 +408,12 @@ int read_sector (byte cara, byte cilindro, byte sector)
 
     // Verifico los registros de Estado ST0-ST2
     // falta verificar ST1 y ST2 (ya que son una especificacion del error, y me complicaba el tratamiento de los ERR)
-    if ( ST0 != (ST0_DRIVE_A | (cara << 2) ))	{
+    //if ( ST0 != (ST0_DRIVE_A | (cara << 2) ))	{
+    // Cambio:
+    // En realidad si hay algun error lo deberia manifestar el IC del ST0
+    //if ( (ST0&0xfb) != (ST0_DRIVE_A ))	{
+    if ( ! COMMAND_OK )	{
+	dump_states();
 	return ERR_NEED_RESET;
     }
     return OK;
@@ -494,6 +522,9 @@ intentar_nuevamente:
     cilindro = (sector_logico / SECTORES_POR_PISTA) /CARAS_POR_PISTA;
     sector = (sector_logico % SECTORES_POR_PISTA) + 1;
 
+#if DEBUG==1
+    kprintf("leer_escribir: sector logico=%d ==> h=%d c=%d s=%d\n", sector_logico, cara, cilindro, sector);
+#endif
 
     if ( seek(cara, cilindro) != OK) {
 	    goto intentar_nuevamente;
@@ -529,7 +560,69 @@ int leer_sec(byte cara, byte cilindro, byte sector , byte *buffer)
 	*buffer++ = *dma_block++;
 
     return OK;
-}	
+}
+
+void dump_states()
+{
+  int posicion;
+
+  for (posicion=0; status[posicion]!=NO_VALIDO , posicion<sizeof(status); posicion++ )
+    dump_status_register(posicion, status[posicion]);
+
+
+}
+
+
+char *ic_codes[] = { "Terminacion Normal", "Terminacion erronea",
+		     "Comando invalido"  , "Terminacion erronea causada por polling" };
+
+void dump_status_register(int numero, byte valor)
+{
+  switch(numero) {
+
+    // ST0 : 7-6:IC, 5:SE, 4:EC, 3:nada, 2:H, 1-0:DS
+    case 0:
+	    kprintf("ST0: 0x%x - ",valor);
+	    kprintf(" IC = 0x%x (%s)\n", (valor&0xc0) >> 6, ic_codes[ (valor&0xc0) >> 6 ]);
+	    kprintf(" SE = 0x%x (Seek end %s)\n", (valor&0x20)>>5, ( ( (valor&0x20) >> 5) == 0 ? "erroneo" : "ok") );
+	    kprintf(" EC = 0x%x (Equipment Check)\n", (valor&0x10)>>4);
+	    kprintf("  H = 0x%x (Head Address)\n", (valor&0x4)>>2);
+	    kprintf(" DS = 0x%x (Drive Select)\n", valor&0x3);
+	    break;
+ 
+    case 1:
+	    puts("ST1:");
+	    kprintf(" EN = 0x%x (End of cylinder)\n", (valor&0x80)>>7);
+	    kprintf(" DE = 0x%x (Data error - CRC)\n", (valor&0x20)>>5);
+	    kprintf(" OR = 0x%x (Overrun / Underrun)\n", (valor&0x10)>>4);
+	    kprintf(" ND = 0x%x (No Data)\n", (valor&0x4)>>2);
+	    kprintf(" NW = 0x%x (Not Writable)\n", (valor&0x2)>>1);
+	    kprintf(" MA = 0x%x (Missing Address Mark)\n", valor&0x1);
+	    break;
+
+    case 2:
+	    puts("ST2:");
+	    kprintf(" CM = 0x%x (Control Mark)\n", (valor&0x40)>>6);
+	    kprintf(" DD = 0x%x (Data Error in data field)\n", (valor&0x20)>>5);
+	    kprintf(" WC = 0x%x (Wrong Cylinder)\n", (valor&0x10)>>4);
+	    kprintf(" BC = 0x%x (Bad cylinder)\n", (valor&0x2)>>1);
+	    kprintf(" MD = 0x%x (Missing data address mark)\n", valor&0x1);
+	    break;
+
+    case 3:
+	    puts("ST3:");
+	    kprintf(" WP = 0x%x (Write Protect)\n", (valor&0x40)>>6);
+	    kprintf(" T0 = 0x%x (Track 0)\n", (valor&0x10)>>4);
+	    kprintf(" HD = 0x%x (Head Address)\n", (valor&0x4)>>2);
+	    kprintf(" DS = 0x%x (Drive Select)\n", valor&0x3);
+	    break;
+	    
+
+
+  }
+
+
+}
 
 
 

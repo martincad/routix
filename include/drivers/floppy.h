@@ -118,7 +118,8 @@
 #define ST0_DRIVE_C	    0x2
 #define ST0_DRIVE_D	    0x3
 
-
+// Verifica el contenido de los bits IC del ST0
+#define COMMAND_OK ( ! (ST0&0xc0 == ST0_IC_OK) )
 
 
 #define BLOQUE_SIZE 512
@@ -148,7 +149,7 @@ void init_floppy_DMA (byte);
 
 #define SECTORES_POR_PISTA	18
 #define CARAS_POR_PISTA		2
-#define MAX_FLOPPY_TRYS		20	// Cantidad maxima de intentos de lectura/escritura antes de tirar error
+#define MAX_FLOPPY_TRYS		1 	// Cantidad maxima de intentos de lectura/escritura antes de tirar error
 
 int leer_escribir(byte operacion, dword sector_logico, byte *buffer);
 

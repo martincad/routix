@@ -105,7 +105,7 @@ $(OBJDIR)/signals.a: $(SRCDIR)/signals/*
 	make
 	cd ../..
 
-$(OBJDIR)/floppy.a: $(SRCDIR)/drivers/*
+$(OBJDIR)/floppy.a: $(SRCDIR)/drivers/*  $(INCDIR)/drivers/floppy.h
 	cd src/drivers
 	make
 	cd ../..

@@ -9,6 +9,8 @@ char msg2[50];
 
 char str[]="Shell v 0.0.0.1";
 
+int j, k;
+
 void main(void) 
 {
     puts(str);
@@ -83,6 +85,24 @@ void main(void)
 
 	else if (! strcmp(msg, "show 3")) {
 		show(3);
+	}
+
+	else if (! strcmp(msg, "setvar")) {
+	    printf("Ingrese el nombre: ");
+	    gets(msg1);
+	    printf("Ingrese el valor: ");
+	    gets(msg2);
+		if (setvar(msg1, atoi(msg2))==-1)
+			printf("No pueden definirse más variables\n");
+	}
+
+	else if (! strcmp(msg, "getvar")) {
+	    printf("Ingrese el nombre: ");
+	    gets(msg1);
+		j = getvar(msg1);
+		if (j==-1)
+			printf("%s no definida\n", msg1);
+		else printf ("Valor de %s: %d\n", msg1, j);
 	}
 	
 	else printf("comando o nombre de archivo erroneo\n");

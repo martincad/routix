@@ -91,6 +91,9 @@ void kmain (void)
 
 	kprintf("Ubicacion del Wrappeo de Exit: 0x%x\n", ptr_exit);
 
+	// Inicializar variables USER-KERNEL (moemntaneas) definidas en sysmisc.c
+	init_var();
+	
 	entrada_de_inicio();
 
 }

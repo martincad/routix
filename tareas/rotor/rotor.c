@@ -7,7 +7,7 @@ int main (void)
 {
 	
  int i;
- unsigned char *ptr = (unsigned char* ) 0xb8000 + 79*2;
+ unsigned char *ptr = (unsigned char* ) 0xb8000 + 76*2;
 
  char simbolos[] = { '|', '/', '-', '\\' };
 
@@ -15,7 +15,7 @@ int main (void)
 	
    for ( i=0; i<sizeof(simbolos); i++) {
      *ptr = simbolos[i];
-     *(ptr+1) = 0x5f;
+     *(ptr+1) = 0x6f;
      usleep(125000);
    }
 

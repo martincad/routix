@@ -1,3 +1,7 @@
+Archive member included because of file (symbol)
+
+../lib/routstd.a(routix.o)    rotor.o (usleep)
+../lib/routstd.a(string.o)    ../lib/routstd.a(routix.o) (strlen)
 
 Memory Configuration
 
@@ -7,40 +11,52 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0x80000000      0x600
+.text           0x80000000      0x780
  *.o(.text)
  .text          0x80000000       0x70 rotor.o
                 0x80000000                main
- .text          0x80000070      0x340 ../lib/routix.o
+ .text          0x80000070      0x4c0 ../lib/routstd.a(routix.o)
                 0x8000008d                usleep
-                0x80000149                putchar
+                0x80000277                putchar
+                0x8000010e                free_mem
                 0x80000070                sleep
-                0x80000170                puts
+                0x800001dc                renice
+                0x8000029e                puts
+                0x800004e9                setvar
                 0x800000aa                proc_dump
-                0x80000103                exec
-                0x80000327                printn_
-                0x80000120                gets
-                0x80000382                getascii
-                0x80000131                fork
-                0x800000bf                kill
-                0x8000013d                voido
-                0x800001a4                printf
-                0x80000198                clrscr
- .text          0x800003b0      0x250 ../lib/string.o
-                0x80000440                strcat
-                0x800003b0                strcmp
-                0x800004b0                strncpy
-                0x80000597                atoi
-                0x80000579                memcpy
-                0x800004ea                str_to_upper
-                0x80000481                strcpy
-                0x80000527                memcmp
-                0x80000413                strlen
-                0x00000600                __code_size = SIZEOF (.text)
+                0x80000181                exec
+                0x80000467                printn_
+                0x80000509                getvar
+                0x8000019e                gets
+                0x800000dc                malloc_page
+                0x800000f1                free_page
+                0x800000bf                proc_dump_v
+                0x8000025d                show
+                0x80000123                perror
+                0x8000020b                get_pid
+                0x800004c2                getascii
+                0x800001b8                fork
+                0x80000227                get_ppid
+                0x8000013d                kill
+                0x80000243                exit
+                0x800001ca                voido
+                0x800002e4                printf
+                0x800002d2                clrscr
+ .text          0x80000530      0x250 ../lib/routstd.a(string.o)
+                0x800005c0                strcat
+                0x80000530                strcmp
+                0x80000630                strncpy
+                0x80000717                atoi
+                0x800006f9                memcpy
+                0x8000066a                str_to_upper
+                0x80000601                strcpy
+                0x800006a7                memcmp
+                0x80000593                strlen
+                0x00000780                __code_size = SIZEOF (.text)
 
-.data           0x88000000       0x20 load address 0x80000600
+.data           0x88000000       0x20 load address 0x80000780
  *.o(.data)
- .data          0x88000000       0x20 ../lib/routix.o
+ .data          0x88000000       0x20 ../lib/routstd.a(routix.o)
                 0x88000016                sposicion
                 0x00000020                __data_size = SIZEOF (.data)
 
@@ -51,6 +67,5 @@ Linker script and memory map
  *(.comment)
 TARGET(coff-go32)
 LOAD rotor.o
-LOAD ../lib/routix.o
-LOAD ../lib/string.o
+LOAD ../lib/routstd.a
 OUTPUT(rotor.bin coff-go32)

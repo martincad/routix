@@ -13,8 +13,11 @@
 
 extern task_struct_t *actual;
 
-void sys_setvar(char *nombre, int valor);
+int sys_setvar(char *nombre, int valor);
 int sys_getvar(char *nombre);
+
+int find_var(char *nombre);
+int find_empty_var(void);
 
 // Vector de funciones de llamadas al sistema (grupo Misc)
 int (*syscall_misc[MAX_SYSCALLS]) (void) = {
@@ -24,6 +27,10 @@ int (*syscall_misc[MAX_SYSCALLS]) (void) = {
 
 
 
+// Aqui se definen unas estructuras para guardar los pares (Nombre, valor) de variables accesibles via
+// setvar y getvar.
+// Esto es solo momentaneo, no se encariñen. Utilizado para propositos de debug en tiempo real
+
 #define VARIABLES_MAX	12
 #define VAR_NAME_MAX	15
 struct {
@@ -32,33 +39,68 @@ struct {
 } variables[VARIABLES_MAX];
 
 
+void init_var(void)
+{
+	int i;
+	for (i=0 ; i<VARIABLES_MAX ; i++)
+		variables[i].valor = -1;
+}
 
-void sys_setvar(char *nombre, int valor)
+int sys_setvar(char *nombre, int valor)
 {
     nombre = convertir_direccion (nombre , actual->cr3_backup);
-	
 	int i;
-
-	for ( i=0 ; i<VARIABLES_MAX && strcmp(nombre, variables[i].nombre) ; i++);
-
-	if (i<VARIABLES_MAX)
-		kprintf("Estaba seteada\n");
-	else {
-//		strncpy(variables[i].nombre, nombre, VAR_NAME_MAX);
-		strcpy(variables[i].nombre, nombre);
-	}	
+	
+	if ( (i=find_var(nombre)) ==-1 )	{		//Variable no esta definida. Agregarla
+		if ( (i = find_empty_var()) ==-1 )	{
+kprintf("SYS_SETVAR: no hay espacio libre\n");
+			return -1;					//No hay un espacio libre
+		}
+		strncpy(variables[i].nombre, nombre, VAR_NAME_MAX);
+		variables[i].valor = valor;
+kprintf("SYS_SETVAR: no estaba definida... definiendola en indice: %d\n", i);
+		return 0;
+	}
+	
+	//Si llegó aquí, la variable esta definida en el indice "i", debo modificarla
+kprintf("SYS_SETVAR: estaba definida ... modificandola en indice: %d\n", i);
+	
+	variables[i].valor = valor;
+	return 0;
+	
 }
 
 int sys_getvar(char *nombre)
 {
     nombre = convertir_direccion (nombre , actual->cr3_backup);
-	int i, valor;
+	int i;
 
-	for ( i=0 ; i<VARIABLES_MAX && strcmp(nombre, variables[i].nombre) ; i++);
-
-	if (i<VARIABLES_MAX)
+	if ( (i=find_var(nombre))!=-1) {
+kprintf("SYS_GET_VAR: se encontro en indice: %d\n", i);
 		return variables[i].valor;
-	
-	return 778899;
+	}
+
+	return -1;
+}
+
+// Busca una variable en el array y retorna el indice en caso de exito, o -1 en caso de no encontrarse
+int find_var (char *nombre)
+{
+	int i=0;
+	for (i=0 ; i<VARIABLES_MAX ; i++)
+		if (strcmp(variables[i].nombre, nombre)==0)
+			return i;
+			
+	return -1;
+}
+
+// Busca un espacio libre para definir una variable. Devuelve el indice en caso de encontrarlo o -1 en caso contrario
+int find_empty_var (void)
+{
+	int i=0;
+	for (i=0 ; i<VARIABLES_MAX ; i++)
+		if (variables[i].valor==-1)
+			return i;
+	return -1;
 }
 

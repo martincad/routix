@@ -22,10 +22,13 @@ dormir_task                                       sys_time.o
 encontrar_proceso_por_pid                         sys_time.o
                                                   sys_proc.o
 exit_addr                                         sys_proc.o
+find_empty_var                                    sys_misc.o
+find_var                                          sys_misc.o
 free                                              sys_time.o
 gets                                              sys_con.o
 header_floppy_cache                               sys_proc.o
 init_new_task                                     sys_proc.o
+init_var                                          sys_misc.o
 insertar_timer                                    sys_time.o
 intSysCall                                        syscalla.o
 kmapmem                                           sys_proc.o
@@ -50,8 +53,8 @@ remover_timer                                     sys_time.o
 spin_lock                                         sys_con.o
 spin_unlock                                       sys_con.o
 strcmp                                            sys_misc.o
-strcpy                                            sys_misc.o
 strlen                                            sys_con.o
+strncpy                                           sys_misc.o
 sys_clrscr                                        sys_con.o
 sys_console                                       syscalla.o
                                                   syscalls.o

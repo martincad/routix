@@ -18,6 +18,7 @@ init_8254                                         kmain.o
 init_MM                                           kmain.o
 init_all_memory                                   kmain.o
 init_time                                         kmain.o
+init_var                                          kmain.o
 kmain                                             kmain.o
                                                   init.o
 kmalloc_page                                      kmain.o

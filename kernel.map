@@ -23,7 +23,7 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0xc0000000     0x8570
+.text           0xc0000000     0x87a0
  obj/boot.o(.text)
  .text          0xc0000000       0x10 obj/boot.o
                 0xc0000000                _start
@@ -167,17 +167,20 @@ Linker script and memory map
                 0xc0003d98                _kmalloc_page
                 0xc0003d40                _kmalloc_page_start
                 0xc0003d29                _lgdt
- .text          0xc0004620     0x1af0 obj/syscalls.a
+ .text          0xc0004620     0x1d20 obj/syscalls.a
                 0xc000486d                _sys_free_page
                 0xc000571e                _sys_get_ppid
-                0xc0006085                _sys_getvar
+                0xc0006208                _sys_getvar
                 0xc0005a40                _sys_print
                 0xc000570b                _sys_get_pid
                 0xc0005aee                _sys_clrscr
                 0xc0004715                _sys_mem
+                0xc00062d1                _find_empty_var
                 0xc00057aa                _sys_exit
                 0xc0005c51                _sys_proc_dump
+                0xc0005fe0                _init_var
                 0xc0005671                _sys_perror
+                0xc0006275                _find_var
                 0xc0004704                _sys_timer
                 0xc0004d22                _sys_exec
                 0xc00046e2                _sys_process
@@ -195,67 +198,67 @@ Linker script and memory map
                 0xc00046a0                _intSysCall
                 0xc000596b                _sys_show
                 0xc00056a0                _sys_renice
-                0xc0005ff0                _sys_setvar
- .text          0xc0006110      0x5d0 obj/console.a
-                0xc0006280                _putchar
-                0xc0006378                _puts
-                0xc0006657                _printn
-                0xc00061d6                _gets
-                0xc0006110                _getchar
-                0xc00064d3                _kprintf
-                0xc00066b2                _getascii
-                0xc0006422                _scroll_up
-                0xc00063b0                _nextpos
-                0xc000649c                _gotoxy
-                0xc00063dc                _clrscr
- .text          0xc00066e0      0x6c0 obj/sched.a
-                0xc0006bd0                _entrada_de_inicio
-                0xc00066e0                _inicializarTss
-                0xc0006899                _inc_tareas_activas
-                0xc0006a8d                _insertar_tarea
-                0xc00068f1                _despertar_task
-                0xc0006c75                _start_scheduler
-                0xc0006882                _get_new_pid
-                0xc0006d4e                _scheduler
-                0xc0006d09                _tarea_init
-                0xc0006ba0                _switch_to_kernel_mode
-                0xc0006b37                _tomar_nombre_tarea
-                0xc0006773                _inicializar_task
-                0xc0006afd                _encontrar_proceso_por_pid
-                0xc0006930                _init_new_task
-                0xc0006c05                _intProximaTarea
-                0xc00068a4                _dormir_task
- .text          0xc0006da0       0x90 obj/signals.a
-                0xc0006dba                _sys_kill
- .text          0xc0006e30      0x680 obj/taskdeb.a
-                0xc00073eb                _ps
-                0xc000708c                _dump_tm
-                0xc00071b5                _local
-                0xc0007120                _bisiestos
-                0xc0006e87                _time_debug
-                0xc00072e6                _task_debug
- .text          0xc00074b0     0x10c0 obj/floppy.a
-                0xc0007d26                _leer_escribir
-                0xc000779c                _recalibrate
-                0xc000820a                _dump_status_register
-                0xc0007c12                _init_floppy_DMA
-                0xc000853d                _Floppy
-                0xc0007ecc                _dump_states
-                0xc0007a13                _read_sector
-                0xc000763b                _init_floppy
-                0xc0007bb9                _block
-                0xc00075a4                _floppy_get_result
-                0xc000792b                _seek
-                0xc0007882                _read_sector_id
-                0xc00074e3                _motor_off
-                0xc00074b0                _motor_on
-                0xc0007b9a                _read_msr
-                0xc000750b                _set_dor
-                0xc0007534                _floppy_sendbyte
-                0xc0007e3f                _leer_sec
-                0x00008570                __code_size = SIZEOF (.text)
+                0xc00060dd                _sys_setvar
+ .text          0xc0006340      0x5d0 obj/console.a
+                0xc00064b0                _putchar
+                0xc00065a8                _puts
+                0xc0006887                _printn
+                0xc0006406                _gets
+                0xc0006340                _getchar
+                0xc0006703                _kprintf
+                0xc00068e2                _getascii
+                0xc0006652                _scroll_up
+                0xc00065e0                _nextpos
+                0xc00066cc                _gotoxy
+                0xc000660c                _clrscr
+ .text          0xc0006910      0x6c0 obj/sched.a
+                0xc0006e00                _entrada_de_inicio
+                0xc0006910                _inicializarTss
+                0xc0006ac9                _inc_tareas_activas
+                0xc0006cbd                _insertar_tarea
+                0xc0006b21                _despertar_task
+                0xc0006ea5                _start_scheduler
+                0xc0006ab2                _get_new_pid
+                0xc0006f7e                _scheduler
+                0xc0006f39                _tarea_init
+                0xc0006dd0                _switch_to_kernel_mode
+                0xc0006d67                _tomar_nombre_tarea
+                0xc00069a3                _inicializar_task
+                0xc0006d2d                _encontrar_proceso_por_pid
+                0xc0006b60                _init_new_task
+                0xc0006e35                _intProximaTarea
+                0xc0006ad4                _dormir_task
+ .text          0xc0006fd0       0x90 obj/signals.a
+                0xc0006fea                _sys_kill
+ .text          0xc0007060      0x680 obj/taskdeb.a
+                0xc000761b                _ps
+                0xc00072bc                _dump_tm
+                0xc00073e5                _local
+                0xc0007350                _bisiestos
+                0xc00070b7                _time_debug
+                0xc0007516                _task_debug
+ .text          0xc00076e0     0x10c0 obj/floppy.a
+                0xc0007f56                _leer_escribir
+                0xc00079cc                _recalibrate
+                0xc000843a                _dump_status_register
+                0xc0007e42                _init_floppy_DMA
+                0xc000876d                _Floppy
+                0xc00080fc                _dump_states
+                0xc0007c43                _read_sector
+                0xc000786b                _init_floppy
+                0xc0007de9                _block
+                0xc00077d4                _floppy_get_result
+                0xc0007b5b                _seek
+                0xc0007ab2                _read_sector_id
+                0xc0007713                _motor_off
+                0xc00076e0                _motor_on
+                0xc0007dca                _read_msr
+                0xc000773b                _set_dor
+                0xc0007764                _floppy_sendbyte
+                0xc000806f                _leer_sec
+                0x000087a0                __code_size = SIZEOF (.text)
 
-.data           0xc8000000     0x1e20 load address 0xc0008570
+.data           0xc8000000     0x1e20 load address 0xc00087a0
  obj/*(.data)
  .data          0xc8000000       0x30 obj/mm.a
                 0xc8000010                _KERNEL_PDT
@@ -535,6 +538,8 @@ _fat_next_sector                                  obj/fat12.o
 _fat_root_dir                                     obj/fat12.o
 _fat_test                                         obj/fat12.o
 _file_descriptor_actual                           obj/file.o
+_find_empty_var                                   obj/syscalls.a
+_find_var                                         obj/syscalls.a
 _flag_fork                                        obj/sched.a
 _floppy_cache                                     obj/fat12.o
                                                   obj/file.o
@@ -589,6 +594,8 @@ _init_floppy_fs                                   obj/fat12.o
 _init_new_task                                    obj/sched.a
                                                   obj/syscalls.a
 _init_time                                        obj/time.o
+                                                  obj/bootstrap.a
+_init_var                                         obj/syscalls.a
                                                   obj/bootstrap.a
 _inportb                                          obj/io.o
                                                   obj/floppy.a
@@ -756,13 +763,13 @@ _strcmp                                           obj/string.o
 _strcpy                                           obj/string.o
                                                   obj/fat12.o
                                                   obj/sched.a
-                                                  obj/syscalls.a
 _strlen                                           obj/string.o
                                                   obj/stdlib.o
                                                   obj/sched.a
                                                   obj/syscalls.a
 _strncpy                                          obj/string.o
                                                   obj/fat12.o
+                                                  obj/syscalls.a
 _switch_to_kernel_mode                            obj/sched.a
                                                   obj/int.o
 _sys_clrscr                                       obj/syscalls.a

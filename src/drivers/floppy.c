@@ -32,8 +32,10 @@
 
 
 
-#include "../../include/drivers/floppy.h"
-#include "../../include/atomic.h"
+#include "drivers/floppy.h"
+#include "atomic.h"
+#include "8259.h"
+#include "stdio.h"
 
 
 
@@ -214,7 +216,7 @@ int init_floppy()
 	return ERR_TIMEOUT;
  }
 
-   
+	return OK;   
 }
 
 
@@ -234,31 +236,31 @@ int recalibrate()
 
     // Ejecutamos un RECALIBRATE 
     if ( ! floppy_sendbyte(RECALIBRATE) ) {	
-	return ERR_TIMEOUT;
+		return ERR_TIMEOUT;
     }
 
     if ( ! floppy_sendbyte(DRIVE_0) ) {			// DS0=0 DS1=0 (Drive 0)
-	return ERR_TIMEOUT;
+		return ERR_TIMEOUT;
     }
 
     if ( block()!=OK )	{
-	return ERR_NEED_RESET;
+		return ERR_NEED_RESET;
     }
     
     // Sensamos el estado de interrupcion
     if ( ! floppy_sendbyte(SENSE_INTERRUPT_STATUS) ) {
-	return ERR_TIMEOUT;
+		return ERR_TIMEOUT;
     }
 
     // Obtener resultados de ejecucion 
     if (floppy_get_result()==ERR_TIMEOUT)     {
-	return ERR_TIMEOUT;
+		return ERR_TIMEOUT;
     }
    
     // Analizamos el resultado del comando 
     if ( ! COMMAND_OK ) {
-	dump_states();
-	return ERR_NEED_RESET;
+		dump_states();
+		return ERR_NEED_RESET;
     }
 
     // Pudimos calibrarlo sin problemas
@@ -436,7 +438,7 @@ int block(void)
     dword timeout=0xffffffff;	//Este timeout es momentaneo (sera reemplazado por un timer). Puede que en maquinas con
     				//micro de mas de 600Mhz haya que aumentarlo... 
     // Las habilitamos nuevamente
-    enable_irq(6);
+    enable_irq(6); 
 
     // Esperamos que aparezca la interrupcion
     while (!floppy_continuar) {
@@ -529,7 +531,8 @@ intentar_nuevamente:
 
     //No implementado
     if (operacion == WRITE_SECTOR)
-	return OK;
+		return OK;
+	else return -1;
 }	
 
 

@@ -1,7 +1,7 @@
 #Makefile relacionado al switcheo de tareas
 
 CC = gcc
-CFLAGS = -c -fpack-struct -ffreestanding 
+CFLAGS = -c -fpack-struct -ffreestanding -Wall -I$(INCDIR)
 
 ASM = nasmw
 AFLAGS = -f coff

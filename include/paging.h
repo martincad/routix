@@ -68,9 +68,15 @@ page_index_t get_page_index (addr_t );
 //! Genera un directorio de páginas para un proceso. Copia todo el mapeo del sistema contenido en el directorio del Kernel
 void *make_pdt (void);
 
+pde_t make_pde (addr_t direccion, word atributos);
+pte_t make_pte (addr_t direccion, word atributos);
+
 //! Copia una página entera (optimizado para velocidad)
 void *copy_page (void *dest, const void *src);
 
 //! Convierte una direccion logica respecto a cierto CR3 a una direccion de memoria fisica
 void *convertir_direccion ( void *dir_logica, addr_t cr3 );
+
+int kmapmem ( addr_t fisica, addr_t logica, addr_t directorio, word atributo);
+int kunmapmem (addr_t logica, addr_t directorio);
 

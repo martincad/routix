@@ -39,6 +39,7 @@ int kmalloc_page_start (addr_t *inicio, addr_t *fin)
 _inicio = inicio;
 _fin = fin;
 _sp = fin;
+return OK;
 }
 
 int kfree_page(addr_t direccion)
@@ -170,5 +171,6 @@ struct user_page *ufree_page (struct user_page *aux)
 		kfree_page(aux->dir);
 
 	free(aux);
+	return NULL;
 }
 

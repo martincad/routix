@@ -4,8 +4,12 @@
 	a lineales y viceversa. Prepara los directorios y tablas de páginas, para accesos lógicos.
 */
 
+#include "../../include/system.h"
 #include "../../include/paging.h"
 #include "../../include/debug.h"
+#include "../../include/stdio.h"
+#include "../../include/kalloc.h"
+
 
 
 /* Devuelve en la estructura la posicion dentro del DIR de paginas, y dentro de la Tabla */
@@ -83,7 +87,6 @@ int kmapmem ( addr_t fisica, addr_t logica, addr_t directorio, word atributo)
 	indice = get_page_index ( logica );
 	pd_t *dir;
 	pt_t *tabla;
-	addr_t *p;
 	word i;
 	
 	atributo = atributo & 0xfff;

@@ -40,7 +40,7 @@
 #define SCR_LOCK    0xF000
 
 /* Obtiene el ascii de un scancode (en crudo) */
-unsigned int _getascii (unsigned char code);
+inline unsigned int _getascii (unsigned char code);
 
 /* Obtiene el ascii de un scancode, teniendo en cuenta los modificadores (CAPS_LOCK, SHIFT, CTRL, etc) */
 unsigned int getascii (unsigned char code);

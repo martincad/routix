@@ -7,6 +7,7 @@
 #include "../../include/system.h"
 #include "../../include/paging.h"
 #include "../../include/segm.h"
+#include "../../include/kalloc.h"
 #include "../../include/task.h"
 #include "../../include/debug.h"
 
@@ -14,7 +15,6 @@ addr_t KERNEL_PDT = POSICION_DIR_PAGINAS;
 
 void init_MM_base(void);
 dword contar_memoria (void);
-
 dword memoria;
 
 
@@ -98,10 +98,7 @@ void init_MM_base()
 
 void init_MM (void)
 {
-
 	dword memoria_total=0;
-	byte *aux;
-	word tablas_paginas_extra;
 
 	page_off();	/* Deshabililitar paginacion */
 
@@ -158,7 +155,7 @@ void init_all_memory( dword memoria ) {
 		indice = get_page_index(i*PAGINA_SIZE*1024);
 		pt = (pt_t *) kmalloc_page();
 
-		dir->entry[ indice.dir_index ] = make_pde(pt, PAGE_PRES | PAGE_SUPER | PAGE_RW);
+		dir->entry[ indice.dir_index ] = make_pde((addr_t)pt, PAGE_PRES | PAGE_SUPER | PAGE_RW);
 
 		for ( j=0; j < PAGINAS_POR_TABLA; j++) {
 			pt->entry[j] = make_pte( i*PAGINA_SIZE*1024 + j*PAGINA_SIZE, PAGE_PRES | PAGE_SUPER | PAGE_RW);

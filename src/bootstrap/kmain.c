@@ -7,18 +7,33 @@
 #include "../../include/paging.h"
 #include "../../include/segm.h"
 #include "../../include/debug.h"
+#include "../../include/8259.h"
+#include "../../include/8254.h"
 
 #include "../../include/task.h"
 #include "../../include/fat.h"
+#include "../../include/kalloc.h"
 #include "../../include/syscalls.h"
+#include "../../include/stdio.h"
 
 // Puntero a pagina de wrappers de usuario
 addr_t *exit_addr;
+void init_MM_base(void);
+void init_MM (void);
+void init_all_memory (dword memoria);
+dword contar_memoria (void);
+
+void inicializarInterrupciones (void);
+void start_scheduler (void);
+void floppy_cache_init (void);
+void entrada_de_inicio (void);
+void init_time (void);
+
+void init_var (void);
+
 
 void kmain (void)
 {
-	addr_t mem;
-
 	/* Deshabilitamos todas las interrupciones */
 	mascarasPics(0xff,0xff);
 

@@ -156,7 +156,7 @@ kprintf("Entrada de pagina de interrupciones: %x\n", ptIDT);
 kprintf("Interrupciones: %x (real) - %x (virtual)\n", paginaIDT, KERNEL_INTERRUPT );
 kprintf("Indice de directorio y tabla: %d - %d\n", pi.dir_index, pi.tabla_index);
 
-directorio->entry[ pi.dir_index ] = make_pde((addr_t *) ptIDT, PAGE_RW | PAGE_PRES );
+directorio->entry[ pi.dir_index ] = make_pde((addr_t) ptIDT, PAGE_RW | PAGE_PRES );
 ptIDT->entry[ pi.tabla_index ] = make_pte((addr_t *) paginaIDT, PAGE_PRES);
 
 int i;

@@ -63,3 +63,6 @@ void kpanic(char *str);
 
 #define _cli()  __asm__ __volatile__ ("cli")
 #define _sti()  __asm__ __volatile__ ("sti")
+
+int getvar (char *);
+int setvar (char *, int);

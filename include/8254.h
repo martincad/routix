@@ -1,5 +1,7 @@
 /* 8254.h */
 
+void init_8254();
+
 #define FOSC		1193182		// Frec del oscilador interno
 #define FINTERRUPCION	100		// Frec de interrupción (10 ms)
 #define CUENTA		FOSC / FINTERRUPCION

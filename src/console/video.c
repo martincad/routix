@@ -130,8 +130,9 @@ void scroll_up ( void )
 
 unsigned char *gotoxy ( int fila, int columna)
 {
- if ( (fila > 25) || (columna > 80) ) { return; }
+ if ( (fila > 25) || (columna > 80) ) { return NULL; }
  pos = (unsigned char *) (VIDEO + (fila-1)*2*80+2*(columna-1) );
+ return pos;
 }
 
 

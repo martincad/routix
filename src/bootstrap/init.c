@@ -20,7 +20,6 @@ extern unsigned char _code_size;
 
 void init(void)
 {
-	void ( *salto) (void);
 	char *origen, *destino; 
 	long i, largo;
 	

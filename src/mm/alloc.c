@@ -8,6 +8,7 @@
 #endif
 #include "../../include/stdio.h"
 #include "../../include/paging.h"
+#include "../../include/kalloc.h"
 #include "../../include/debug.h"
 
 

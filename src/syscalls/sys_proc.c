@@ -409,7 +409,7 @@ int sys_exec (char *nombre)
 //		sys_exit(0);
 
 	//Si el proceso que ejecuta el exec no es el init, debe morir, muejeje
-	if (actual->pid!=0) {
+	if (actual->pid!=1) {
 		sys_exit(0);
 	}
 	

@@ -4,10 +4,10 @@
 #include "../../include/system.h"
 #include "../../include/teclado.h"
 #include "../../include/video.h"
-//#include "../../include/console.h"
 #include "../../include/atomic.h"
 #include "../../include/event.h"
-
+#include "../../include/8259.h"
+#include "../../include/stdio.h"
 
 /*! Puntero a tabla de caracteres (por default keymap_std) */
 unsigned int *keymap = keymap_std;

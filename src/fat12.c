@@ -110,7 +110,7 @@ int levantar_fat(void)
 
 	//Mapeo las paginas que contienen bloques en memoria virtual, para poder asi tenerlos en forma contigua
 	//(nadie me asegura que los bloques entregados por kmalloc_page sean contiguos)
-	kmapmem(aux->bloque, DIR_FAT_VIRTUAL + (i * PAGINA_SIZE), KERNEL_PDT, PAGE_PRES | PAGE_SUPER | PAGE_RW); 
+	kmapmem((addr_t) aux->bloque, DIR_FAT_VIRTUAL + (i * PAGINA_SIZE), KERNEL_PDT, PAGE_PRES | PAGE_SUPER | PAGE_RW); 
 	aux->bloque = (byte *) (DIR_FAT_VIRTUAL + (i * PAGINA_SIZE));
 
 	//Hacer que cada nodo de la lista apunte a 512 bytes dentro de la pagina obtenida.

@@ -37,7 +37,7 @@ int (*syscall_process[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_get_ppid,
 	(int (*) (void)) sys_exit,
 	(int (*) (void)) sys_show,
-	(int (*) (void)) sys_wait
+	(int (*) (void)) sys_waitpid
 			
 };
 
@@ -179,6 +179,7 @@ int sys_fork (void)
     // Poner en eax del hijo un 0, para que tome como retorno de fork 0
     new_ext->eax = 0;
 
+    new_task->pid = get_new_pid();
     new_task->ppid = actual->pid;
 
     // Despertamos la nueva tarea, recordemos que init_new_task crea las tareas en estado TASK_STOPPED
@@ -396,8 +397,18 @@ int sys_exec (char *nombre)
     }
 
 // Si exec genera un nuevo proceso	
-    new_task->ppid = actual->pid;
-	new_task->pid = get_new_pid();
+//    new_task->ppid = actual->pid;
+//	new_task->pid = get_new_pid();
+
+// Si exec pisa la copia del proceso llamante
+	if (actual->pid==1) {				// Si el proceso es init, caso particular ya que init no tiene formato de tarea
+	    new_task->ppid = actual->pid;
+		new_task->pid = get_new_pid();
+	}
+	else {								// Si es cualquier otro proceso, el nuevo proceso debe heredar su pid y ppid
+		new_task->ppid = actual->ppid;
+	    new_task->pid = actual->pid;
+	}
 
     // Inicialización de senales
     new_task->senales.senales_pendientes = 0;
@@ -407,12 +418,16 @@ int sys_exec (char *nombre)
     // Despertamos la nueva tarea, recordemos que init_new_task crea las tareas en estado TASK_STOPPED
     despertar_task( new_task );
 
-/*	TEMP Fuera de Servicio momentaneamente (como los subtes de Ibarra)
-	//Si el proceso que ejecuta el exec no es el init, debe morir, muejeje
+	// Recordemos que el proceso que ejecuto el exec debe terminar (excepto que sea el init)
 	if (actual->pid!=1) {
-		sys_exit(0);
+		cli();
+		sys_exit_mm();					// libero la memoria
+		remover_task (actual);			// lo saco de la lista de tareas del scheduler
+		kfree_page ((addr_t)actual);	// libero el task_struct
+		sti();
+		_reschedule();					
 	}
-*/	
+	
     return OK;
 }
 
@@ -558,11 +573,7 @@ int sys_exit_notify (void)
 }
 
 
-/*! \brief  llamada al sistema wait
- * \param	dirección de un entero donde se colocará el valor de salida del hijo
- * \return	PID del hijo
- */
-
+/*
 pid_t sys_wait (int *status)
 {
 	_cli();
@@ -608,8 +619,71 @@ pid_t sys_wait (int *status)
 	_sti();
 	return child_pid;
 }
+*/
+/*! \brief  llamada al sistema waitpid
+ * \param	dirección de un entero donde se colocará el valor de salida del hijo
+ * \return	PID del hijo
+ */
 
+#define WNOHANG 1
 
+pid_t sys_waitpid (pid_t pid, int *status, int options)
+{
+	_cli();
+    status = convertir_direccion( status , actual->cr3_backup);
+
+	struct zombie_queue *aux, *tmp;
+
+	int zombie_found = 0;
+	
+	while (1) {
+		// Recorrer la lista de procesos zombies
+		for (aux=&zombie_header ; aux->next!=NULL ; aux=aux->next) {
+			if ( aux->next->ppid == actual->pid)	{			// Encontre un hijo "zombie"
+				// Buscar cualquier hijo (pid=0) o alguno en particular (pid>1)?	
+				if (pid>1  &&  pid!=aux->next->task_struct->pid)
+					break;
+				zombie_found = 1;
+				break;
+			}
+		}
+		if (zombie_found==1)	
+			break;
+		if (getvar("__wait")==1)
+			kprintf("SYS_WAIT: Mi PID es: %d\tNo encontre hijo zombie\n", actual->pid);
+		// Si es no bloqueante, debo irme con -1 al no haberlo encontrado
+		if (options==WNOHANG)	{		
+			if (getvar("__wait")==1)
+				kprintf("SYS_WAIT: Me voy por el WNOHANG....\n");
+			actual->err_no = ECHILD;
+			_sti();
+			return -1;
+		}
+		_sti();
+		_reschedule();	// espero un rato
+		_cli();
+	}
+	
+	// Mientras que aux queda apuntando al nodo anterior, tmp lo hace al nodo en cuestión
+	tmp = aux->next;
+	pid_t child_pid = tmp->task_struct->pid;
+	if (getvar("__wait")==1) 
+		kprintf("SYS_WAIT:Mi hijo zombie es: %d\n", tmp->task_struct->pid);
+
+	// Valor de retorno del hijo
+	*status = tmp->task_struct->retorno;
+	remover_task (tmp->task_struct);
+	
+	// Quitar al nodo de la lista
+	aux->next = tmp->next;
+	// Liberar el task struct utilizado
+	kfree_page ((addr_t)(tmp->task_struct));
+	free (tmp);
+	zombie_queue_len--;
+	
+	_sti();
+	return child_pid;
+}
 
 
 

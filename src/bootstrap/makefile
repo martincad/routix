@@ -35,5 +35,6 @@ kmain.o: kmain.c $(INCDIR)/system.h $(INCDIR)/paging.h $(INCDIR)/debug.h $(INCDI
 
 clean:
 	del  *.o
+	del	 *.map
 
 

@@ -437,7 +437,6 @@ inline pid_t sys_get_ppid (void)
 
 void sys_exit (int valor)
 {
-	kprintf("SYS_EXIT: Implementacion a medio hacer de exit... recibio: %d\n", valor);
 	dormir_task(actual);
 	actual->estado = TASK_ZOMBIE;
 		

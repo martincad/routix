@@ -8,7 +8,7 @@
 #include "../../include/signal.h"
 #endif
 
-#include "../../include/errno.h"
+#include "../../include/error.h"
 #include "../../include/task.h"
 
 #define senal_bloqueada(proceso,sig) ( proceso->senales.senales_enmascaras & sig ) 

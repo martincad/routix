@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -c -fpack-struct -ffreestanding 
+CFLAGS = -c -fpack-struct -ffreestanding -Wall
 
 ASM = nasmw
 AFLAGS = -f coff

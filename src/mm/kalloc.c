@@ -10,7 +10,7 @@
 #include "../../include/stdio.h"
 #include "../../include/kalloc.h"
 #include "../../include/task.h"
-#include "../../include/errno.h"
+#include "../../include/error.h"
 #include "../../include/debug.h"
 
 #include "../../include/misc.h"

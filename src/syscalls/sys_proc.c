@@ -493,17 +493,14 @@ void sys_exit (int valor)
 	
 	// Si no existe el padre, INIT deberá hacerse cargo del proceso huerfano
     if ( (padre = encontrar_proceso_por_pid(actual->ppid))!=NULL ) {
-if (getvar("exitdebug")==1)
-kprintf("Padre Vive: %d\n", actual->ppid);
+		// El padre está en un wait esperando por el hijo ?
 		if (padre->estado == TASK_INTERRUMPIBLE && padre->wait_child) {
-if (getvar("exitdebug")==1)
-kprintf("Padre Esperando su muerte: %d\n", actual->ppid);
 			padre->retorno = valor;		//Pasarle el valor de salida del hijo
 			padre->last_child_died = actual->pid;
 			despertar_task (padre);
+			actual->estado = TASK_CLEAN;
 		}
 
-		actual->estado = TASK_CLEAN;
 	}
 
 	sti();

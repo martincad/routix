@@ -31,15 +31,26 @@ int (*syscall_console[MAX_SYSCALLS]) (void) = {
 
 
 
-
+#include "../../include/atomic.h"
 // Similar a llamada nix Write pero escribiendo siempre hacia stdout
 int sys_print (void *buff, size_t largo)
 {
     buff = convertir_direccion (buff , actual->cr3_backup);
 	
     size_t aux;
-    for (aux=0 ; aux<largo; aux++)
-	putchar(*((char *)buff+aux));
+
+	int i;
+
+	static volatile spinlock_t candado = 1;
+
+	spin_lock(&candado);
+	
+	for (aux=0 ; aux<largo; aux++) {
+		//Demora utilizada para verificar el funcionamiento de spinlocks
+//		for(i=0 ; i<0x4fff ; i++);
+		putchar(*((char *)buff+aux));
+	}
+	spin_unlock(&candado);
 
     return largo;
 }	

@@ -40,6 +40,8 @@ perror                                            sys_proc.o
 putchar                                           sys_con.o
 read                                              sys_proc.o
 remover_timer                                     sys_time.o
+spin_lock                                         sys_con.o
+spin_unlock                                       sys_con.o
 strlen                                            sys_con.o
 sys_clrscr                                        sys_con.o
 sys_console                                       syscalla.o

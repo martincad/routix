@@ -8,6 +8,6 @@ typedef int spinlock_t;
 
 int TestAndSet(volatile int *);
 
-void spin_lock (spinlock_t *);
-void spin_unlock (spinlock_t *);
+void spin_lock (volatile spinlock_t *);
+void spin_unlock (volatile spinlock_t *);
 

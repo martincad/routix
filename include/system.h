@@ -60,3 +60,6 @@ void kpanic(char *str);
 
 #define cli() __asm__ __volatile__ ("pushf ; cli")
 #define sti() __asm__ __volatile__ ("popf")
+
+#define _cli()  __asm__ __volatile__ ("cli")
+#define _sti()  __asm__ __volatile__ ("sti")

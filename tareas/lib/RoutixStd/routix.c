@@ -1,7 +1,8 @@
 /* routix.c */
 #include "stdarg.h"
 #include "routix.h"
-#include "syscalls.h"
+#include "sys/syscalls.h"
+#include "string.h"
 void sprintn ( unsigned int num, int base);
 void sputchar (char car);
 char getascii (char c);
@@ -11,6 +12,8 @@ char getascii (char c);
 #define _syscall1(numero,retorno,param1) __asm__ __volatile__ ("int $0x50" : "=a" (retorno) : "a" (numero), "b" (param1))
 #define _syscall2(numero,retorno,param1,param2) __asm__ __volatile__ ("int $0x50" : "=a" (retorno) : "a" (numero), \
 	"b" (param1), "c" (param2))
+#define _syscall3(numero,retorno,param1,param2,param3) __asm__ __volatile__ ("int $0x50" : "=a" (retorno) : "a" (numero), \
+	"b" (param1), "c" (param2), "d" (param3))
 
 
 int sleep(int segundos)
@@ -88,9 +91,7 @@ void perror (char *str)
     _syscall1(SYS_PROCESS | SYS_PERROR, retorno, str);
 }
 
-typedef word pid_t;
-
-int kill( word pid, int sig)
+int kill( pid_t pid, int sig)
 {
  int retorno;
 
@@ -120,6 +121,7 @@ int fork(void)
 {
     int retorno;
     _syscall0(SYS_PROCESS | SYS_FORK, retorno);
+	return retorno;
 }	
 
 
@@ -166,8 +168,13 @@ void show(int valor)
 
 pid_t wait(int *valor)
 {
+	return waitpid(0, valor, 0);
+}
+
+pid_t waitpid (pid_t pid, int *valor, int options)
+{
 	int retorno;
-	_syscall1(SYS_PROCESS | SYS_WAIT, retorno, valor);
+	_syscall3(SYS_PROCESS | SYS_WAIT, retorno, pid, valor, options);
 	return retorno;
 }
 
@@ -178,6 +185,7 @@ int putchar (char car)
     aux[1]='\0';
     aux[0]=car;
     puts(aux);
+	return 1;
 }	
 
 // llamada al sistema (similar a write pero hacia stdout)
@@ -191,6 +199,7 @@ int clrscr(void)
 {
     int retorno;
     _syscall0(SYS_CONSOLE | SYS_CLRSCR, retorno);
+	return retorno;
 }	
 
 #define MAX_STRING  100
@@ -211,10 +220,9 @@ void printf ( char *string, ...)
 
  char *p=string;
  char *d;
- char nibble[8];
  char car;
 
- unsigned int i,flag;
+ unsigned int i;
 	
  va_list argumentos;
 
@@ -280,10 +288,9 @@ int sprintf(char *str, const char *string, ...)
 {
  char *p=string;
  char *d;
- char nibble[8];
  char car;
 
- unsigned int i,flag;
+ unsigned int i;
  unsigned int index = 0;	// Posicion dentro de str donde se colocara el proximo dato	
  
  va_list argumentos;

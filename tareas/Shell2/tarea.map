@@ -7,6 +7,7 @@ Allocating common symbols
 Common symbol       size              file
 
 j                   0x10              shell.o
+aux                 0x10              shell.o
 msg                 0x40              shell.o
 k                   0x10              shell.o
 msg2                0x40              shell.o
@@ -21,71 +22,74 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 
-.text           0x80000000      0xf40
+.text           0x80000000     0x1020
  *.o(.text)
- .text          0x80000000      0x550 shell.o
+ .text          0x80000000      0x630 shell.o
                 0x80000000                main
- .text          0x80000550      0x7a0 ../lib/routstd.a(routix.o)
-                0x8000056d                usleep
-                0x8000078e                putchar
-                0x800009ce                sprintf
-                0x80000603                free_mem
-                0x80000550                sleep
-                0x800006d1                renice
-                0x800007b5                puts
-                0x80000ca9                setvar
-                0x8000058a                proc_dump
-                0x80000676                exec
-                0x80000bc7                printn_
-                0x80000cc9                getvar
-                0x800005bc                timer_dump
-                0x80000693                gets
-                0x800005d1                malloc_page
-                0x800005e6                free_page
-                0x8000059f                proc_dump_v
-                0x8000076c                wait
-                0x80000752                show
-                0x80000618                perror
-                0x80000700                get_pid
-                0x80000c82                getascii
-                0x800006ad                fork
-                0x8000071c                get_ppid
-                0x80000c22                printn_s
-                0x80000632                kill
-                0x80000738                exit
-                0x800006bf                voido
-                0x800007fb                printf
-                0x800007e9                clrscr
- .text          0x80000cf0      0x250 ../lib/routstd.a(string.o)
-                0x80000d80                strcat
-                0x80000cf0                strcmp
-                0x80000df0                strncpy
-                0x80000ed7                atoi
-                0x80000eb9                memcpy
-                0x80000e2a                str_to_upper
-                0x80000dc1                strcpy
-                0x80000e67                memcmp
-                0x80000d53                strlen
-                0x00000f40                __code_size = SIZEOF (.text)
+ .text          0x80000630      0x7a0 ../lib/routstd.a(routix.o)
+                0x8000064d                usleep
+                0x8000086f                putchar
+                0x80000ab6                sprintf
+                0x800006e3                free_mem
+                0x80000630                sleep
+                0x800007a5                renice
+                0x8000089b                puts
+                0x80000d91                setvar
+                0x8000066a                proc_dump
+                0x80000747                exec
+                0x80000caf                printn_
+                0x80000db1                getvar
+                0x8000069c                timer_dump
+                0x80000764                gets
+                0x800006b1                malloc_page
+                0x8000084c                waitpid
+                0x800006c6                free_page
+                0x8000067f                proc_dump_v
+                0x80000832                wait
+                0x80000818                show
+                0x800006f8                perror
+                0x800007d4                get_pid
+                0x80000d6a                getascii
+                0x8000077e                fork
+                0x800007e9                get_ppid
+                0x80000d0a                printn_s
+                0x80000712                kill
+                0x800007fe                exit
+                0x80000793                voido
+                0x800008e4                printf
+                0x800008cf                clrscr
+ .text          0x80000dd0      0x250 ../lib/routstd.a(string.o)
+                0x80000e60                strcat
+                0x80000dd0                strcmp
+                0x80000ed0                strncpy
+                0x80000fb7                atoi
+                0x80000f99                memcpy
+                0x80000f0a                str_to_upper
+                0x80000ea1                strcpy
+                0x80000f47                memcmp
+                0x80000e33                strlen
+                0x00001020                __code_size = SIZEOF (.text)
 
-.data           0x88000000      0x240 load address 0x80000f40
+.data           0x88000000      0x300 load address 0x80001020
  *.o(.data)
- .data          0x88000000      0x220 shell.o
+ .data          0x88000000      0x2e0 shell.o
+                0x88000010                ntasks
                 0x88000000                str
- .data          0x88000220       0x20 ../lib/routstd.a(routix.o)
-                0x88000236                sposicion
-                0x00000240                __data_size = SIZEOF (.data)
+ .data          0x880002e0       0x20 ../lib/routstd.a(routix.o)
+                0x880002f6                sposicion
+                0x00000300                __data_size = SIZEOF (.data)
 
-.bss            0x88000240       0xf0
+.bss            0x88000300      0x100
  *.o(.bss)
- COMMON         0x88000240       0xf0 shell.o
+ COMMON         0x88000300      0x100 shell.o
                                   0x0 (size before relaxing)
-                0x88000240                j
-                0x88000250                msg
-                0x88000290                k
-                0x880002a0                msg2
-                0x880002e0                pid
-                0x880002f0                msg1
+                0x88000300                j
+                0x88000310                aux
+                0x88000320                msg
+                0x88000360                k
+                0x88000370                msg2
+                0x880003b0                pid
+                0x880003c0                msg1
 
 .comment
  *(.comment)

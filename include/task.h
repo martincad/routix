@@ -14,7 +14,7 @@
 #include "../include/signal.h"
 #endif
 
-typedef word pid_t;
+typedef short int pid_t;
 
 #define MAX_TASKS 7
 

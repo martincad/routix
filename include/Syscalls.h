@@ -86,6 +86,7 @@ inline pid_t sys_get_ppid (void);
 void sys_exit (int);
 void sys_show (int);
 pid_t sys_wait(int *);
+pid_t sys_waitpid (pid_t pid, int *status, int options);
 
 // Grupo timer
 int sys_sleep(int segundos);

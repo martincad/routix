@@ -121,5 +121,5 @@ $(OBJDIR)/taskdeb.a: $(SRCDIR)/tareas/*
 clean:
 	del  $(OBJDIR)\*.o
 	del  $(OBJDIR)\*.a
-
+	del	 *.map
 

@@ -1,6 +1,7 @@
 /* tarea.c */
 #include "stdarg.h"
-#include "../include/routix.h"
+#include "routix.h"
+#include "string.h"
 
 char msg[50];
 
@@ -11,6 +12,8 @@ char str[]="Shell v 0.0.0.2";
 
 int j, k;
 int pid;
+int ntasks = 0;		// Tareas hijas del shell (levantar condición de salida)
+int aux;
 
 void main(void) 
 {
@@ -20,26 +23,25 @@ void main(void)
 
     while(1) {
 
-	printf("kernel$ ");
+	printf("kernel# ");
 	gets(msg);
 
-//    printf("*%s*\n", msg);
-    
 	if ( ! strcmp(msg, "clear") ) {
 	    clrscr();
 	}
 	else if ( ! strcmp(msg, "exec") ) {
 	    printf("Ingrese nombre de tarea:");
 	    gets(msg1);
-//		pid = fork();
-//		if (pid==0) {		//Shell HIJO
-		    if (exec(msg1)==-1)
+		pid = fork();
+		if (pid==-1)
+			perror("fork");
+		else if (pid==0) {		//Shell HIJO
+			if (exec(msg1)==-1)
 				perror("No pudo ejecutarse");
-//			exit(-1);
-//		}
-//		else if (pid==-1)
-//			perror("fork");
-//		wait(&j);		//El shell padre recoge la condicion de salida del shell hijo
+			printf("Estoy aca despues de un EXEC ????? deberia haber muerto\n");
+			exit(5);
+		}
+		ntasks++;
 	}
 	else if ( ! strcmp(msg, "echo") ) {
 	    printf("Ingrese texto:");
@@ -97,6 +99,11 @@ void main(void)
 		show(3);
 	}
 
+	else if (! strcmp(msg, "show ntasks")) {
+		printf("Cantidad de hijos del shell: %d\n", ntasks);
+	}
+
+	
 	else if (! strcmp(msg, "setvar")) {
 	    printf("Ingrese el nombre: ");
 	    gets(msg1);
@@ -116,6 +123,16 @@ void main(void)
 	}
 
 	else printf("comando o nombre de archivo erroneo\n");
-    }
+	// Debo hacerme cargo de los hijos que van terminando
+	if (ntasks>0) {
+		pid = waitpid (0, &aux, WNOHANG);
+		if (pid>0) {
+			printf("SHELL 2 - Proceso: %d termino con: %d\n", pid, aux );
+			ntasks--;
+		}
+			
+	}
 
+  }
+	
 }    

@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -c -ffreestanding -fwritable-strings -fpack-struct
+CFLAGS = -c -ffreestanding -fwritable-strings -fpack-struct -Wall -I$(INCDIR)
 
 ASM = nasmw
 AFLAGS = -f aout

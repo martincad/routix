@@ -2,8 +2,8 @@
  * Memory Manager */
 
 
-#include "alloc.h"
-#include "../../include/routix.h"
+#include "sys/alloc.h"
+#include "sys/routix.h"
 
 
 

@@ -1,7 +1,8 @@
 /* routix.h */
+/*
 #ifndef _ROUTIX
 #define _ROUTIX
-
+*/
 #define NULL (void *) 0
 
 typedef unsigned char byte;
@@ -37,13 +38,13 @@ int proc_dump_v(int);
 
 int setvar(char *nombre, int valor);
 int getvar(char *nombre);
-
-int perror (char *);
+void perror (char *str);
 int exec (char *);
 void exit(int);
 pid_t fork();
+#define WNOHANG 1
 pid_t waitpid (pid_t pid, int *valor, int options);
 pid_t wait (int *valor);
 
 
-#endif
+//#endif

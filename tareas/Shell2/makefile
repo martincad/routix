@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -c -ffreestanding -fwritable-strings 
+CFLAGS = -c -ffreestanding -fwritable-strings -Wall -I$(INCDIR)
 
 ASM = nasmw
 AFLAGS = -f aout
@@ -11,7 +11,7 @@ LFLAGS = --script ../ldscript/tarea.ld --print-map --format coff-go32 -s
 
 OBJDIR = obj
 SRCDIR = src
-INCDIR = include
+INCDIR = ../include
 LIBDIR = ../lib
 
 OBJECTS = shell.o $(LIBDIR)/routstd.a 

@@ -21,14 +21,12 @@
 #endif
 
 
-//Nuevas
-
+//! Puntero al task struct de la tarea que realizó la llamada al sistema
 extern task_struct_t *actual;
-inline int rematar_task (task_struct_t *);
 
 
 
-// Vector de funciones de llamadas al sistema (grupo Process)
+//! Vector de funciones de llamadas al sistema (grupo Process)
 int (*syscall_process[MAX_SYSCALLS]) (void) = {
 	(int (*) (void)) sys_exec,	
 	(int (*) (void)) sys_void,	
@@ -44,7 +42,7 @@ int (*syscall_process[MAX_SYSCALLS]) (void) = {
 };
 
    
-
+//! Sólo imprime un mensaje (utilizada tiempo atrás para propósitos de debug)
 int sys_void (void)
 {
     kprintf("\nLlamada a SYS Void\n");
@@ -52,8 +50,8 @@ int sys_void (void)
     
 }	
 
-// Estructuras utilizadas por fork()
-// Registros que se pusheand al stack de modo kernel al entrar via int 0x50
+//! Estructuras utilizadas por fork()
+//! Registros que se pushean al stack de modo kernel al entrar via int 0x50
 struct int_regs
 {
     dword ebx;
@@ -68,7 +66,8 @@ struct int_regs
     dword esp;
     dword ss;
 };
-// Esta estructura posee todos los registros que se popean del stack de modo kernel antes de ejecutar una tarea
+
+//! Esta estructura posee todos los registros que se popean del stack de modo kernel antes de ejecutar una tarea
 struct int_regs_ext
 {
     dword gs;
@@ -89,7 +88,7 @@ struct int_regs_ext
     dword ss;
 };
 
-
+//! Implementación de fork (no hace falta hacer comentarios)
 int sys_fork (void)
 {
     struct task_struct_t *new_task;
@@ -189,8 +188,11 @@ int sys_fork (void)
 }
 
 
-/* Llamada al sistema exec: carga un ejecutable de disco (COFF32), verifica que posea sus 3 secciones, y lo carga en 
- * memoria. Genera una nueva tarea, cierra el descriptor.
+/*! \brief Genera un nuevo proceso a partir de un ejecutable COFF32 (no pisa, momentaneamente, la copia del proceso llamante)
+ *  \param path donde se encuentra el ejecutable
+ *  \return -1 en caso de error.
+ *  \todo Liberar recursos en caso de error
+ *  \todo Que el proceso se ejecute con el PID y recursos de la tarea que lo llamó (POSIX 1003.1)
  */
 int sys_exec (char *nombre)
 {
@@ -412,35 +414,39 @@ int sys_exec (char *nombre)
     return OK;
 }
 
-
+//! \brief Imprime el mensaje relacionado a un errorn
 void sys_perror (char *str)
 {
     str = convertir_direccion( str , actual->cr3_backup);
     perror(str);
 }
 
-
+/*! \brief modifica la prioridad de una tarea
+ *  \param pid del proceso
+ *  \param nueva prioridad
+ */
 int sys_renice (word pid, word prioridad)
 {
 //    kprintf("TEMP SYS_RENICE. PID: %d\tPRI: %d\n", pid, prioridad);
     task_struct_t *tmp;
     if ( (tmp = encontrar_proceso_por_pid(pid))==NULL ) {
-	actual->err_no = ESRCH;
-	return -1;
+		actual->err_no = ESRCH;
+		return -1;
     }
     // Esto es solo a modo de prueba ya que en routix por ahora el TASK_STOPPED cumple las veces de TASK_INTERRUMIPLE
     if (prioridad < 1)
-	tmp->estado = TASK_STOPPED;
+		dormir_task(tmp);
     tmp->prioridad = prioridad;    
     return OK;
 }
 
+//! \brief Devuelve el PID de la tarea actual
 inline pid_t sys_get_pid (void)
 {
     return actual->pid;
 }
 
-
+//! \brief Devuelve el PID de su padre
 inline pid_t sys_get_ppid (void)
 {
     return actual->ppid;
@@ -451,17 +457,27 @@ inline pid_t sys_get_ppid (void)
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Primer nodo de la lista de procesos zombies
+//! Header de la lista de procesos "actualmente" zombies
 struct zombie_queue zombie_header;
 
 
-// Cantidad de procesos en estado Zombie
+//! Cantidad de procesos en estado Zombie
 int zombie_queue_len = 0;
 
 // Funciones relacionadas con la llamada "exit"
 int sys_exit_mm(void);
 int sys_exit_notify(void);
 
+/*! \brief Termina un proceso y libera los recursos utilizados
+ *  \param valor retornado al padre (o a quién recoja la condición de salida)
+ *
+ *  \relates	sys_exit_notify
+ */
+/*
+ *  \relates	sys_exit_notify
+ *  \relates	sys_exit_mm
+ *  \relates	sys_wait
+ */
 void sys_exit (int valor)
 {
 	cli();
@@ -476,7 +492,8 @@ void sys_exit (int valor)
 	_reschedule();
 }
 
-//! Liberar todos los recursos relacionados con la memoria
+/*! \brief Libera todos los recursos de memoria utilizados por un proceso (excepto el task_struct)
+ */
 int sys_exit_mm(void)
 {
 	struct user_page *aux, *tmp;
@@ -515,8 +532,9 @@ int sys_exit_mm(void)
 	return 0;
 }
 
-//! Notify se encarga de:   1. Si tiene hijos, avisarle al init para que se haga cargo.
-//							2. Si su padre esta en un wait, darle la condición de salida y terminar.
+/*! \brief notificación al sistema de la terminación de un proceso
+ *  \nota  (uso interno de System Call exit)
+*/	
 int sys_exit_notify (void)
 {
 	struct zombie_queue *aux = &zombie_header;
@@ -538,7 +556,10 @@ int sys_exit_notify (void)
 }
 
 
-
+/*! \brief  llamada al sistema wait
+ * \param	dirección de un entero donde se colocará el valor de salida del hijo
+ * \return	PID del hijo
+ */
 
 pid_t sys_wait (int *status)
 {
@@ -565,12 +586,11 @@ pid_t sys_wait (int *status)
 		_cli();
 	}
 	
-//	if (getvar("__wait")==1) 
-//		kprintf("Mi hijo zombie es: %d\n", tmp->task_struct->pid);
-
 	// Mientras que aux queda apuntando al nodo anterior, tmp lo hace al nodo en cuestión
 	tmp = aux->next;
 	pid_t child_pid = tmp->task_struct->pid;
+	if (getvar("__wait")==1) 
+		kprintf("SYS_WAIT:Mi hijo zombie es: %d\n", tmp->task_struct->pid);
 
 	// Valor de retorno del hijo
 	*status = tmp->task_struct->retorno;
@@ -600,21 +620,13 @@ pid_t sys_wait (int *status)
 
 
 
-/*! Elimina una tarea de la lista de scheduler y libera el task struct (se supone que ya ha sido recogida su condicion
- * 	de salida) */
-inline int rematar_task (task_struct_t *tarea)
-{
-	if (remover_task (tarea)!=NULL) {		//Si se pudo quitar la tarea de la lista
-		free (tarea);						//liberar el task_struct
-		return 0;
-	}
-	return -1;
-}
-
 
 //Cantidad de veces que la función malloc llamo a morecore solicitandole una página
 extern word morecores;
 extern struct floppy_cache *header_floppy_cache;
+/*! \brief muestra parametros internos con propósitos de debug
+ *  \param parametro que desea mostrarse
+ */
 
 void sys_show (int valor)
 {

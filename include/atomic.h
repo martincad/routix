@@ -4,10 +4,10 @@
 #include "system.h"
 #endif
 
-typedef int spinlock_t;
+typedef volatile int spinlock_t;
 
-int TestAndSet(volatile int *);
+int TestAndSet(spinlock_t *);
 
-void spin_lock (volatile spinlock_t *);
-void spin_unlock (volatile spinlock_t *);
+void spin_lock (spinlock_t *);
+void spin_unlock (spinlock_t *);
 

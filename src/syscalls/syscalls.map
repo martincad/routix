@@ -31,6 +31,7 @@ init_new_task                                     sys_proc.o
 init_var                                          sys_misc.o
 insertar_timer                                    sys_time.o
 intSysCall                                        syscalla.o
+kfree_page                                        sys_proc.o
 kmapmem                                           sys_proc.o
                                                   sys_mem.o
 kmem_free                                         sys_proc.o

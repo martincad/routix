@@ -8,13 +8,7 @@ void pepito(int,int,int);
 char a[10];
 void main(void) 
 {
-	printf("Antes de ejecutar setvar\n");
-	setvar("Martino",100);
-
-	printf("GETVAR Martino: %d\n", getvar("Martino"));
-	printf("GETVAR pepe: %d\n", getvar("pepe"));
-	setvar("Martino",200);
-	printf("GETVAR Martino: %d\n", getvar("Martino"));
+	printf("Saliendo del main...\n");
 }    
 
 void pepito(int a, int b, int i)

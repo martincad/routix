@@ -84,7 +84,7 @@ int sys_proc_dump(void)
 {
  task_struct_t *tmp;
 
- char *estados[] = { "TASK_RUNNING", "TASK_STOPPED", "TASK_INTERRUMPIBLE", "TASK_ININTERRUMPIBLE" };
+ char *estados[] = { "TASK_RUNNING", "TASK_STOPPED", "TASK_INTERRUMPIBLE", "TASK_ININTERRUMPIBLE", "TASK_ZOMBIE" };
 
  kprintf("pid ppid descripcion estado pri cuenta cpu senpend\n");
  for (tmp = tareas_inicio; tmp != NULL ; tmp=tmp->proxima ) {
@@ -106,10 +106,15 @@ int sys_proc_dump_v(int pid)
     //Ubicar el pid en la lista de procesos
 
     if ( (tmp=encontrar_proceso_por_pid(pid))==NULL ) {
-	actual->err_no = ESRCH;	    //proceso no existe
+		actual->err_no = ESRCH;	    //proceso no existe
         return -1;
     }
 
+	if (tmp->estado == TASK_ZOMBIE) { //Si el proceso es Zombie, no tiene que mostrar
+		actual->err_no = ESRCH;	    
+		return -1;
+	}
+	
     kprintf("Descripcion: %s\tPID: %d\n", tmp->descripcion, tmp->pid);
     kprintf("Memoria utilizada: ");
     kprintf("Codigo: %d\tDatos: %d\tStack: %d", tmp->num_code, tmp->num_data, tmp->num_stack);

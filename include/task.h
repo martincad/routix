@@ -125,7 +125,7 @@ typedef struct task_struct_t
     pid_t ppid;
 } task_struct_t ;
 
-enum estado { TASK_RUNNING, TASK_STOPPED, TASK_INTERRUMPIBLE, TASK_ININTERRUMPIBLE };
+enum estado { TASK_RUNNING, TASK_STOPPED, TASK_INTERRUMPIBLE, TASK_ININTERRUMPIBLE, TASK_ZOMBIE};
 
 
 

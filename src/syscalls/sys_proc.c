@@ -459,7 +459,8 @@ void sys_exit (int valor)
 {
 	kprintf("SYS_EXIT: Implementacion a medio hacer de exit... recibio: %d\n", valor);
 	dormir_task(actual);
-
+	actual->estado = TASK_ZOMBIE;
+		
 	struct user_page *aux, *tmp;
 
 	cli();
@@ -480,20 +481,19 @@ void sys_exit (int valor)
 //		kprintf("TEMP: Libero UserStack\n");
 	}
 
-//	kprintf("Libero Directorio: 0x%x\n", actual->cr3);
+//	kprintf("Libero Directorio: 0x%x\n", actual->cr3_backup);
 
-//	__debug();
+//	if (sys_getvar("debug")==1)
+//		__debug();
 
-//	kfree_page (actual->cr3);
+	kfree_page (actual->cr3_backup);
 //	kfree_page (actual);
 
 	//Liberar memoria, solo si no comparte las paginas con ningun pariente
 
 	sti();
-	
 	_reschedule();
 
-	kprintf("TEMP: Exit: MATANGA, no deberia esta acá\n");
 }
 
 //Cantidad de veces que la función malloc llamo a morecore solicitandole una página

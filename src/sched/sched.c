@@ -7,8 +7,10 @@
 #include "../../include/system.h"
 #include "../../include/segm.h"
 #include "../../include/paging.h"
+#include "../../include/kalloc.h"
 #include "../../include/task.h"
 #include "../../include/debug.h"
+#include "../../include/stdio.h"
 
 void idle_task(void);
 extern void shell(void);
@@ -53,8 +55,6 @@ void start_scheduler(void)
 
 void tarea_init()
 {
-    addr_t shell_stack = kmalloc_page();	// esto se usa ???
-    
     kprintf("ejecutando INIT.....\n");
 
     if ( exec("shell.bin")!=OK )

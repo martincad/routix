@@ -11,7 +11,7 @@
 #include "../../include/segm.h"
 #include "../../include/debug.h"
 #include "../../include/syscalls.h"
-#include "../../include/errno.h"
+#include "../../include/error.h"
 #include "../../include/kalloc.h"
 #include "../../include/stdio.h"
 #include "../../include/string.h"

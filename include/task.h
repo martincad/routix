@@ -91,7 +91,7 @@ typedef struct tss_t {
 
 extern tss_t tss;
 extern task_t tarea[];
-
+void inicializarTss(tss_t *tss, word cs, word ds, dword eip, dword esp, dword eflags);
 
 #define ltr(selector) __asm__ __volatile__("ltr %w0" : : "a" (selector));
 

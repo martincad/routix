@@ -11,7 +11,7 @@
 #include "../../include/syscalls.h"
 #include "../../include/elf.h"
 #include "../../include/file.h"
-#include "../../include/errno.h"
+#include "../../include/error.h"
 #include "../../include/timer.h"
 #include "../../include/kalloc.h"
 #include "../../include/stdio.h"

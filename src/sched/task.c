@@ -6,6 +6,8 @@
 #include "../../include/system.h"
 #include "../../include/task.h"
 #include "../../include/paging.h"
+#include "../../include/kalloc.h"
+#include "../../include/error.h"
 #include "../../include/file.h"
 #include "../../include/string.h"
 
@@ -188,7 +190,7 @@ task_struct_t *init_new_task(word cs, word ds, dword eip, dword esp, dword eflag
 
  // Crear un directorio de paginas y alojar su dir en cr3
  if ( (nueva->cr3 = (addr_t) make_pdt()) == NULL ) {
-    kfree_page(nueva);
+    kfree_page((addr_t)nueva);
     return NULL;
  } 
 
@@ -225,7 +227,7 @@ task_struct_t *init_new_task(word cs, word ds, dword eip, dword esp, dword eflag
  if ( ! insertar_tarea(nueva) ) {
  
   // No pudimos insertarla !! liberamos la memoria
-  kfree_page(nueva);
+  kfree_page((addr_t)nueva);
 
   return NULL;
  }

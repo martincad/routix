@@ -7,6 +7,7 @@
 #include "../../include/task.h"
 #include "../../include/paging.h"
 #include "../../include/file.h"
+#include "../../include/string.h"
 
 // Un solo tss
 tss_t	tss;

@@ -13,7 +13,7 @@
 #include "../include/event.h"
 
 
-extern byte continuar;
+//extern byte floppy_continuar;
 extern void intDefaultHandler(void);
 extern void intTeclado(void);
 extern void switch_to_kernel_mode(void);
@@ -45,7 +45,7 @@ void DefaultHandler(void)
 {
 //    putchar('I');
 //    putchar('\n');
-    continuar=1;
+    //continuar=1;
     endOfInterrupt();
 }
 
@@ -127,11 +127,13 @@ void Teclado(void) {
 
 }
 
+/* Esto va ahora en el archivo drivers/floppy.c
 void Floppy (void)
 {
     continuar=1;
     endOfInterrupt();
 }	
+*/
 
 
 void inicializarInterrupciones( void )

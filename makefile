@@ -18,7 +18,7 @@ OBJECTS = $(OBJDIR)/boot.o	$(OBJDIR)/bootstrap.a	$(OBJDIR)/mm.a		\
   	  $(OBJDIR)/syscalls.a	$(OBJDIR)/console.a 	$(OBJDIR)/sched.a	\
 	  $(OBJDIR)/signals.a   $(OBJDIR)/inta.o	$(OBJDIR)/int.o	   	\
 	  $(OBJDIR)/io.o		$(OBJDIR)/taskdeb.a 	$(OBJDIR)/string.o	\
-  	  $(OBJDIR)/pic.o  		$(OBJDIR)/floppy.o   	$(OBJDIR)/file.o   	\
+  	  $(OBJDIR)/pic.o  		$(OBJDIR)/floppy.a   	$(OBJDIR)/file.o   	\
   	  $(OBJDIR)/libk.o      $(OBJDIR)/stdlib.o	$(OBJDIR)/fat12.o  	\
  	  $(OBJDIR)/time.o      $(OBJDIR)/8254.o	$(OBJDIR)/timer.o  	\
    	  $(OBJDIR)/error.o 	$(OBJDIR)/event.o	$(OBJDIR)/spinlock.o
@@ -42,9 +42,6 @@ $(OBJDIR)/int.o: $(SRCDIR)/int.c $(INCDIR)/system.h $(INCDIR)/debug.h $(INCDIR)/
 
 $(OBJDIR)/string.o: $(SRCDIR)/string.c $(INCDIR)/system.h
 	$(CC) $(CFLAGS) $(SRCDIR)/string.c -o $(OBJDIR)/string.o
-
-$(OBJDIR)/floppy.o: $(SRCDIR)/floppy.c $(INCDIR)/floppy.h $(INCDIR)/system.h
-	$(CC) $(CFLAGS) $(SRCDIR)/floppy.c -o $(OBJDIR)/floppy.o
 
 $(OBJDIR)/stdlib.o: $(SRCDIR)/stdlib.c $(INCDIR)/system.h
 	$(CC) $(CFLAGS) $(SRCDIR)/stdlib.c -o $(OBJDIR)/stdlib.o
@@ -105,6 +102,11 @@ $(OBJDIR)/syscalls.a: $(SRCDIR)/syscalls/*
 
 $(OBJDIR)/signals.a: $(SRCDIR)/signals/*
 	cd src/signals
+	make
+	cd ../..
+
+$(OBJDIR)/floppy.a: $(SRCDIR)/drivers/*
+	cd src/drivers
 	make
 	cd ../..
 

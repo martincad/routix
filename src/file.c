@@ -1,6 +1,5 @@
 /* file.c */
 #include "../include/system.h"
-#include "../include/floppy.h"
 #include "../include/string.h"
 #include "../include/fat.h"
 #include "../include/paging.h"
@@ -8,6 +7,7 @@
 #include "../include/stdio.h"
 #include "../include/file.h"
 #include "../include/task.h"
+#include "../include/drivers/floppy.h"
 
 file_opened_t *header_archivos_abiertos;
 

@@ -13,7 +13,7 @@ void voido (void);
 int putchar (char car);
 void puts(char *str);
 void printf ( char *string, ...);
-void sprintf ( char *string, ...);
+int sprintf(char *str, const char *string, ...);
 void sputchar (char car);
 size_t strlen(const char *s);
 

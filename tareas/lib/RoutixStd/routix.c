@@ -6,6 +6,7 @@ void sprintn ( unsigned int num, int base);
 void sputchar (char car);
 char getascii (char c);
 
+
 #define _syscall0(numero,retorno) __asm__ __volatile__ ("int $0x50" : "=a" (retorno) : "a" (numero))
 #define _syscall1(numero,retorno,param1) __asm__ __volatile__ ("int $0x50" : "=a" (retorno) : "a" (numero), "b" (param1))
 #define _syscall2(numero,retorno,param1,param2) __asm__ __volatile__ ("int $0x50" : "=a" (retorno) : "a" (numero), \
@@ -224,12 +225,17 @@ void printf ( char *string, ...)
 	     break;
 
    case 'd':
-	     i = va_arg(argumentos, unsigned int);
+	     i = va_arg(argumentos, int);
 		 if (i> (0xffffffff/2)) {
 		 	putchar('-');
 			printn_(~i+1,10);
 			break;
 		 }
+		 printn_(i,10);
+	     break;
+
+   case 'u':
+	     i = va_arg(argumentos, unsigned int);
 		 printn_(i,10);
 	     break;
 
@@ -253,12 +259,90 @@ void printf ( char *string, ...)
  va_end(argumentos);
 }
 
+void printn_s ( unsigned int num, int base, char *str, int *index);
+
+
+int sprintf(char *str, const char *string, ...)
+{
+ char *p=string;
+ char *d;
+ char nibble[8];
+ char car;
+
+ unsigned int i,flag;
+ unsigned int index = 0;	// Posicion dentro de str donde se colocara el proximo dato	
+ 
+ va_list argumentos;
+
+ va_start(argumentos, string );
+
+	for ( p=string; *p ; p++ ) {
+			
+		if ( *p != '%' ) {
+	    	str[index++] = *p;
+		    continue;
+  		}
+  
+	    switch (*++p) {
+			case 'c':
+	    	    car=va_arg(argumentos, int);     
+				str[index++] = car;
+		    	break;
+			case 'x':
+			    i = va_arg(argumentos, unsigned int );
+		        printn_s(i,16, str, &index);
+	   	        break;
+			case 'd':
+				i = va_arg(argumentos, int);
+				if (i> (0xffffffff/2)) {
+					str[index++] = '-';
+					printn_s(~i+1,10, str, &index);
+					break;
+				}
+				printn_s(i,10, str, &index);
+				break;
+			case 'u':
+				i = va_arg(argumentos, unsigned int);
+				printn_s(i,10, str, &index);
+				break;
+	    //  case 'o':
+		//      i = va_arg(argumentos, unsigned int);
+		//      printn_s(i,8);
+		//      break; 
+			case 's':
+				d = va_arg(argumentos, char *);
+				strcat(str+index, d);
+			    index += strlen(d);
+			    break;
+		   default:
+			    str[index++] = *p;
+		    	break;
+		}
+	
+	}
+	
+	str[index] = '\0'; 
+	va_end(argumentos);
+
+	return index;
+}
+
+
 void printn_ ( unsigned int num, int base)
 {
  unsigned int div;
  if ( (div=num/base) ) printn_(div,base);
  putchar( getascii(num%base) );
 }
+
+void printn_s ( unsigned int num, int base, char *str, int *index)
+{
+	unsigned int div;
+	if ( (div=num/base) ) 
+			printn_s(div,base, str, index);
+	str[(*index)++] = ( getascii(num%base) );
+}
+
 
 char getascii ( char c )
 {

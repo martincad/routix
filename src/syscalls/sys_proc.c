@@ -400,7 +400,17 @@ int sys_exec (char *nombre)
 
     // Despertamos la nueva tarea, recordemos que init_new_task crea las tareas en estado TASK_STOPPED
     despertar_task( new_task );
-    
+
+	//Nuevo exec
+//	if (getvar("newexec")==1 && strcmp(actual->descripcion,"shell.bin")) {
+//	if (getvar("newexec")==1) 
+//		sys_exit(0);
+
+	//Si el proceso que ejecuta el exec no es el init, debe morir, muejeje
+	if (actual->pid!=0) {
+		sys_exit(0);
+	}
+	
     return OK;
 }
 

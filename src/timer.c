@@ -4,6 +4,7 @@
 
 #include "../include/system.h"
 #include "../include/8254.h"
+#include "../include/8259.h"
 #include "../include/debug.h"
 #include "../include/task.h"
 

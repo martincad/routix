@@ -2,7 +2,10 @@
 
 #include "../include/paging.h"
 #include "../include/segm.h"
+#include "../include/8259.h"
 #include "../include/debug.h"
+#include "../include/kalloc.h"
+#include "../include/stdio.h"
 
 #include "../include/fat.h"
 
@@ -157,7 +160,7 @@ kprintf("Interrupciones: %x (real) - %x (virtual)\n", paginaIDT, KERNEL_INTERRUP
 kprintf("Indice de directorio y tabla: %d - %d\n", pi.dir_index, pi.tabla_index);
 
 directorio->entry[ pi.dir_index ] = make_pde((addr_t) ptIDT, PAGE_RW | PAGE_PRES );
-ptIDT->entry[ pi.tabla_index ] = make_pte((addr_t *) paginaIDT, PAGE_PRES);
+ptIDT->entry[ pi.tabla_index ] = make_pte((addr_t) paginaIDT, PAGE_PRES);
 
 int i;
 descriptor_t *temp;

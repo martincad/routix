@@ -113,6 +113,8 @@ typedef struct file_loaded_t
 } file_loaded_t;
 */
 
+int init_floppy_fs(void);
+
 // Adapta un nombre de la forma fat (KERNEL  BIN) a formato string: KERNEL.BIN\0
 // asi es mas facil su comparacion, impresion y usos varios
 void fat_adapta_name (byte *nombre_fat, byte *adaptado);
@@ -124,6 +126,10 @@ fat12_entry_t *fat_file_find (char *nombre, fat12_entry_t *datos_archivo);
 int fat_next_sector ( dword sector_inicial );
 
 void *floppy_cache (dword sector);
+
+// Abrir un archivo desde un dispositivo con formato FAT12
+int open_FAT12 (char *nombre, int fd);
+
 
 #define DIR_FAT_VIRTUAL	    0xF8000000
 

@@ -2,7 +2,9 @@
 
 /* Rutinas de inicialización y manejo del timer 8254 */
 
+#include "../include/system.h"
 #include "../include/8254.h"
+#include "../include/stdio.h"
 #include "../include/debug.h"
 
 
@@ -24,7 +26,7 @@ void init_8254()
  outportb(CWR, COUNTER_0 | LSB_MSB | MODO2);
  
  // Configuramos la cuenta para una interrupción cada 10ms
- outportb(COUNTER0, CUENTA);
+ outportb(COUNTER0, (unsigned char) CUENTA);
  outportb(COUNTER0, CUENTA>>8);
 
 }

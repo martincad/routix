@@ -1,6 +1,8 @@
 /* pic.c */
 
 #include "../include/system.h"
+#include "../include/8259.h"
+#include "../include/stdio.h"
 
 #define PIC1_A0	0x20
 #define PIC1_A1	0x21

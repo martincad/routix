@@ -2,6 +2,7 @@
 
 #include "../include/time.h"
 #include "../include/8254.h"
+#include "../include/stdio.h"
 
 #ifndef __SYSTEM
 #include "../include/system.h"

@@ -120,8 +120,6 @@ int lseek (int fd, int offset, int donde)
 
     dword sector_aux;	// Numero de orden del sector (no es el numero del sector en el dispositivo. Toma los valores
 			// 0,1,2,3,4,5, etc dependiendo del sector sobre el cual este el offset
-    int sector;
-    
     if (aux == NULL)
 	return -1;
 

@@ -7,6 +7,7 @@
 #include "../include/paging.h"
 #include "../include/task.h"
 #include "../include/syscalls.h"
+#include "../include/stdio.h"
 
 #include <stdarg.h>
 
@@ -32,10 +33,9 @@ void kprintf ( char *string, ...)
 {
  char *p=string;
  char *d;
- char nibble[8];
  char car;
 
- unsigned int i,flag;
+ unsigned int i;
 	
  va_list argumentos;
 

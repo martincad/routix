@@ -247,8 +247,6 @@ fat12_entry_t *fat_file_find (char *nombre, fat12_entry_t *datos_archivo)
     char nombre_archivos[MAX_PATH_LEN];    //String en el que se guarda cada nombre levantado del disco
     
     byte x; 
-    byte j;
-
     
     byte root_dir_flag=TRUE;   //Directorio en el que se busca es el Root.
     
@@ -278,7 +276,7 @@ fat_file_find_break:
 	do {
 	   if ( leer_sector(dir_sector, buffer) != OK) {
 		kprintf("No se puede leer sector\n");
-		return;
+		return NULL;
 	    }
 
 	    aux_fat = (fat12_entry_t *) buffer;
@@ -521,7 +519,6 @@ void fat_root_dir (void)
     
     byte root_dir_sector;
     byte x;
-    byte j;
     fat12_entry_t *datos;
 
     char nombre[MAX_PATH_LEN];
@@ -582,8 +579,6 @@ void fat_test(void)
 
     sector = fat_next_sector(sector);
 
-    char pepe[10];
-    
     while (  (sector > 0) && (sector < 0xff0) ) {
         kprintf("%d->", sector);
 	sector = fat_next_sector(sector);

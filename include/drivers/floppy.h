@@ -94,7 +94,7 @@
 #define READ_SECTOR_ID		0x4a
 
 // READ SECTOR
-#define READ_SECTOR		0Xe6 //0xe6
+#define READ_SECTOR		0Xe6 // MT=1 MFM=1 SK=1
 
 // WRITE SECTOR
 #define WRITE_SECTOR		0x0

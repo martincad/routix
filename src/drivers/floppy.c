@@ -45,23 +45,23 @@ void dump_status_register(int numero, byte valor);
 
 
 //Contiene el estado del motor (0=apagado , 1=encendido)
-byte motor_status=0;
+static byte motor_status=0;
 
-byte floppy_calibrado=0;
+static byte floppy_calibrado=0;
 
-//Array con los valores de estados y pcn en la fase de resultado.
+// Array con los valores de estados y pcn en la fase de resultado.
 // Valores validos: 0-255   ;	ERR_TIMEOUT	; NO_VALIDO
-int status[12];	
-
-// En esta direccion (640K - 1024) se ubica el bloque para transferencias DMA. La ubicacion de este bloque no puede
-// quedar entre dos paginas (el tamaño de estas paginas es de 64K) es decir tiene que estar totalmente contenido dentro
-// del mismo bloque.
-addr_t dma_address=0xA0000 - 1024;
+static int status[12];	
 
 #define ST0 status[0]
 #define ST1 status[1]
 #define ST2 status[2]
 #define ST3 status[3]
+
+// En esta direccion (640K - 1024) se ubica el bloque para transferencias DMA. La ubicacion de este bloque no puede
+// quedar entre dos paginas (el tamaño de estas paginas es de 64K) es decir tiene que estar totalmente contenido dentro
+// del mismo bloque.
+addr_t dma_address=0xA0000 - 1024;
 
 #define OK  0
 
@@ -81,7 +81,7 @@ void motor_off()
 }
 
 
-void set_dor(word valor )
+void set_dor(word valor)
 {
  outportb(DOR, valor);
 }
@@ -125,10 +125,10 @@ int floppy_get_result()
  
     for (timeout=GETBYTE_TIMEOUT; timeout; timeout--) 
     {
-      // Leemos primero el MSR (Main Status Register)
+        // Leemos primero el MSR (Main Status Register)
 	msr = inportb(MSR) & (RQM | CMDBUSY | DIO);
 
-      // Si RQM=1, DIO=1 y CMD_BUSY=1 ( Host puede leer info)
+        // Si RQM=1, DIO=1 y CMD_BUSY=1 ( Host puede leer info)
 	if ( msr == (RQM | CMDBUSY | DIO) )
 	{
 	    status[posicion++]=inportb(DATA);
@@ -138,14 +138,11 @@ int floppy_get_result()
 	else if ( msr == RQM )
 	{
 	    status[posicion]=NO_VALIDO;
-//	    kprintf("\nCantidad de resultados obtenidos: %d\n", posicion);
 	    return OK;
 	}
     }
 
     // Si timeout llego a 0 no se pudo completar la escritura
-    //return  timeout ? valor : -1;
- 
     return ERR_TIMEOUT; 
 
 }
@@ -258,13 +255,13 @@ int recalibrate()
 	return ERR_TIMEOUT;
     }
    
-    if ( (ST0 != (ST0_DRIVE_A | ST0_IC_OK | ST0_SEEK)) || (PCN!=0) )	{
+    // Analizamos el resultado del comando 
+    if ( ! COMMAND_OK ) {
 	dump_states();
 	return ERR_NEED_RESET;
     }
 
     // Pudimos calibrarlo sin problemas
-    puts("Floppy calibrado !");
     floppy_calibrado=1;
     
     return OK;
@@ -342,13 +339,11 @@ byte seek (byte cara, byte pista)
         return ERR_TIMEOUT;
     }
     
-    //Por comportamiento dispar de controladores (o mala interpretacion mia) voy a enmascarar el bit de Head
-    //ya que a veces lo setea al valor que corresponde y a veces no
-    if ( (ST0 & 0xF8) != (ST0_DRIVE_A |  ST0_SEEK ))	{
+    // Analizamos el resultado del comando 
+    if ( ! COMMAND_OK ) {
 	dump_states();
 	return ERR_TIMEOUT;
     }
-
 
     return OK;
 }	
@@ -405,17 +400,12 @@ int read_sector (byte cara, byte cilindro, byte sector)
 	return ERR_TIMEOUT;
     }
 
-
-    // Verifico los registros de Estado ST0-ST2
-    // falta verificar ST1 y ST2 (ya que son una especificacion del error, y me complicaba el tratamiento de los ERR)
-    //if ( ST0 != (ST0_DRIVE_A | (cara << 2) ))	{
-    // Cambio:
-    // En realidad si hay algun error lo deberia manifestar el IC del ST0
-    //if ( (ST0&0xfb) != (ST0_DRIVE_A ))	{
+    // Analizamos el resultado del comando 
     if ( ! COMMAND_OK )	{
 	dump_states();
 	return ERR_NEED_RESET;
     }
+
     return OK;
 }	
 
@@ -443,7 +433,7 @@ int block(void)
     floppy_continuar=0;
 
     // TEMPORAL
-    dword timeout=0xffffff;	//Este timeout es momentaneo (sera reemplazado por un timer). Puede que en maquinas con
+    dword timeout=0xffffffff;	//Este timeout es momentaneo (sera reemplazado por un timer). Puede que en maquinas con
     				//micro de mas de 600Mhz haya que aumentarlo... 
     // Las habilitamos nuevamente
     enable_irq(6);
@@ -525,17 +515,12 @@ intentar_nuevamente:
 #if DEBUG==1
     kprintf("leer_escribir: sector logico=%d ==> h=%d c=%d s=%d\n", sector_logico, cara, cilindro, sector);
 #endif
-
+ 
+    // Esto no deberia ser necesario ya que configuramos el controlador con EIS (Implied Seek) 
     if ( seek(cara, cilindro) != OK) {
 	    goto intentar_nuevamente;
     }
   
-/*    
-Sector = (LBA mod SectorsPerTrack)+1
-Cylinder = (LBA/SectorsPerTrack)/NumHeads
-Head = (LBA/SectorsPerTrack) mod NumHeads
-*/
-
     if (operacion == READ_SECTOR) {
 	if ( leer_sec(cara, cilindro, sector, buffer)!=OK )
 	    goto intentar_nuevamente;
@@ -555,6 +540,7 @@ int leer_sec(byte cara, byte cilindro, byte sector , byte *buffer)
 	return ERR_NEED_RESET;
     
     word i;
+
     byte *dma_block = (byte *) dma_address;
     for( i=0 ; i < BLOQUE_SIZE ; i++) 
 	*buffer++ = *dma_block++;
@@ -573,8 +559,8 @@ void dump_states()
 }
 
 
-char *ic_codes[] = { "Terminacion Normal", "Terminacion erronea",
-		     "Comando invalido"  , "Terminacion erronea causada por polling" };
+static char *ic_codes[] = { "Terminacion Normal", "Terminacion erronea",
+		     	    "Comando invalido"  , "Terminacion erronea causada por polling" };
 
 void dump_status_register(int numero, byte valor)
 {

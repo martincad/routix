@@ -14,6 +14,8 @@
 #include "../include/signal.h"
 #endif
 
+typedef word pid_t;
+
 #define MAX_TASKS 7
 
 typedef struct task_t {
@@ -93,6 +95,8 @@ extern tss_t tss;
 extern task_t tarea[];
 void inicializarTss(tss_t *tss, word cs, word ds, dword eip, dword esp, dword eflags);
 
+pid_t get_new_pid(void);
+		
 #define ltr(selector) __asm__ __volatile__("ltr %w0" : : "a" (selector));
 
 
@@ -100,7 +104,6 @@ void inicializarTss(tss_t *tss, word cs, word ds, dword eip, dword esp, dword ef
 #define MAX_PAGINAS_POR_TAREA	16
 #define MAX_DESCRIPTION		64
 
-typedef word pid_t;
 
 typedef struct task_struct_t
 {

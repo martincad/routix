@@ -106,9 +106,9 @@ dword *inicializar_fork(dword *stack,word cs,word ds,dword eip,dword esp,dword e
 */	
 
 
-word get_new_pid(void)
+pid_t get_new_pid(void)
 {
- static word pid=1;
+ static pid_t pid=2;
  
  return(pid++);
 }
@@ -196,7 +196,8 @@ task_struct_t *init_new_task(word cs, word ds, dword eip, dword esp, dword eflag
 
  nueva->cr3_backup = nueva->cr3;
 
- nueva->pid = get_new_pid();
+// Esto debe hacerse sólo en la llamada a fork (o en exec si el que llama es init)
+// nueva->pid = get_new_pid();
  strcpy( nueva->descripcion, descripcion);
 
  // Ponemos la tarea a correr

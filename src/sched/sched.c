@@ -43,6 +43,8 @@ void start_scheduler(void)
  addr_t INIT_stack = kmalloc_page();
  
  init_task=init_new_task(DESC_CODE, DESC_DATA, (dword) &tarea_init, INIT_stack + 4096, 0x202, "init", 1);
+
+ init_task->pid = 1;
  
  // Despertamos la nueva tarea, ya que recordemos init_new_task crea la nueva tarea en estado STOPPED
  despertar_task(init_task);

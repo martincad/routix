@@ -394,8 +394,10 @@ int sys_exec (char *nombre)
 		    return -1;
 	    }
     }
-    
+
+// Si exec genera un nuevo proceso	
     new_task->ppid = actual->pid;
+	new_task->pid = get_new_pid();
 
     // Inicialización de senales
     new_task->senales.senales_pendientes = 0;

@@ -64,12 +64,16 @@ void tarea_init()
 }	
 
 
+/* Pasa los scan codes del buffer en crudo, a los ASCII con combinaciones de ALT, SHIFT y CTRL */
+extern void leer_buff_teclado (void);
+
 
 // Busca la próxima tarea activa
 void scheduler()
 {
  task_struct_t *tmp;
 
+ leer_buff_teclado();
  
  // Volvemos al principio
  if (  ((tmp = actual->proxima ) == NULL)  ) { tmp = tareas_inicio; }

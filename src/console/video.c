@@ -203,14 +203,14 @@ void printn( unsigned int num, int base)
 {
  unsigned int div;
  if ( (div=num/base) ) printn(div,base);
- putchar( getascii(num%base) );
+ putchar( getascii_video(num%base) );
 }
 
 
 
 
 
-char getascii ( char c )
+char getascii_video ( char c )
 {
  char valor = '0' + c;
 

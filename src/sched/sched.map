@@ -24,6 +24,7 @@ kfree_page                                        task.o
 kmalloc_page                                      sched.o
                                                   task.o
 kprintf                                           sched.o
+leer_buff_teclado                                 sched.o
 make_pdt                                          task.o
 perror                                            sched.o
 scheduler                                         sched.o

@@ -82,7 +82,7 @@ void ExcepcionHandler(int numero,dword err1, dword err2, dword err3)
  while(1);
 }
 
-
+/*
 #define TECLADO_BUFFER_SIZE 10
 #define TECLADO_PORT 0x60
 
@@ -126,7 +126,7 @@ void Teclado(void) {
   actualizar_eventos( TECLADO );
 
 }
-
+*/
 /* Esto va ahora en el archivo drivers/floppy.c
 void Floppy (void)
 {

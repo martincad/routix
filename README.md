@@ -9,9 +9,9 @@ The OS implements:
 * FAT 16 fs
 * Syscalls:
  * Console:   
-   int sys_gets (char *str);
-   int sys_print (void *buff, size_t largo);
-   int sys_clrscr (void);
+  - int sys_gets (char *str);
+  - int sys_print (void *buff, size_t largo);
+  - int sys_clrscr (void);
 
  * Process:
   - int sys_fork (void);

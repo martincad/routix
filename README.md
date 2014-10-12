@@ -37,3 +37,5 @@ The OS implements:
     - dword sys_free_mem (void);
  5. A small C library was implemented so it is possible to build a Routix executable with GCC linking against Routix lib C library.
 The only executable format supported is COFF32
+
+> The project has been migrated from Source Forge CVS (http://sourceforge.net/projects/routix/) so some annotations and tracking history may be wrong/missing

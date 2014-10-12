@@ -24,7 +24,7 @@ The OS implements:
     - void sys_show (int);
     - pid_t sys_wait(int *);
     - pid_t sys_waitpid (pid_t pid, int *status, int options);
- 3.Timers
+ 3. Timers
     - int sys_sleep(int segundos);
     - int sys_usleep(int usegundos);
     - int sys_proc_dump(void);
